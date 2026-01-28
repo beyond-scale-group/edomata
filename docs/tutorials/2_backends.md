@@ -6,24 +6,19 @@ So far, we've written pure domain logic and service definitions. But these are j
 
 > **Real-world analogy**: Think of an architect's blueprint vs. a construction crew. The blueprint (your Edomaton/Stomaton) describes what to build. The construction crew (backend) actually builds it with real materials.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Your Code (Pure)                              │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐       │
-│  │   Domain     │    │   Service    │    │  Edomaton/   │       │
-│  │   Model      │───▶│   Logic      │───▶│  Stomaton    │       │
-│  └──────────────┘    └──────────────┘    └──────────────┘       │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              │ compile with
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    Backend (Side Effects)                        │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐       │
-│  │   Database   │    │   Caching    │    │   Message    │       │
-│  │   Storage    │    │              │    │   Delivery   │       │
-│  └──────────────┘    └──────────────┘    └──────────────┘       │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Pure["Your Code (Pure)"]
+        DM["Domain Model"] --> SL["Service Logic"] --> ES["Edomaton/Stomaton"]
+    end
+
+    Pure -->|"compile with"| Backend
+
+    subgraph Backend["Backend (Side Effects)"]
+        DB["Database Storage"]
+        Cache["Caching"]
+        Msg["Message Delivery"]
+    end
 ```
 
 ## The Program/Interpreter Pattern
@@ -75,28 +70,38 @@ Each aggregate type has its own namespace (which is a separate schema in Postgre
 
 > **What is Idempotency?** The property that running an operation multiple times has the same effect as running it once. The `commands` table tracks which commands we've already processed, so if the same command is sent twice (due to network retries, etc.), we don't process it twice.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                   Postgres Schema: "accounts"                │
-│                                                              │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐             │
-│  │  journal   │  │  outbox    │  │  commands  │             │
-│  │            │  │            │  │            │             │
-│  │ - id       │  │ - id       │  │ - id       │             │
-│  │ - stream   │  │ - data     │  │ - time     │             │
-│  │ - version  │  │ - created  │  │            │             │
-│  │ - event    │  │            │  │            │             │
-│  │ - time     │  │            │  │            │             │
-│  └────────────┘  └────────────┘  └────────────┘             │
-│                                                              │
-│  ┌────────────┐  ┌────────────┐                             │
-│  │ snapshots  │  │  states    │                             │
-│  │            │  │            │                             │
-│  │ - stream   │  │ - stream   │                             │
-│  │ - version  │  │ - state    │                             │
-│  │ - state    │  │ - version  │                             │
-│  └────────────┘  └────────────┘                             │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+erDiagram
+    JOURNAL {
+        uuid id PK
+        string stream
+        int version
+        jsonb event
+        timestamp time
+    }
+
+    OUTBOX {
+        uuid id PK
+        jsonb data
+        timestamp created
+    }
+
+    COMMANDS {
+        uuid id PK
+        timestamp time
+    }
+
+    SNAPSHOTS {
+        string stream PK
+        int version
+        jsonb state
+    }
+
+    STATES {
+        string stream PK
+        jsonb state
+        int version
+    }
 ```
 
 #### Memory Image

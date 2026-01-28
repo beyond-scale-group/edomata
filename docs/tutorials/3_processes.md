@@ -14,32 +14,19 @@ These are all **processes** - background jobs that react to what happens in your
 > - **Aggregates** are like individual cooks preparing dishes
 > - **Processes** are like the expeditor who coordinates everything: calling out orders, tracking what's ready, notifying servers
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Your System                              │
-│                                                              │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                   │
-│  │ Account  │  │  Order   │  │ Delivery │   Aggregates      │
-│  │Aggregate │  │Aggregate │  │Aggregate │                   │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘                   │
-│       │             │             │                          │
-│       └─────────────┼─────────────┘                          │
-│                     │                                        │
-│                     ▼                                        │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                   Outbox / Journal                   │    │
-│  │  (events and notifications waiting to be processed)  │    │
-│  └──────────────────────────┬──────────────────────────┘    │
-│                             │                                │
-│       ┌─────────────────────┼─────────────────────┐         │
-│       │                     │                     │         │
-│       ▼                     ▼                     ▼         │
-│  ┌─────────┐          ┌──────────┐         ┌──────────┐     │
-│  │ Email   │          │ Search   │         │ Payment  │     │
-│  │ Sender  │          │ Indexer  │         │ Workflow │     │
-│  └─────────┘          └──────────┘         └──────────┘     │
-│    Process              Process              Process         │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Aggregates
+        A1["Account Aggregate"]
+        A2["Order Aggregate"]
+        A3["Delivery Aggregate"]
+    end
+
+    A1 & A2 & A3 --> Outbox["Outbox / Journal<br/>(events and notifications)"]
+
+    Outbox --> P1["Email Sender<br/>(Process)"]
+    Outbox --> P2["Search Indexer<br/>(Process)"]
+    Outbox --> P3["Payment Workflow<br/>(Process)"]
 ```
 
 ## Reading
@@ -76,19 +63,26 @@ def backend : Backend[IO, Account, Event, Rejection, Notification] = ???
 > Problem: You want to update your database AND send a message (email, event, webhook). If you do both separately, one might fail while the other succeeds, leading to inconsistency.
 >
 > Solution: Write the message to an "outbox" table in the same transaction as your data change. A separate process reads the outbox and actually sends the messages. If sending fails, it can retry. If it succeeds, it marks the message as processed.
->
-> ```
-> Command ──▶ Aggregate ──▶ Database Transaction
->                               │
->                               ├── Update state
->                               └── Insert into outbox
->
-> Later...
->
-> Outbox ──▶ Process ──▶ Send email / Call API / Publish message
->                               │
->                               └── Mark as processed
-> ```
+
+```mermaid
+sequenceDiagram
+    participant C as Command
+    participant A as Aggregate
+    participant DB as Database Transaction
+
+    C->>A: Process command
+    A->>DB: Begin transaction
+    DB->>DB: Update state
+    DB->>DB: Insert into outbox
+    DB->>A: Commit
+
+    Note over DB: Later...
+
+    participant P as Process
+    DB->>P: Read outbox
+    P->>P: Send email / Call API
+    P->>DB: Mark as processed
+```
 
 For consuming outboxed items, you can use `backend.outbox` directly, or you can use the provided `OutboxConsumer` like the following:
 ```scala mdoc
@@ -222,16 +216,25 @@ def orderFulfillment: Stream[IO, Unit] =
 ### Sagas
 
 > **What is a Saga?** A pattern for managing long-running business processes that span multiple services. Each step has a compensation action that undoes it if a later step fails.
->
-> ```
-> Step 1: Reserve inventory    ←→ Compensation: Release inventory
-> Step 2: Charge payment       ←→ Compensation: Refund payment
-> Step 3: Schedule delivery    ←→ Compensation: Cancel delivery
->
-> If Step 3 fails:
->   - Run Compensation 2 (refund)
->   - Run Compensation 1 (release inventory)
-> ```
+
+```mermaid
+flowchart LR
+    subgraph Forward["Forward Steps"]
+        S1["1. Reserve inventory"]
+        S2["2. Charge payment"]
+        S3["3. Schedule delivery"]
+        S1 --> S2 --> S3
+    end
+
+    subgraph Compensate["Compensation (on failure)"]
+        C3["Cancel delivery"]
+        C2["Refund payment"]
+        C1["Release inventory"]
+        C3 --> C2 --> C1
+    end
+
+    S3 -.->|"If fails"| C3
+```
 
 A new custom read side projection would be just another stream that handles journal events:
 

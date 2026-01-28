@@ -7,27 +7,31 @@ CQRS stands for **Command Query Responsibility Segregation**. It's a pattern tha
 > **Real-world analogy**: Think of a library. The card catalog (or computer search) is optimized for finding books (queries). The checkout desk is optimized for borrowing and returning books (commands). They serve different purposes and could even be in different locations.
 
 **Traditional approach**:
-```
-┌─────────────────────────────────────┐
-│           Same Service              │
-│  - Create user                      │
-│  - Update user                      │
-│  - Get user by ID                   │
-│  - Search users                     │
-│  - List all users                   │
-└─────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Traditional["Same Service"]
+        T1["Create user"]
+        T2["Update user"]
+        T3["Get user by ID"]
+        T4["Search users"]
+        T5["List all users"]
+    end
 ```
 
 **CQRS approach**:
-```
-┌─────────────────────┐    ┌─────────────────────┐
-│   Command Side      │    │    Query Side       │
-│  (Write Model)      │    │   (Read Model)      │
-│                     │    │                     │
-│ - Create user       │    │ - Get user by ID    │
-│ - Update user       │    │ - Search users      │
-│ - Delete user       │    │ - List all users    │
-└─────────────────────┘    └─────────────────────┘
+```mermaid
+flowchart LR
+    subgraph Command["Command Side (Write Model)"]
+        C1["Create user"]
+        C2["Update user"]
+        C3["Delete user"]
+    end
+
+    subgraph Query["Query Side (Read Model)"]
+        Q1["Get user by ID"]
+        Q2["Search users"]
+        Q3["List all users"]
+    end
 ```
 
 **When to use CQRS (without event sourcing)?**
@@ -121,16 +125,15 @@ Assume we have the following business requirements:
 
 Let's visualize the order lifecycle:
 
-```
-┌───────┐     place      ┌─────────┐    allocate    ┌─────────┐
-│ Empty │ ─────────────▶ │  New    │ ──────────────▶│ Cooking │
-└───────┘                └─────────┘                └─────────┘
-                                                         │
-                                                    ready│
-                                                         ▼
-┌───────────┐   deliver   ┌────────────┐   pick up  ┌──────────────┐
-│ Delivered │◀─────────── │ Delivering │◀───────────│ WaitingPickUp│
-└───────────┘             └────────────┘            └──────────────┘
+```mermaid
+stateDiagram-v2
+    [*] --> Empty
+    Empty --> New: place
+    New --> Cooking: allocate
+    Cooking --> WaitingPickUp: ready
+    WaitingPickUp --> Delivering: pick up
+    Delivering --> Delivered: deliver
+    Delivered --> [*]
 ```
 
 > **Scala syntax: enum** We'll use scala 3 enums for modeling ADTs, as they are neat and closer to what modeling is all about; but you can use `sealed trait`s and normal `case class`es too

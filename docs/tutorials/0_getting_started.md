@@ -32,26 +32,26 @@ Before jumping in to code, we should know the big picture of what we are going t
 
 Application logic is divided into 2 separate layers:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     SERVICE LAYER                            │
-│  - Receives commands (requests to do something)              │
-│  - Loads current state from storage                          │
-│  - Calls domain logic to make decisions                      │
-│  - Persists events/state changes                             │
-│  - Sends notifications to other systems                      │
-│  - May involve side effects (database, network, etc.)        │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                     DOMAIN LAYER                             │
-│  - Contains your business rules                              │
-│  - Pure functions: no database, no network, no I/O           │
-│  - Same input always gives same output                       │
-│  - Easy to test (no mocks needed)                            │
-│  - Models your aggregate root                                │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Service["SERVICE LAYER"]
+        S1["Receives commands"]
+        S2["Loads current state from storage"]
+        S3["Calls domain logic to make decisions"]
+        S4["Persists events/state changes"]
+        S5["Sends notifications to other systems"]
+        S6["May involve side effects"]
+    end
+
+    subgraph Domain["DOMAIN LAYER"]
+        D1["Contains your business rules"]
+        D2["Pure functions: no database, no network, no I/O"]
+        D3["Same input always gives same output"]
+        D4["Easy to test - no mocks needed"]
+        D5["Models your aggregate root"]
+    end
+
+    Service -->|"calls"| Domain
 ```
 
 > **What is a "pure function"?** A function with no side effects - it doesn't read from databases, send emails, or do anything that affects the outside world. Like a math formula: `f(x) = x + 1` always returns the same result for the same input.
