@@ -579,7 +579,7 @@ object ProductCatalogApp extends IOApp.Simple {
         command: ProductCommand
     ) =
       IO.randomUUID.flatMap { id =>
-        IO.realTimeInstant.map { now =>
+        IO.realTime.map { d => java.time.Instant.ofEpochMilli(d.toMillis) }.map { now =>
           CommandMessage(
             id.toString,
             now,

@@ -326,7 +326,7 @@ object SaaSApp extends IOApp.Simple {
 
     def cmd(address: String, caller: CallerIdentity, command: TodoCommand) =
       IO.randomUUID.flatMap { id =>
-        IO.realTimeInstant.map { now =>
+        IO.realTime.map { d => java.time.Instant.ofEpochMilli(d.toMillis) }.map { now =>
           CommandMessage(
             id.toString,
             now,
