@@ -152,7 +152,7 @@
         
         <h2 id="getting-started" class="section"><a class="anchor-link left" href="#getting-started"><i class="icofont-laika link">&#xef71;</i></a>Getting Started</h2>
         <p>Add the SaaS module to your project. Do <strong>not</strong> add <code>edomata-core</code> directly -- it comes transitively:</p>
-        <pre class="keep-together pdf epub"><code class="nohighlight"><span class="identifier">libraryDependencies</span><span> += </span><span class="string-literal">&quot;dev.hnaderi&quot;</span><span> %% </span><span class="string-literal">&quot;edomata-saas&quot;</span><span> % </span><span class="string-literal">&quot;0.12-2dca3c9-SNAPSHOT&quot;</span></code></pre>
+        <pre class="keep-together pdf epub"><code class="nohighlight"><span class="identifier">libraryDependencies</span><span> += </span><span class="string-literal">&quot;dev.hnaderi&quot;</span><span> %% </span><span class="string-literal">&quot;edomata-saas&quot;</span><span> % </span><span class="string-literal">&quot;0.12.0&quot;</span></code></pre>
         <p>Import everything from <code>edomata.saas</code>:</p>
         <pre class="keep-together pdf epub"><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">edomata</span><span>.</span><span class="identifier">saas</span><span>.*</span></code></pre>
         
@@ -544,7 +544,7 @@
         <h2 id="build-configuration" class="section"><a class="anchor-link left" href="#build-configuration"><i class="icofont-laika link">&#xef71;</i></a>Build Configuration</h2>
         <p>For maximum enforcement, your external project should depend <strong>only</strong> on <code>edomata-saas</code>:</p>
         <pre class="keep-together pdf epub"><code class="nohighlight"><span class="comment">// build.sbt
-</span><span class="identifier">libraryDependencies</span><span> += </span><span class="string-literal">&quot;dev.hnaderi&quot;</span><span> %% </span><span class="string-literal">&quot;edomata-saas&quot;</span><span> % </span><span class="string-literal">&quot;0.12-2dca3c9-SNAPSHOT&quot;</span><span>
+</span><span class="identifier">libraryDependencies</span><span> += </span><span class="string-literal">&quot;dev.hnaderi&quot;</span><span> %% </span><span class="string-literal">&quot;edomata-saas&quot;</span><span> % </span><span class="string-literal">&quot;0.12.0&quot;</span><span>
 </span><span class="comment">// Do NOT add edomata-core -- use edomata.saas.* imports only</span></code></pre>
         <p>By importing <code>edomata.saas.*</code> instead of <code>edomata.core.*</code>, developers get the guarded DSL and cannot accidentally construct unguarded services. The raw <code>DomainDSL</code> and <code>CQRSDomainDSL</code> are not re-exported.</p>
 
