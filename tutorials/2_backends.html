@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Typelevel Laika + Helium Theme" />
+  <title>Running</title>
+  
+  <meta name="author" content="Hossein Naderi"/>
+  
+  
+  <meta name="description" content="docs"/>
+  
+  
+  
+  <link rel="icon" sizes="32x32" type="image/png" href="../icon.png"/>
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700">
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:500">
+  
+  <link rel="stylesheet" type="text/css" href="../helium/site/icofont.min.css" />
+    <link rel="stylesheet" type="text/css" href="../helium/site/laika-helium.css" />
+  <script src="../helium/site/laika-helium.js"></script>
+    <script type="module">
+
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+mermaid.initialize({ 
+  startOnLoad: true,
+  theme: "base",
+  themeVariables: {
+    'darkMode': dark,
+    'primaryColor': dark ? '#125d75' : '#eef5f6', 
+    'primaryTextColor': dark ? '#a7d4de' : '#007c99',
+    'primaryBorderColor': dark ? '#a7d4de' : '#a7d4de',
+    'lineColor': dark ? '#a7d4de' : '#007c99',
+    'background': dark ? '#064458' : '#ffffff',
+  }
+});
+
+</script>
+  
+  
+  <script> /* for avoiding page load transitions */ </script>
+</head>
+
+  <body>
+
+    <header id="top-bar" class="light-default dark-default">
+
+  <div class="row">
+    <a id="nav-icon">
+      <i class="icofont-laika navigationMenu" title="Navigation">&#xefa2;</i>
+    </a>
+    
+    
+  </div>
+
+  <a class="image-link" href="../introduction.html"><img src="../icon.png"></a>
+
+  <div class="row links">
+    
+    <a class="icon-link svg-link" href="https://github.com/hnaderi/edomata/"><span class="github" title="Source Code"><svg class="svg-icon" width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g class="svg-shape">
+    <path d="M49.995,1c-27.609,-0 -49.995,22.386 -49.995,50.002c-0,22.09 14.325,40.83 34.194,47.444c2.501,0.458 3.413,-1.086 3.413,-2.412c0,-1.185 -0.043,-4.331 -0.067,-8.503c-13.908,3.021 -16.843,-6.704 -16.843,-6.704c-2.274,-5.773 -5.552,-7.311 -5.552,-7.311c-4.54,-3.103 0.344,-3.042 0.344,-3.042c5.018,0.356 7.658,5.154 7.658,5.154c4.46,7.64 11.704,5.433 14.552,4.156c0.454,-3.232 1.744,-5.436 3.174,-6.685c-11.102,-1.262 -22.775,-5.553 -22.775,-24.713c-0,-5.457 1.949,-9.92 5.147,-13.416c-0.516,-1.265 -2.231,-6.348 0.488,-13.233c0,0 4.199,-1.344 13.751,5.126c3.988,-1.108 8.266,-1.663 12.518,-1.682c4.245,0.019 8.523,0.574 12.517,1.682c9.546,-6.47 13.736,-5.126 13.736,-5.126c2.728,6.885 1.013,11.968 0.497,13.233c3.204,3.496 5.141,7.959 5.141,13.416c0,19.209 -11.691,23.436 -22.83,24.673c1.795,1.544 3.394,4.595 3.394,9.26c0,6.682 -0.061,12.076 -0.061,13.715c0,1.338 0.899,2.894 3.438,2.406c19.853,-6.627 34.166,-25.354 34.166,-47.438c-0,-27.616 -22.389,-50.002 -50.005,-50.002"/>
+  </g>
+</svg></span></a>
+    
+    <a class="icon-link glyph-link" href="https://edomata.ir/"><i class="icofont-laika home" title="Home">&#xef47;</i></a>
+    
+  </div>  
+
+</header>
+    
+    <nav id="sidebar">
+
+  <div class="row">
+    
+    <a class="icon-link svg-link" href="https://github.com/hnaderi/edomata/"><span class="github" title="Source Code"><svg class="svg-icon" width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g class="svg-shape">
+    <path d="M49.995,1c-27.609,-0 -49.995,22.386 -49.995,50.002c-0,22.09 14.325,40.83 34.194,47.444c2.501,0.458 3.413,-1.086 3.413,-2.412c0,-1.185 -0.043,-4.331 -0.067,-8.503c-13.908,3.021 -16.843,-6.704 -16.843,-6.704c-2.274,-5.773 -5.552,-7.311 -5.552,-7.311c-4.54,-3.103 0.344,-3.042 0.344,-3.042c5.018,0.356 7.658,5.154 7.658,5.154c4.46,7.64 11.704,5.433 14.552,4.156c0.454,-3.232 1.744,-5.436 3.174,-6.685c-11.102,-1.262 -22.775,-5.553 -22.775,-24.713c-0,-5.457 1.949,-9.92 5.147,-13.416c-0.516,-1.265 -2.231,-6.348 0.488,-13.233c0,0 4.199,-1.344 13.751,5.126c3.988,-1.108 8.266,-1.663 12.518,-1.682c4.245,0.019 8.523,0.574 12.517,1.682c9.546,-6.47 13.736,-5.126 13.736,-5.126c2.728,6.885 1.013,11.968 0.497,13.233c3.204,3.496 5.141,7.959 5.141,13.416c0,19.209 -11.691,23.436 -22.83,24.673c1.795,1.544 3.394,4.595 3.394,9.26c0,6.682 -0.061,12.076 -0.061,13.715c0,1.338 0.899,2.894 3.438,2.406c19.853,-6.627 34.166,-25.354 34.166,-47.438c-0,-27.616 -22.389,-50.002 -50.005,-50.002"/>
+  </g>
+</svg></span></a>
+    
+    <a class="icon-link glyph-link" href="https://edomata.ir/"><i class="icofont-laika home" title="Home">&#xef47;</i></a>
+    
+  </div>
+
+  <ul class="nav-list">
+    <li class="level1 nav-leaf"><a href="../introduction.html">Introduction</a></li>
+    <li class="level1 nav-header">about</li>
+    <li class="level2 nav-leaf"><a href="../about/features.html">Features</a></li>
+    <li class="level2 nav-leaf"><a href="../about/design_goals.html">Design goals</a></li>
+    <li class="level1 nav-header">tutorials</li>
+    <li class="level2 nav-leaf"><a href="0_getting_started.html">Getting started</a></li>
+    <li class="level2 nav-leaf"><a href="1-1_eventsourcing.html">Event sourcing</a></li>
+    <li class="level2 nav-leaf"><a href="1-2_cqrs.html">CQRS style</a></li>
+    <li class="level2 active nav-leaf"><a href="#">Running</a></li>
+    <li class="level2 nav-leaf"><a href="3_processes.html">Processes</a></li>
+    <li class="level2 nav-leaf"><a href="4_saas.html">SaaS Multi-Tenant Module</a></li>
+    <li class="level2 nav-leaf"><a href="5_migrations.html">Event Migrations</a></li>
+    <li class="level1 nav-header">principles</li>
+    <li class="level2 nav-leaf"><a href="../principles/">Principles</a></li>
+    <li class="level2 nav-leaf"><a href="../principles/definitions.html">Definitions</a></li>
+    <li class="level1 nav-header">backends</li>
+    <li class="level2 nav-leaf"><a href="../backends/skunk.html">Skunk</a></li>
+    <li class="level2 nav-leaf"><a href="../backends/doobie.html">Doobie</a></li>
+    <li class="level1 nav-header">other</li>
+    <li class="level2 nav-leaf"><a href="../other/modules.html">Modules</a></li>
+    <li class="level2 nav-leaf"><a href="../other/faq.html">FAQ</a></li>
+    <li class="level1 nav-header">Related projects</li>
+    <li class="level2 nav-leaf"><a href="https://typelevel.org/cats/">cats</a></li>
+    <li class="level2 nav-leaf"><a href="https://typelevel.org/cats-effect/">cats-effect</a></li>
+    <li class="level2 nav-leaf"><a href="https://fs2.io/">fs2</a></li>
+    <li class="level2 nav-leaf"><a href="https://github.com/typelevel/discipline/">discipline</a></li>
+  </ul>
+
+</nav>
+
+    <div id="container">
+
+      
+<nav id="page-nav">
+  <p class="header"><a href="#">Running</a></p>
+
+  <ul class="nav-list">
+    <li class="level1 nav-leaf"><a href="#what-is-a-backend">What is a Backend?</a></li>
+    <li class="level1 nav-leaf"><a href="#the-program-interpreter-pattern">The Program/Interpreter Pattern</a></li>
+    <li class="level1 nav-node"><a href="#backends">Backends</a></li>
+    <li class="level2 nav-leaf"><a href="#postgres">Postgres</a></li>
+    <li class="level1 nav-node"><a href="#minimal-example">Minimal Example</a></li>
+    <li class="level2 nav-leaf"><a href="#usage">Usage</a></li>
+  </ul>
+
+  <p class="footer"></p>
+</nav>
+
+
+      <main class="content">
+
+        <h1 id="running" class="title">Running</h1>
+        
+        <h2 id="what-is-a-backend" class="section"><a class="anchor-link left" href="#what-is-a-backend"><i class="icofont-laika link">&#xef71;</i></a>What is a Backend?</h2>
+        <p>So far, we&#39;ve written pure domain logic and service definitions. But these are just <em>descriptions</em> of what should happen - like a recipe that hasn&#39;t been cooked yet. A <strong>backend</strong> is what actually executes your code, connecting it to databases and real-world infrastructure.</p>
+        <blockquote><strong>Real-world analogy</strong>: Think of an architect&#39;s blueprint vs. a construction crew. The blueprint (your Edomaton/Stomaton) describes what to build. The construction crew (backend) actually builds it with real materials.</blockquote>
+        <pre class="mermaid">flowchart TB
+    subgraph Pure[&quot;Your Code (Pure)&quot;]
+        DM[&quot;Domain Model&quot;] --&gt; SL[&quot;Service Logic&quot;] --&gt; ES[&quot;Edomaton/Stomaton&quot;]
+    end
+
+    Pure --&gt;|&quot;compile with&quot;| Backend
+
+    subgraph Backend[&quot;Backend (Side Effects)&quot;]
+        DB[&quot;Database Storage&quot;]
+        Cache[&quot;Caching&quot;]
+        Msg[&quot;Message Delivery&quot;]
+    end</pre>
+        
+        <h2 id="the-program-interpreter-pattern" class="section"><a class="anchor-link left" href="#the-program-interpreter-pattern"><i class="icofont-laika link">&#xef71;</i></a>The Program/Interpreter Pattern</h2>
+        <p>A pretty common pattern in functional programming is creating programs that define a problem and then creating other programs that interpret them; and thus decoupling <strong>what</strong> and <strong>how</strong> of a program. There are a bunch of terms used for such a pattern but I&#39;ll stick with program and interpreter here.</p>
+        <blockquote>
+          <p><strong>Why separate &quot;what&quot; from &quot;how&quot;?</strong></p>
+          <ul>
+            <li><strong>Testability</strong>: Your pure code can be tested without databases</li>
+            <li><strong>Flexibility</strong>: Swap backends without changing business logic</li>
+            <li><strong>Clarity</strong>: Business rules aren&#39;t tangled with infrastructure details</li>
+          </ul>
+        </blockquote>
+        <p>An <code>Edomaton</code> is simply a definition of an action that needs to take place. It won&#39;t affect its environment even if it runs for several times (and programs that use side effects must follow this rule); it just computes the result of decision making, so we can use it.</p>
+        <p>For running such a program we need another program that can interpret this one, which in Edomata is called a backend.</p>
+        
+        <h2 id="backends" class="section"><a class="anchor-link left" href="#backends"><i class="icofont-laika link">&#xef71;</i></a>Backends</h2>
+        <p>There are currently 2 backends supported, but creating new ones is pretty straightforward as much as extending or customizing provided ones.
+        Currently available backends rely on RDBMSes (specifically Postgres) for persistence.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Backend</th>
+              <th>Library</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Skunk</strong></td>
+              <td><a href="https://tpolecat.github.io/skunk/">Skunk</a></td>
+              <td>Async, non-blocking. Works on JVM, JS, and Native</td>
+            </tr>
+            <tr>
+              <td><strong>Doobie</strong></td>
+              <td><a href="https://tpolecat.github.io/doobie/">Doobie</a></td>
+              <td>JDBC-based. JVM only, more mature ecosystem</td>
+            </tr>
+          </tbody>
+        </table>
+        <blockquote>
+          <p><strong>Which should I choose?</strong></p>
+          <ul>
+            <li><strong>Skunk</strong>: Modern, async-first. Great for high-concurrency applications. Cross-platform.</li>
+            <li><strong>Doobie</strong>: Battle-tested, JDBC-based. Better if you need JDBC features or existing JDBC infrastructure.</li>
+          </ul>
+          <p>Both are excellent choices and fully compatible with each other&#39;s data.</p>
+        </blockquote>
+        
+        <h3 id="postgres" class="section"><a class="anchor-link left" href="#postgres"><i class="icofont-laika link">&#xef71;</i></a>Postgres</h3>
+        <p>These backends are designed to be as standard as possible and to be a great fit as default backend in production scenarios for microservice/service based/event-driven architectures.</p>
+        
+        <h4 id="persistence" class="section"><a class="anchor-link left" href="#persistence"><i class="icofont-laika link">&#xef71;</i></a>Persistence</h4>
+        <p>Each aggregate type has its own namespace that contains all the required tables. By default, each namespace creates a dedicated PostgreSQL schema (e.g. <code>&quot;auth&quot;.journal</code>). Alternatively, you can use <strong>prefix mode</strong> to keep all tables in a single schema with prefixed names (e.g. <code>auth_journal</code>) — see the <a href="../backends/skunk.html">Skunk</a> or <a href="../backends/doobie.html">Doobie</a> backend docs for details. The available tables are:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Table</th>
+              <th>Purpose</th>
+              <th>Used By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>journal</code></td>
+              <td>Stores all events in order</td>
+              <td>Event sourced apps (Edomaton)</td>
+            </tr>
+            <tr>
+              <td><code>outbox</code></td>
+              <td>Notifications waiting to be published</td>
+              <td>Both</td>
+            </tr>
+            <tr>
+              <td><code>commands</code></td>
+              <td>Processed command IDs (for idempotency)</td>
+              <td>Both</td>
+            </tr>
+            <tr>
+              <td><code>snapshots</code></td>
+              <td>Cached state (performance optimization)</td>
+              <td>Event sourced apps</td>
+            </tr>
+            <tr>
+              <td><code>states</code></td>
+              <td>Current state</td>
+              <td>CQRS apps (Stomaton)</td>
+            </tr>
+          </tbody>
+        </table>
+        <blockquote>
+          <p><strong>What is an Outbox?</strong> A pattern for reliable message publishing. Instead of sending notifications directly (which might fail), we store them in the database atomically with the state change. A separate process then publishes them. This ensures we never lose notifications or send duplicates.</p>
+          <p><strong>What is Idempotency?</strong> The property that running an operation multiple times has the same effect as running it once. The <code>commands</code> table tracks which commands we&#39;ve already processed, so if the same command is sent twice (due to network retries, etc.), we don&#39;t process it twice.</p>
+        </blockquote>
+        <pre class="mermaid">erDiagram
+    JOURNAL {
+        uuid id PK
+        string stream
+        int version
+        jsonb event
+        timestamp time
+    }
+
+    OUTBOX {
+        uuid id PK
+        jsonb data
+        timestamp created
+    }
+
+    COMMANDS {
+        uuid id PK
+        timestamp time
+    }
+
+    SNAPSHOTS {
+        string stream PK
+        int version
+        jsonb state
+    }
+
+    STATES {
+        string stream PK
+        jsonb state
+        int version
+    }</pre>
+        
+        <h4 id="memory-image" class="section"><a class="anchor-link left" href="#memory-image"><i class="icofont-laika link">&#xef71;</i></a>Memory Image</h4>
+        <p>Besides that, these backends also have built-in caches that when sized correctly, can prevent most of the database stuff and runs application like a <a href="https://martinfowler.com/bliki/MemoryImage.html">memory image</a> which can boost a lot of performance.</p>
+        <blockquote><strong>What is Memory Image?</strong> A pattern where you keep the entire application state in memory and just persist for durability. Reads are instant (no database round-trip). Writes update memory and async-persist to disk. Great for performance, but requires enough RAM.</blockquote>
+        <p>This database stuff is required if you need to ensure no data loss in a normal webservice/microservice scenario, which is the most common use case; however there is nothing that prevents a backend to use a disruptor pattern (like LMAX disruptor) to eliminate all the disk stuff while running business code.</p>
+        <p>These 2 backends are completely compatible with each other&#39;s data, so you can change your mind on which one to use any time.</p>
+        
+        <h4 id="serialization" class="section"><a class="anchor-link left" href="#serialization"><i class="icofont-laika link">&#xef71;</i></a>Serialization</h4>
+        <p>Both backends support <code>json</code>, <code>jsonb</code>, <code>bytea</code> types in Postgres, so you can use the one which is more appropriate.
+        Integrations with <code>Circe</code> and <code>uPickle</code> are provided in separate modules which you can use, or otherwise you can create your own codecs easily.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>Postgres Type</th>
+              <th>Pros</th>
+              <th>Cons</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>JSON (text)</td>
+              <td><code>json</code></td>
+              <td>Human-readable, easy debugging</td>
+              <td>Larger, slower queries</td>
+            </tr>
+            <tr>
+              <td>JSON (binary)</td>
+              <td><code>jsonb</code></td>
+              <td>Indexable, faster queries</td>
+              <td>Slightly less readable in dumps</td>
+            </tr>
+            <tr>
+              <td>Binary</td>
+              <td><code>bytea</code></td>
+              <td>Compact, fast</td>
+              <td>Not human-readable</td>
+            </tr>
+          </tbody>
+        </table>
+        <blockquote><strong>Recommendation</strong>: Start with <code>jsonb</code> for most cases. It&#39;s a good balance of queryability and performance. Switch to <code>bytea</code> only if you have proven performance needs.</blockquote>
+        
+        <h2 id="minimal-example" class="section"><a class="anchor-link left" href="#minimal-example"><i class="icofont-laika link">&#xef71;</i></a>Minimal Example</h2>
+        <p>Here&#39;s a complete example showing how to wire up a backend:</p>
+        <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">effect</span><span>.*
+</span><span class="keyword">import</span><span> </span><span class="identifier">edomata</span><span>.</span><span class="identifier">backend</span><span>.*
+</span><span class="keyword">import</span><span> </span><span class="identifier">edomata</span><span>.</span><span class="identifier">backend</span><span>.</span><span class="identifier">eventsourcing</span><span>.</span><span class="type-name">Backend</span><span>
+</span><span class="keyword">import</span><span> </span><span class="identifier">edomata</span><span>.</span><span class="identifier">skunk</span><span>.* </span><span class="comment">// or edomata.doobie.*
+</span><span class="keyword">import</span><span> </span><span class="identifier">skunk</span><span>.</span><span class="type-name">Session</span><span>
+
+</span><span class="comment">// Your domain from previous chapters
+// Account, Event, Rejection, Notification, AccountService...
+</span><span>
+</span><span class="keyword">object</span><span> </span><span class="type-name">Main</span><span> </span><span class="keyword">extends</span><span> </span><span class="type-name">IOApp</span><span>.</span><span class="type-name">Simple</span><span> {
+  </span><span class="keyword">def</span><span> </span><span class="declaration-name">run</span><span>: </span><span class="type-name">IO</span><span>[</span><span class="type-name">Unit</span><span>] = {
+    </span><span class="comment">// 1. Create database connection pool
+</span><span>    </span><span class="keyword">val</span><span> </span><span class="identifier">pool</span><span>: </span><span class="type-name">Resource</span><span>[</span><span class="type-name">IO</span><span>, </span><span class="type-name">Session</span><span>[</span><span class="type-name">IO</span><span>]] = </span><span class="type-name">Session</span><span>.</span><span class="identifier">pooled</span><span>(
+      </span><span class="identifier">host</span><span> = </span><span class="string-literal">&quot;localhost&quot;</span><span>,
+      </span><span class="identifier">port</span><span> = </span><span class="number-literal">5432</span><span>,
+      </span><span class="identifier">user</span><span> = </span><span class="string-literal">&quot;postgres&quot;</span><span>,
+      </span><span class="identifier">database</span><span> = </span><span class="string-literal">&quot;postgres&quot;</span><span>,
+      </span><span class="identifier">password</span><span> = </span><span class="type-name">Some</span><span>(</span><span class="string-literal">&quot;postgres&quot;</span><span>),
+      </span><span class="identifier">max</span><span> = </span><span class="number-literal">10</span><span>
+    )
+
+    </span><span class="comment">// 2. Create backend
+</span><span>    </span><span class="keyword">val</span><span> </span><span class="identifier">buildBackend</span><span> = </span><span class="type-name">Backend</span><span>
+      .</span><span class="identifier">builder</span><span>(</span><span class="type-name">AccountService</span><span>)                    </span><span class="comment">// 1
+</span><span>      .</span><span class="identifier">use</span><span>(</span><span class="type-name">SkunkDriver</span><span>(</span><span class="string-literal">&quot;account&quot;</span><span>, </span><span class="identifier">pool</span><span>))          </span><span class="comment">// 2
+</span><span>      .</span><span class="identifier">persistedSnapshot</span><span>(</span><span class="identifier">maxInMem</span><span> = </span><span class="number-literal">200</span><span>)          </span><span class="comment">// 3
+</span><span>      .</span><span class="identifier">build</span><span>
+
+    </span><span class="identifier">buildBackend</span><span>.</span><span class="identifier">use</span><span> { </span><span class="identifier">backend</span><span> =&gt;
+      </span><span class="comment">// 3. Compile your service
+</span><span>      </span><span class="keyword">val</span><span> </span><span class="identifier">service</span><span> = </span><span class="identifier">backend</span><span>.</span><span class="identifier">compile</span><span>(</span><span class="type-name">AccountService</span><span>[</span><span class="type-name">IO</span><span>])
+
+      </span><span class="comment">// 4. Use it!
+</span><span>      </span><span class="keyword">for</span><span> {
+        </span><span class="identifier">result</span><span> &lt;- </span><span class="identifier">service</span><span>(
+          </span><span class="type-name">CommandMessage</span><span>(
+            </span><span class="identifier">id</span><span> = </span><span class="string-literal">&quot;cmd-1&quot;</span><span>,
+            </span><span class="identifier">time</span><span> = </span><span class="identifier">java</span><span>.</span><span class="identifier">time</span><span>.</span><span class="type-name">Instant</span><span>.</span><span class="identifier">now</span><span>(),
+            </span><span class="identifier">address</span><span> = </span><span class="string-literal">&quot;account-123&quot;</span><span>,
+            </span><span class="identifier">payload</span><span> = </span><span class="type-name">Command</span><span>.</span><span class="type-name">Open</span><span>
+          )
+        )
+        </span><span class="identifier">_</span><span> &lt;- </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;Result: </span><span class="substitution">$result</span><span class="string-literal">&quot;</span><span>)
+      } </span><span class="keyword">yield</span><span> ()
+    }
+  }
+}</span></code></pre>
+        <blockquote>
+          <p><strong>What&#39;s happening here?</strong></p>
+          <ol class="arabic">
+            <li>Create a connection pool to Postgres</li>
+            <li>Build a backend with your domain model</li>
+            <li>Compile your pure <code>Edomaton</code> into something that actually talks to the database</li>
+            <li>Send commands and get results!</li>
+          </ol>
+        </blockquote>
+        
+        <h4 id="usage" class="section"><a class="anchor-link left" href="#usage"><i class="icofont-laika link">&#xef71;</i></a>Usage</h4>
+        <p>For detailed instructions on how to setup and use these backends refer to:</p>
+        <ul>
+          <li><a href="../backends/skunk.html">Skunk backend</a></li>
+          <li><a href="../backends/doobie.html">Doobie backend</a></li>
+        </ul>
+
+        
+<hr class="footer-rule"/>
+<footer>
+  Site generated by <a href="https://typelevel.org/Laika/">Laika</a> with the Helium theme.
+</footer>
+
+
+      </main>
+
+    </div>
+
+  </body>
+
+</html>

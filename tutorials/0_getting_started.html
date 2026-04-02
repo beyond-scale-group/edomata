@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Typelevel Laika + Helium Theme" />
+  <title>Getting started</title>
+  
+  <meta name="author" content="Hossein Naderi"/>
+  
+  
+  <meta name="description" content="docs"/>
+  
+  
+  
+  <link rel="icon" sizes="32x32" type="image/png" href="../icon.png"/>
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700">
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:500">
+  
+  <link rel="stylesheet" type="text/css" href="../helium/site/icofont.min.css" />
+    <link rel="stylesheet" type="text/css" href="../helium/site/laika-helium.css" />
+  <script src="../helium/site/laika-helium.js"></script>
+    <script type="module">
+
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+mermaid.initialize({ 
+  startOnLoad: true,
+  theme: "base",
+  themeVariables: {
+    'darkMode': dark,
+    'primaryColor': dark ? '#125d75' : '#eef5f6', 
+    'primaryTextColor': dark ? '#a7d4de' : '#007c99',
+    'primaryBorderColor': dark ? '#a7d4de' : '#a7d4de',
+    'lineColor': dark ? '#a7d4de' : '#007c99',
+    'background': dark ? '#064458' : '#ffffff',
+  }
+});
+
+</script>
+  
+  
+  <script> /* for avoiding page load transitions */ </script>
+</head>
+
+  <body>
+
+    <header id="top-bar" class="light-default dark-default">
+
+  <div class="row">
+    <a id="nav-icon">
+      <i class="icofont-laika navigationMenu" title="Navigation">&#xefa2;</i>
+    </a>
+    
+    
+  </div>
+
+  <a class="image-link" href="../introduction.html"><img src="../icon.png"></a>
+
+  <div class="row links">
+    
+    <a class="icon-link svg-link" href="https://github.com/hnaderi/edomata/"><span class="github" title="Source Code"><svg class="svg-icon" width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g class="svg-shape">
+    <path d="M49.995,1c-27.609,-0 -49.995,22.386 -49.995,50.002c-0,22.09 14.325,40.83 34.194,47.444c2.501,0.458 3.413,-1.086 3.413,-2.412c0,-1.185 -0.043,-4.331 -0.067,-8.503c-13.908,3.021 -16.843,-6.704 -16.843,-6.704c-2.274,-5.773 -5.552,-7.311 -5.552,-7.311c-4.54,-3.103 0.344,-3.042 0.344,-3.042c5.018,0.356 7.658,5.154 7.658,5.154c4.46,7.64 11.704,5.433 14.552,4.156c0.454,-3.232 1.744,-5.436 3.174,-6.685c-11.102,-1.262 -22.775,-5.553 -22.775,-24.713c-0,-5.457 1.949,-9.92 5.147,-13.416c-0.516,-1.265 -2.231,-6.348 0.488,-13.233c0,0 4.199,-1.344 13.751,5.126c3.988,-1.108 8.266,-1.663 12.518,-1.682c4.245,0.019 8.523,0.574 12.517,1.682c9.546,-6.47 13.736,-5.126 13.736,-5.126c2.728,6.885 1.013,11.968 0.497,13.233c3.204,3.496 5.141,7.959 5.141,13.416c0,19.209 -11.691,23.436 -22.83,24.673c1.795,1.544 3.394,4.595 3.394,9.26c0,6.682 -0.061,12.076 -0.061,13.715c0,1.338 0.899,2.894 3.438,2.406c19.853,-6.627 34.166,-25.354 34.166,-47.438c-0,-27.616 -22.389,-50.002 -50.005,-50.002"/>
+  </g>
+</svg></span></a>
+    
+    <a class="icon-link glyph-link" href="https://edomata.ir/"><i class="icofont-laika home" title="Home">&#xef47;</i></a>
+    
+  </div>  
+
+</header>
+    
+    <nav id="sidebar">
+
+  <div class="row">
+    
+    <a class="icon-link svg-link" href="https://github.com/hnaderi/edomata/"><span class="github" title="Source Code"><svg class="svg-icon" width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g class="svg-shape">
+    <path d="M49.995,1c-27.609,-0 -49.995,22.386 -49.995,50.002c-0,22.09 14.325,40.83 34.194,47.444c2.501,0.458 3.413,-1.086 3.413,-2.412c0,-1.185 -0.043,-4.331 -0.067,-8.503c-13.908,3.021 -16.843,-6.704 -16.843,-6.704c-2.274,-5.773 -5.552,-7.311 -5.552,-7.311c-4.54,-3.103 0.344,-3.042 0.344,-3.042c5.018,0.356 7.658,5.154 7.658,5.154c4.46,7.64 11.704,5.433 14.552,4.156c0.454,-3.232 1.744,-5.436 3.174,-6.685c-11.102,-1.262 -22.775,-5.553 -22.775,-24.713c-0,-5.457 1.949,-9.92 5.147,-13.416c-0.516,-1.265 -2.231,-6.348 0.488,-13.233c0,0 4.199,-1.344 13.751,5.126c3.988,-1.108 8.266,-1.663 12.518,-1.682c4.245,0.019 8.523,0.574 12.517,1.682c9.546,-6.47 13.736,-5.126 13.736,-5.126c2.728,6.885 1.013,11.968 0.497,13.233c3.204,3.496 5.141,7.959 5.141,13.416c0,19.209 -11.691,23.436 -22.83,24.673c1.795,1.544 3.394,4.595 3.394,9.26c0,6.682 -0.061,12.076 -0.061,13.715c0,1.338 0.899,2.894 3.438,2.406c19.853,-6.627 34.166,-25.354 34.166,-47.438c-0,-27.616 -22.389,-50.002 -50.005,-50.002"/>
+  </g>
+</svg></span></a>
+    
+    <a class="icon-link glyph-link" href="https://edomata.ir/"><i class="icofont-laika home" title="Home">&#xef47;</i></a>
+    
+  </div>
+
+  <ul class="nav-list">
+    <li class="level1 nav-leaf"><a href="../introduction.html">Introduction</a></li>
+    <li class="level1 nav-header">about</li>
+    <li class="level2 nav-leaf"><a href="../about/features.html">Features</a></li>
+    <li class="level2 nav-leaf"><a href="../about/design_goals.html">Design goals</a></li>
+    <li class="level1 nav-header">tutorials</li>
+    <li class="level2 active nav-leaf"><a href="#">Getting started</a></li>
+    <li class="level2 nav-leaf"><a href="1-1_eventsourcing.html">Event sourcing</a></li>
+    <li class="level2 nav-leaf"><a href="1-2_cqrs.html">CQRS style</a></li>
+    <li class="level2 nav-leaf"><a href="2_backends.html">Running</a></li>
+    <li class="level2 nav-leaf"><a href="3_processes.html">Processes</a></li>
+    <li class="level2 nav-leaf"><a href="4_saas.html">SaaS Multi-Tenant Module</a></li>
+    <li class="level2 nav-leaf"><a href="5_migrations.html">Event Migrations</a></li>
+    <li class="level1 nav-header">principles</li>
+    <li class="level2 nav-leaf"><a href="../principles/">Principles</a></li>
+    <li class="level2 nav-leaf"><a href="../principles/definitions.html">Definitions</a></li>
+    <li class="level1 nav-header">backends</li>
+    <li class="level2 nav-leaf"><a href="../backends/skunk.html">Skunk</a></li>
+    <li class="level2 nav-leaf"><a href="../backends/doobie.html">Doobie</a></li>
+    <li class="level1 nav-header">other</li>
+    <li class="level2 nav-leaf"><a href="../other/modules.html">Modules</a></li>
+    <li class="level2 nav-leaf"><a href="../other/faq.html">FAQ</a></li>
+    <li class="level1 nav-header">Related projects</li>
+    <li class="level2 nav-leaf"><a href="https://typelevel.org/cats/">cats</a></li>
+    <li class="level2 nav-leaf"><a href="https://typelevel.org/cats-effect/">cats-effect</a></li>
+    <li class="level2 nav-leaf"><a href="https://fs2.io/">fs2</a></li>
+    <li class="level2 nav-leaf"><a href="https://github.com/typelevel/discipline/">discipline</a></li>
+  </ul>
+
+</nav>
+
+    <div id="container">
+
+      
+<nav id="page-nav">
+  <p class="header"><a href="#">Getting started</a></p>
+
+  <ul class="nav-list">
+    <li class="level1 nav-leaf"><a href="#what-problem-does-edomata-solve">What problem does Edomata solve?</a></li>
+    <li class="level1 nav-leaf"><a href="#add-to-your-build">Add to your build</a></li>
+    <li class="level1 nav-node"><a href="#layers-of-abstraction">Layers of abstraction</a></li>
+    <li class="level2 nav-leaf"><a href="#layers">Layers</a></li>
+    <li class="level2 nav-leaf"><a href="#aggregate-space">Aggregate space</a></li>
+    <li class="level2 nav-leaf"><a href="#variants-choosing-the-right-automaton">Variants: Choosing the right automaton</a></li>
+    <li class="level1 nav-leaf"><a href="#next">Next</a></li>
+  </ul>
+
+  <p class="footer"></p>
+</nav>
+
+
+      <main class="content">
+
+        <h1 id="getting-started" class="title">Getting started</h1>
+        
+        <h2 id="what-problem-does-edomata-solve" class="section"><a class="anchor-link left" href="#what-problem-does-edomata-solve"><i class="icofont-laika link">&#xef71;</i></a>What problem does Edomata solve?</h2>
+        <p>Traditional applications store data by overwriting the current state. When you update a user&#39;s balance, you replace the old value with the new one. This approach has limitations:</p>
+        <ul>
+          <li><strong>Lost history</strong>: You can&#39;t see how the balance changed over time</li>
+          <li><strong>Debugging difficulty</strong>: When something goes wrong, you can&#39;t trace what happened</li>
+          <li><strong>Audit challenges</strong>: Compliance often requires knowing the full history of changes</li>
+          <li><strong>Concurrent conflicts</strong>: Two updates at the same time can cause data loss</li>
+        </ul>
+        <p><strong>Event-driven systems</strong> solve these problems by storing <em>what happened</em> (events) rather than just the current state. Edomata helps you build these systems in a clean, composable way using Scala.</p>
+        <blockquote><strong>Real-world analogy</strong>: Think of a bank ledger vs. a bank balance. The balance tells you &quot;you have $500&quot;, but the ledger tells you &quot;you deposited $1000, withdrew $300, deposited $100, withdrew $300&quot; - from which you can always calculate the balance, plus understand how you got there.</blockquote>
+        
+        <h2 id="add-to-your-build" class="section"><a class="anchor-link left" href="#add-to-your-build"><i class="icofont-laika link">&#xef71;</i></a>Add to your build</h2>
+        <pre class="keep-together pdf epub"><code class="nohighlight"><span class="identifier">libraryDependencies</span><span> += </span><span class="string-literal">&quot;dev.hnaderi&quot;</span><span> %% </span><span class="string-literal">&quot;edomata-core&quot;</span><span> % </span><span class="string-literal">&quot;0.12-cc00290-SNAPSHOT&quot;</span></code></pre>
+        <p>or for scala.js</p>
+        <pre class="keep-together pdf epub"><code class="nohighlight"><span class="identifier">libraryDependencies</span><span> += </span><span class="string-literal">&quot;dev.hnaderi&quot;</span><span> %%% </span><span class="string-literal">&quot;edomata-core&quot;</span><span> % </span><span class="string-literal">&quot;0.12-cc00290-SNAPSHOT&quot;</span></code></pre>
+        
+        <h2 id="layers-of-abstraction" class="section"><a class="anchor-link left" href="#layers-of-abstraction"><i class="icofont-laika link">&#xef71;</i></a>Layers of abstraction</h2>
+        <p>Before jumping in to code, we should know the big picture of what we are going to do;</p>
+        
+        <h3 id="layers" class="section"><a class="anchor-link left" href="#layers"><i class="icofont-laika link">&#xef71;</i></a>Layers</h3>
+        <p>Application logic is divided into 2 separate layers:</p>
+        <pre class="mermaid">flowchart TB
+    subgraph Service[&quot;SERVICE LAYER&quot;]
+        S1[&quot;Receives commands&quot;]
+        S2[&quot;Loads current state from storage&quot;]
+        S3[&quot;Calls domain logic to make decisions&quot;]
+        S4[&quot;Persists events/state changes&quot;]
+        S5[&quot;Sends notifications to other systems&quot;]
+        S6[&quot;May involve side effects&quot;]
+    end
+
+    subgraph Domain[&quot;DOMAIN LAYER&quot;]
+        D1[&quot;Contains your business rules&quot;]
+        D2[&quot;Pure functions: no database, no network, no I/O&quot;]
+        D3[&quot;Same input always gives same output&quot;]
+        D4[&quot;Easy to test - no mocks needed&quot;]
+        D5[&quot;Models your aggregate root&quot;]
+    end
+
+    Service --&gt;|&quot;calls&quot;| Domain</pre>
+        <blockquote>
+          <p><strong>What is a &quot;pure function&quot;?</strong> A function with no side effects - it doesn&#39;t read from databases, send emails, or do anything that affects the outside world. Like a math formula: <code>f(x) = x + 1</code> always returns the same result for the same input.</p>
+          <p><strong>What is a &quot;side effect&quot;?</strong> Any action that affects something outside your function: writing to a database, sending an HTTP request, printing to console, getting the current time. Side effects make code harder to test and reason about.</p>
+        </blockquote>
+        <p><strong>Domain layer</strong>:</p>
+        <ul>
+          <li>Is pure and has no side effects at all</li>
+          <li>Ensures aggregate invariants and implements all business rules and logic</li>
+          <li>Does not change frequently in well established businesses</li>
+          <li>Models an aggregate root in DDD</li>
+          <li>Aggregate roots just hold enough data to decide based on business rules and maintain invariants; they don&#39;t care about any other data</li>
+        </ul>
+        <p><strong>Service layer</strong>:</p>
+        <ul>
+          <li>May involve side effects</li>
+          <li>Is very minimal and mostly gluing</li>
+          <li>Must be idempotent (safe to run multiple times with same result)</li>
+          <li>Models application services and command handlers in DDD</li>
+        </ul>
+        <blockquote><strong>What is &quot;idempotent&quot;?</strong> An operation that produces the same result whether you run it once or multiple times. Like pressing an elevator button - pressing it 5 times has the same effect as pressing it once. This is important because in distributed systems, operations might be retried automatically.</blockquote>
+        
+        <h3 id="aggregate-space" class="section"><a class="anchor-link left" href="#aggregate-space"><i class="icofont-laika link">&#xef71;</i></a>Aggregate space</h3>
+        <blockquote>
+          <p><strong>What is an &quot;Aggregate&quot;?</strong> In domain-driven design (DDD), an aggregate is a cluster of related objects that we treat as a single unit for data changes. Think of a shopping cart: the cart and its items form an aggregate. You don&#39;t update items independently - you always go through the cart to ensure consistency (e.g., total price is correct).</p>
+          <p><strong>What is an &quot;Aggregate Root&quot;?</strong> The main entity that controls access to the aggregate. For a shopping cart aggregate, the Cart is the root. All changes go through it.</p>
+        </blockquote>
+        <ul>
+          <li>Each aggregate has a unique address (like an ID)</li>
+          <li>All the possible aggregates together form our aggregate space which is an infinite space (mathematically speaking)</li>
+          <li>There is nothing as a non existing aggregate - aggregates that are not created yet do exist in their initial state</li>
+        </ul>
+        <blockquote><strong>Real-world analogy</strong>: Think of it like phone numbers. The phone number 555-0199 &quot;exists&quot; even if no one has claimed it yet - it just hasn&#39;t been assigned. Similarly, aggregate &quot;order-12345&quot; exists in its initial (empty) state even before any events happen to it.</blockquote>
+        
+        <h3 id="variants-choosing-the-right-automaton" class="section"><a class="anchor-link left" href="#variants-choosing-the-right-automaton"><i class="icofont-laika link">&#xef71;</i></a>Variants: Choosing the right automaton</h3>
+        <p>Currently these kinds of state machines are implemented in Edomata:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Name</th>
+              <th>Use When</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Edomaton</code></td>
+              <td>Event-driven automaton</td>
+              <td>You need full event sourcing - storing all events and rebuilding state from them</td>
+            </tr>
+            <tr>
+              <td><code>Stomaton</code></td>
+              <td>State-driven automaton</td>
+              <td>You only need current state, but want clean command handling (CQRS style)</td>
+            </tr>
+          </tbody>
+        </table>
+        <blockquote>
+          <p><strong>What is Event Sourcing?</strong> A persistence pattern where you store every change as an event, then rebuild current state by replaying all events. Like a git history - you can see every commit and rebuild any past state.</p>
+          <p><strong>What is CQRS?</strong> Command Query Responsibility Segregation - separating the code that changes data (commands) from the code that reads data (queries). This allows you to optimize each path independently.</p>
+        </blockquote>
+        <p><strong>Choose <code>Edomaton</code> when:</strong></p>
+        <ul>
+          <li>You need audit trails or compliance records</li>
+          <li>You want to be able to &quot;replay&quot; history</li>
+          <li>Your domain naturally thinks in terms of &quot;what happened&quot;</li>
+          <li>You need to build multiple views from the same events</li>
+        </ul>
+        <p><strong>Choose <code>Stomaton</code> when:</strong></p>
+        <ul>
+          <li>You only care about current state</li>
+          <li>Event history isn&#39;t valuable for your use case</li>
+          <li>You want simpler persistence (just save the state)</li>
+          <li>You still want clean separation of commands and business logic</li>
+        </ul>
+        
+        <h2 id="next" class="section"><a class="anchor-link left" href="#next"><i class="icofont-laika link">&#xef71;</i></a>Next</h2>
+        <p>That&#39;s all we need to know for now; talk is enough, let&#39;s jump into code!</p>
+        <p>For event sourced applications, <a href="1-1_eventsourcing.html">follow this link</a>,
+        For CQRS applications (without event sourcing), <a href="1-2_cqrs.html">follow this link</a></p>
+
+        
+<hr class="footer-rule"/>
+<footer>
+  Site generated by <a href="https://typelevel.org/Laika/">Laika</a> with the Helium theme.
+</footer>
+
+
+      </main>
+
+    </div>
+
+  </body>
+
+</html>
