@@ -1,5 +1,5 @@
-# Forked from the upstream sbt-github-actions generated workflow.
-# Publish is handled separately by publish-ghp.yml (GitHub Packages).
+# CI workflow for the edomata fork (beyond-scale-group/edomata).
+# Runs build, test, formatting checks, site generation, and steward validation.
 
 name: Continuous Integration
 
@@ -11,7 +11,6 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 
 concurrency:
   group: ${{ github.workflow }} @ ${{ github.ref }}
@@ -39,94 +38,107 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup sbt
-        uses: sbt/setup-sbt@v1
-
-      - name: sbt update
-        if: matrix.java == 'temurin@8' && steps.setup-java-temurin-8.outputs.cache-hit == 'false'
-        run: 'nix develop .#${{ matrix.java }} -c sbt +update'
-
-      - name: sbt update
-        if: matrix.java == 'temurin@17' && steps.setup-java-temurin-17.outputs.cache-hit == 'false'
-        run: 'nix develop .#${{ matrix.java }} -c sbt +update'
-
       - name: Install Nix
         uses: cachix/install-nix-action@v17
+
+      - name: Setup sbt
+        uses: sbt/setup-sbt@v1
 
       - name: Start up Postgres
         run: docker compose up -d
 
       - name: Check headers and formatting
-        if: matrix.java == 'temurin@8' && matrix.os == 'ubuntu-22.04'
-        run: 'nix develop .#${{ matrix.java }} -c sbt ''project ${{ matrix.project }}'' ''++ ${{ matrix.scala }}'' headerCheckAll scalafmtCheckAll ''project /'' scalafmtSbtCheck'
+        if: matrix.java == 'temurin@8' && matrix.project == 'rootJVM'
+        run: >-
+          nix develop .#${{ matrix.java }} -c sbt
+          'project ${{ matrix.project }}'
+          '++ ${{ matrix.scala }}'
+          headerCheckAll scalafmtCheckAll
+          'project /'
+          scalafmtSbtCheck
 
       - name: scalaJSLink
         if: matrix.project == 'rootJS'
-        run: 'nix develop .#${{ matrix.java }} -c sbt ''project ${{ matrix.project }}'' ''++ ${{ matrix.scala }}'' Test/scalaJSLinkerResult'
+        run: >-
+          nix develop .#${{ matrix.java }} -c sbt
+          'project ${{ matrix.project }}'
+          '++ ${{ matrix.scala }}'
+          Test/scalaJSLinkerResult
 
       - name: nativeLink
         if: matrix.project == 'rootNative'
-        run: 'nix develop .#${{ matrix.java }} -c sbt ''project ${{ matrix.project }}'' ''++ ${{ matrix.scala }}'' Test/nativeLink'
+        run: >-
+          nix develop .#${{ matrix.java }} -c sbt
+          'project ${{ matrix.project }}'
+          '++ ${{ matrix.scala }}'
+          Test/nativeLink
 
       - name: Test
-        run: 'nix develop .#${{ matrix.java }} -c sbt ''project ${{ matrix.project }}'' ''++ ${{ matrix.scala }}'' test'
+        run: >-
+          nix develop .#${{ matrix.java }} -c sbt
+          'project ${{ matrix.project }}'
+          '++ ${{ matrix.scala }}'
+          test
 
       - name: Check binary compatibility
-        if: matrix.java == 'temurin@8' && matrix.os == 'ubuntu-22.04'
-        run: 'nix develop .#${{ matrix.java }} -c sbt ''project ${{ matrix.project }}'' ''++ ${{ matrix.scala }}'' mimaReportBinaryIssues'
+        if: matrix.java == 'temurin@8'
+        run: >-
+          nix develop .#${{ matrix.java }} -c sbt
+          'project ${{ matrix.project }}'
+          '++ ${{ matrix.scala }}'
+          mimaReportBinaryIssues
 
       - name: Generate API documentation
-        if: matrix.java == 'temurin@8' && matrix.os == 'ubuntu-22.04'
-        run: 'nix develop .#${{ matrix.java }} -c sbt ''project ${{ matrix.project }}'' ''++ ${{ matrix.scala }}'' doc'
+        if: matrix.java == 'temurin@8'
+        run: >-
+          nix develop .#${{ matrix.java }} -c sbt
+          'project ${{ matrix.project }}'
+          '++ ${{ matrix.scala }}'
+          doc
 
-  dependency-submission:
-    name: Submit Dependencies
-    if: github.event_name != 'pull_request'
-    strategy:
-      matrix:
-        os: [ubuntu-22.04]
-        java: [temurin@8]
-    runs-on: ${{ matrix.os }}
+  post-build:
+    name: post build
+    needs: [build]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: post build
+        run: echo success!
+
+  site:
+    name: Generate Site
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
     steps:
       - name: Checkout current branch (full)
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Setup sbt
-        uses: sbt/setup-sbt@v1
-
-      - name: sbt update
-        if: matrix.java == 'temurin@8' && steps.setup-java-temurin-8.outputs.cache-hit == 'false'
-        run: 'nix develop .#${{ matrix.java }} -c sbt +update'
-
-      - name: sbt update
-        if: matrix.java == 'temurin@17' && steps.setup-java-temurin-17.outputs.cache-hit == 'false'
-        run: 'nix develop .#${{ matrix.java }} -c sbt +update'
-
       - name: Install Nix
         uses: cachix/install-nix-action@v17
 
-      - name: Submit Dependencies
-        uses: scalacenter/sbt-dependency-submission@v2
+      - name: Setup sbt
+        uses: sbt/setup-sbt@v1
+
+      - name: Generate site
+        run: nix develop .#temurin@17 -c sbt docs/tlSite
+
+      - name: Publish site
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4.0.0
         with:
-          modules-ignore: edomata_3 docs_3 examples_sjs1_3 edomata-e2e_3 edomata_3 edomata_3 examples_3 edomata-backend-tests_sjs1_3 edomata-backend-tests_3 edomata-backend-tests_native0.4_3 mdocplantuml_3
-          configs-ignore: test scala-tool scala-doc-tool test-internal
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: site/target/docs/site
+          keep_files: true
 
   validate-steward:
     name: Validate Steward Config
-    strategy:
-      matrix:
-        os: [ubuntu-22.04]
-        java: [temurin@11]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout current branch (fast)
         uses: actions/checkout@v5
 
       - name: Setup Java (temurin@11)
-        id: setup-java-temurin-11
-        if: matrix.java == 'temurin@11'
         uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -137,52 +149,3 @@ jobs:
           apps: scala-steward
 
       - run: scala-steward validate-repo-config .scala-steward.conf
-
-  post-build:
-    name: post build
-    needs: [build]
-    strategy:
-      matrix:
-        os: [ubuntu-22.04]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: post build
-        run: echo success!
-
-  site:
-    name: Generate Site
-    strategy:
-      matrix:
-        os: [ubuntu-22.04]
-        java: [temurin@17]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout current branch (full)
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Setup sbt
-        uses: sbt/setup-sbt@v1
-
-      - name: sbt update
-        if: matrix.java == 'temurin@8' && steps.setup-java-temurin-8.outputs.cache-hit == 'false'
-        run: 'nix develop .#${{ matrix.java }} -c sbt +update'
-
-      - name: sbt update
-        if: matrix.java == 'temurin@17' && steps.setup-java-temurin-17.outputs.cache-hit == 'false'
-        run: 'nix develop .#${{ matrix.java }} -c sbt +update'
-
-      - name: Install Nix
-        uses: cachix/install-nix-action@v17
-
-      - name: Generate site
-        run: 'nix develop .#${{ matrix.java }} -c sbt docs/tlSite'
-
-      - name: Publish site
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v4.0.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: site/target/docs/site
-          keep_files: true
