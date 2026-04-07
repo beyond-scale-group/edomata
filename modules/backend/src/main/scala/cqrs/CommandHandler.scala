@@ -36,6 +36,7 @@ trait CommandHandler[F[_], S, E] {
 object CommandHandler {
   private val void: EitherNec[Nothing, Unit] = Right(())
 
+  @scala.annotation.nowarn("msg=unused")
   private def run[F[_]: Monad, C, S, E, R](
       repository: Repository[F, S, E],
       app: Stomaton[F, CommandMessage[C], S, R, E, Unit]
