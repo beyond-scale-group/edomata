@@ -71,7 +71,6 @@ final class SaaSDomainDSL[Auth, C, A, E, R, N](
   ): App[F, Unit] =
     guard(action) >> logic
 
-  @scala.annotation.nowarn("msg=unused")
   def unsafeUnguarded[F[_]: Monad](logic: App[F, Unit]): App[F, Unit] = logic
 
   def decide[F[_]: Applicative, T](d: Decision[R, E, T]): App[F, T] =

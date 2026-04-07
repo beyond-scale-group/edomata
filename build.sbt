@@ -6,6 +6,10 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 lazy val scala3 = "3.3.7"
 
+ThisBuild / scalacOptions ++= Seq(
+  "-Wconf:msg=unused:s"
+)
+
 inThisBuild(
   List(
     tlBaseVersion := "0.12",
