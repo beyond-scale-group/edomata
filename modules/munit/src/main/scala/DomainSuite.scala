@@ -29,7 +29,7 @@ import java.time.Instant
 
 trait DomainSuite(msgId: String = "1", address: String = "sut")
     extends FunSuite {
-  @scala.annotation.nowarn ("msg=unused")
+  @scala.annotation.nowarn("msg=unused")
   extension [F[_], C, S, E, R, N](
       self: Edomaton[F, RequestContext[C, S], R, E, N, Unit]
   )(using Monad[F], ModelTC[S, E, R], Location) {

@@ -43,12 +43,14 @@ trait UnsafeCrossTenantQuery[F[_], A, Q]:
   def query(q: Q): F[List[A]]
 
 object TenantScopedQuery:
+  @scala.annotation.nowarn("msg=unused")
   def apply[F[_]: Monad, Auth, A, Q](
       run: (TenantId, Q) => F[List[A]]
   )(using policy: AuthPolicy[Auth]): TenantScopedQuery[F, Auth, A, Q] =
     (auth, q) => run(policy.tenantId(auth), q)
 
 object UnsafeCrossTenantQuery:
+  @scala.annotation.nowarn("msg=unused")
   def apply[F[_]: Monad, A, Q](
       run: Q => F[List[A]]
   ): UnsafeCrossTenantQuery[F, A, Q] =

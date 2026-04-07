@@ -37,6 +37,7 @@ import edomata.core.*
   * @tparam N
   *   notification type
   */
+@scala.annotation.nowarn("msg=unused")
 abstract class SaaSEventSourcedService[Auth, C, A, E, R, N](
     mkRejection: String => R
 )(using ModelTC[CrudState[A], E, R], AuthPolicy[Auth]):
@@ -69,6 +70,7 @@ abstract class SaaSEventSourcedService[Auth, C, A, E, R, N](
   * @tparam N
   *   notification type
   */
+@scala.annotation.nowarn("msg=unused")
 abstract class SaaSCQRSService[Auth, C, A, R, N](
     mkRejection: String => R
 )(using StateModelTC[CrudState[A]], AuthPolicy[Auth]):
