@@ -33,7 +33,7 @@ inThisBuild(
         url = url("https://hnaderi.dev")
       )
     ),
-    tlSonatypeUseLegacyHost := false
+    sonatypeCredentialHost := "s01.oss.sonatype.org"
   )
 )
 
