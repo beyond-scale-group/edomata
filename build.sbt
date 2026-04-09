@@ -9,6 +9,11 @@ useReadableConsoleGit
 
 lazy val scala3 = "3.3.7"
 
+val javaMajorVersion =
+  scala.util
+    .Try(System.getProperty("java.specification.version").toDouble.toInt)
+    .getOrElse(8)
+
 ThisBuild / scalacOptions ++= Seq(
   "-Wconf:msg=unused:s"
 )
@@ -294,8 +299,11 @@ lazy val javaApi = project
     libraryDependencies ++= Seq(
       "org.scalameta" %% "munit" % Versions.MUnit % Test
     ),
-    Compile / javacOptions ++= Seq("--release", "11"),
-    Test / javacOptions ++= Seq("--release", "11")
+    Compile / javacOptions ++= (if (javaMajorVersion >= 9)
+                                  Seq("--release", "11")
+                                else Nil),
+    Test / javacOptions ++= (if (javaMajorVersion >= 9) Seq("--release", "11")
+                             else Nil)
   )
 
 lazy val driverTests = module("backend-tests") {
