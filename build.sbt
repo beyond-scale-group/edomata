@@ -32,8 +32,7 @@ inThisBuild(
         email = "mail@hnaderi.dev",
         url = url("https://hnaderi.dev")
       )
-    ),
-    sonatypeCredentialHost := "s01.oss.sonatype.org"
+    )
   )
 )
 
