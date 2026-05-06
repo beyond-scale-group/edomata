@@ -1,0 +1,15 @@
+enabled: false
+default_human_reviewer: nmusic-music
+
+agents:
+  - tech
+  - qa
+  - security
+  - cleaner
+  - po
+
+budget:
+  max_loc_per_issue: 300
+  max_files_per_issue: 10
+
+auto_merge: false
