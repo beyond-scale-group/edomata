@@ -1,0 +1,15 @@
+# .bsg/SECURITYIGNORE — false-positive paths for security scans
+#
+# Lines listed here are excluded from secret-scanning and vulnerability
+# reports. One path per line, glob patterns supported.
+
+# Test fixtures with hardcoded connection strings (docker-compose local only)
+testdata.sql
+testdbs.sql
+docker-compose.yml
+
+# Example code with placeholder values
+examples/
+
+# CI configuration (no secrets, uses GitHub Actions secrets)
+.github/workflows/
