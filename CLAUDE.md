@@ -238,6 +238,28 @@ If a new table is needed:
 3. Add tests in `PGNamespaceSuite.scala` (PGSchemaSuite section)
 4. Prefix constraint/index names using `naming.constraint()` / `naming.index()`
 
+## Rust Port (`rust/`)
+
+A Cargo workspace under `rust/` ports the library to Rust, milestone by milestone, following
+`docs/plans/rust-port.md` (the source of truth for scope and quality bar).
+
+- **Crates**: `rust/crates/*` (`edomata-core` first; see `rust/README.md` for the full list)
+- **Porting map**: `rust/PORTING.md` maps every Scala module and test suite to its Rust counterpart
+- **ADRs**: `rust/docs/adr/` records design decisions (effects/futures, `chrono`, `Edomaton` shape, `RaiseError`)
+- **MSRV**: 1.85 (edition 2024); every crate has `#![forbid(unsafe_code)]`
+- **CI**: `.github/workflows/rust.yml` (fmt, clippy, doc, tests with PostgreSQL, MSRV, wasm32 build of `edomata-core`)
+
+```bash
+cd rust
+cargo fmt --all --check
+cargo clippy --workspace --all-targets --all-features -- -D warnings
+cargo test --workspace --all-features
+cargo build -p edomata-core --target wasm32-unknown-unknown
+```
+
+Do not modify the Scala modules for the port, except to add golden-DDL tooling and the Scala
+side of the cross-language compatibility test.
+
 ## CI/CD
 
 GitHub Actions runs on:
