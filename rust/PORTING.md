@@ -1,6 +1,6 @@
 # Porting map: Scala modules and suites → Rust
 
-This table is the contract of the Rust port (see `docs/plans/rust-port.md`).
+This table is the contract of the Rust port (see [`../docs/plans/rust-port.md`](../docs/plans/rust-port.md)).
 Every Scala module and every Scala test suite is mapped to its Rust
 counterpart. Rows marked *planned* name the milestone that ports them; the
 port is complete when no row is left *planned*.
@@ -68,7 +68,7 @@ Method naming: Scala overloads become distinct names (`validate` /
 |-------------|-----------|-------|
 | `decision/DecisionSuite.scala` | `crates/edomata-core/tests/decision.rs` | MonadError, Traverse, Eq laws via `proptest`; accumulation and validation properties. `SerializableTests` is JVM-only (no equivalent). |
 | `decision/DecisionSyntaxSuite.scala` | `crates/edomata-core/tests/decision_syntax.rs` | |
-| `decision/Generators.scala`, `Helpers.scala` | `crates/edomata-core/tests/common/mod.rs` | proptest strategies |
+| `decision/Generators.scala`, `Helpers.scala` (at `modules/core/src/test/scala/`) | `crates/edomata-core/tests/common/mod.rs` | proptest strategies |
 | `decisiont/DecisionTSuite.scala` | `crates/edomata-core/tests/decision_t.rs` | |
 | `responset/ResponseTLaws.scala` | `crates/edomata-core/tests/response.rs` (`check_laws`) | generic over `Res: RaiseError`; the Cats `Traverse` law set is not ported (no `Traverse` in Rust, see ADR 0004) |
 | `responset/ResponseDecisionSuite.scala` (`ResponseDecisionSuite`, `ResponseEitherNecSuite`) | `crates/edomata-core/tests/response.rs` | `response_decision_laws`, `response_result_nec_laws` |
