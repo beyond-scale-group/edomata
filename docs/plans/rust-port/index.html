@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-plans/rust-port" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.9.2">
+<title data-rh="true">Goal: Port Edomata to Rust | Edomata</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://beyond-scale-group.github.io/edomata/img/icon.png"><meta data-rh="true" name="twitter:image" content="https://beyond-scale-group.github.io/edomata/img/icon.png"><meta data-rh="true" property="og:url" content="https://beyond-scale-group.github.io/edomata/docs/plans/rust-port"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Goal: Port Edomata to Rust | Edomata"><meta data-rh="true" name="description" content="Mission"><meta data-rh="true" property="og:description" content="Mission"><link data-rh="true" rel="icon" href="/edomata/img/icon.png"><link data-rh="true" rel="canonical" href="https://beyond-scale-group.github.io/edomata/docs/plans/rust-port"><link data-rh="true" rel="alternate" href="https://beyond-scale-group.github.io/edomata/docs/plans/rust-port" hreflang="en"><link data-rh="true" rel="alternate" href="https://beyond-scale-group.github.io/edomata/docs/plans/rust-port" hreflang="x-default"><link rel="stylesheet" href="/edomata/assets/css/styles.8e5b82b2.css">
+<script src="/edomata/assets/js/runtime~main.87be465c.js" defer="defer"></script>
+<script src="/edomata/assets/js/main.3ed82998.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/edomata/"><div class="navbar__logo"><img src="/edomata/img/icon.png" alt="Edomata Logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="/edomata/img/icon.png" alt="Edomata Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">Edomata</b></a><a class="navbar__item navbar__link" href="/edomata/docs/introduction">Documentation</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a href="https://github.com/beyond-scale-group/edomata" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><main class="docMainContainer_TBSr docMainContainerEnhanced_lQrH"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Goal: Port Edomata to Rust</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="mission">Mission<a href="#mission" class="hash-link" aria-label="Direct link to Mission" title="Direct link to Mission" translate="no">​</a></h2>
+<p>Port the entire Edomata library (Scala 3, all 17 modules, ~11k lines of main code, ~7k lines
+of tests, in <code>modules/</code>) to an idiomatic, production-grade Rust library, published as a Cargo
+workspace under <code>rust/</code> in this repository. When you&#x27;re done, a Rust developer can build
+event-sourced (<code>Edomaton</code>) and CQRS (<code>Stomaton</code>) services with the same semantics and
+guarantees as the Scala version. A Rust service must also be able to read and write the
+same PostgreSQL tables as a Scala service, so both can share a database.</p>
+<p>This is a translation of <strong>semantics</strong>, not syntax. Don&#x27;t emulate Cats/HKT machinery. Map
+each abstraction to its idiomatic Rust equivalent, and keep the behavior, the invariants
+and the on-disk formats identical.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="source-of-truth">Source of truth<a href="#source-of-truth" class="hash-link" aria-label="Direct link to Source of truth" title="Direct link to Source of truth" translate="no">​</a></h2>
+<p>Read these before writing any code, then keep checking them as you go:</p>
+<ul>
+<li class=""><code>modules/core</code>: <code>Decision</code>, <code>DecisionT</code>, <code>Response</code>/<code>ResponseT</code>/<code>ResponseD</code>/<code>ResponseE</code>,
+<code>Action</code>, <code>Edomaton</code>, <code>Stomaton</code>, <code>RequestContext</code>, <code>DomainModel</code>/<code>ModelTC</code>, <code>CQRSModel</code>,
+<code>DomainDSL</code>, <code>CQRSDomainDSL</code>, <code>DomainCompiler</code>, <code>RaiseError</code></li>
+<li class=""><code>modules/backend</code>: <code>Backend</code> + <code>BackendBuilder</code>, <code>Storage</code>, <code>StorageDriver</code>, <code>Repository</code>,
+<code>RepositoryReader</code>, <code>CachedRepository</code>, <code>Cache</code>/<code>LRUCache</code>, <code>CommandHandler</code>,
+<code>CommandStore</code>, <code>CommandState</code>, <code>SnapshotReader</code>/<code>SnapshotStore</code>/<code>SnapshotPersistence</code>, <code>JournalReader</code>,
+<code>OutboxReader</code>/<code>OutboxItem</code>, <code>OutboxConsumer</code>, <code>Notifications</code>, <code>BackendError</code>, <code>EventMetadata</code>/<code>EventMessage</code></li>
+<li class=""><code>modules/postgres</code>: <code>PGNaming</code> (Schema/Prefixed), <code>PGNamespace</code>, <code>PGSchema</code>, <code>EventMigration</code></li>
+<li class=""><code>modules/skunk</code> and <code>modules/doobie</code>: <code>Queries.scala</code> (exact SQL), drivers, handlers,
+repositories, journal/outbox readers, snapshot persistence, migrations</li>
+<li class=""><code>modules/saas</code> and <code>modules/saas-skunk</code>: tenancy (<code>TenantId</code>, <code>UserId</code>, <code>CallerIdentity</code>),
+<code>SaaSGuard</code>, <code>RoleBasedPolicy</code>, <code>CrudState</code>, SaaS DSLs and services, RLS config, <code>SaaSPGSchema</code></li>
+<li class=""><code>modules/munit</code>: <code>DomainSuite</code> test helpers</li>
+<li class=""><code>modules/backend-tests</code>, <code>modules/e2e</code>, <code>examples/</code>: behavioral specs to port as tests</li>
+<li class=""><code>docs/</code>: user-facing semantics (principles, tutorials, backends, migrations, saas)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="scope-a-full-port-nothing-left-behind">Scope: a full port, nothing left behind<a href="#scope-a-full-port-nothing-left-behind" class="hash-link" aria-label="Direct link to Scope: a full port, nothing left behind" title="Direct link to Scope: a full port, nothing left behind" translate="no">​</a></h2>
+<p>This is a <strong>complete</strong> port: all 17 modules. Nothing is out of scope. Every JVM/Scala
+connector and dependency is replaced by the standard, widely used Rust crate for the same
+job. The Rust port must never require a JVM, JNI, or any Scala/Java artifact at build time
+or at runtime. (The only exception is the cross-language compatibility <em>test</em>, which uses
+the Scala build as an external oracle.)</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="connector-and-dependency-replacement">Connector and dependency replacement<a href="#connector-and-dependency-replacement" class="hash-link" aria-label="Direct link to Connector and dependency replacement" title="Direct link to Connector and dependency replacement" translate="no">​</a></h2>
+<p>Replace every Scala/Java library with its standard Rust equivalent:</p>
+<table><thead><tr><th>Scala / Java dependency</th><th>Used for</th><th>Rust replacement</th></tr></thead><tbody><tr><td>Doobie + JDBC <code>Transactor</code></td><td><code>doobie</code> driver, <code>java-api</code></td><td><code>sqlx</code> (<code>postgres</code>, <code>runtime-tokio</code> features), with <code>PgPool</code> as the transactor</td></tr><tr><td>Circe, jsoniter-scala, uPickle</td><td>Payload codecs</td><td><code>serde</code> + <code>serde_json</code>, the only serializer</td></tr><tr><td>Cats / Cats Effect <code>IO</code>, <code>F[_]</code></td><td>Effects</td><td><code>std::future::Future</code>, <code>async fn</code>, <code>tokio</code> as the default runtime</td></tr><tr><td>FS2 <code>Stream</code></td><td>Journal/outbox streaming, notifications</td><td><code>futures::Stream</code> + <code>async-stream</code></td></tr><tr><td><code>cats.effect.std.Queue</code> / <code>Semaphore</code></td><td>Concurrency</td><td><code>tokio::sync::{mpsc, Semaphore}</code></td></tr><tr><td><code>cats.effect.std.Random</code> / <code>SecureRandom</code></td><td>Random data</td><td><code>rand</code> / <code>getrandom</code></td></tr><tr><td><code>cats.effect.std.UUIDGen</code> / <code>java.util.UUID</code></td><td>IDs</td><td><code>uuid</code> (v4)</td></tr><tr><td><code>java.time.Instant</code> / <code>OffsetDateTime</code></td><td>Timestamps</td><td><code>chrono</code> (<code>DateTime&lt;Utc&gt;</code>) or <code>time</code> (pick one, record it in an ADR)</td></tr><tr><td><code>NonEmptyChain</code> / <code>NonEmptyList</code></td><td>Non-empty collections</td><td>a small in-crate <code>NonEmpty&lt;T&gt;</code> type</td></tr><tr><td>Cats Effect <code>Queue.circularBuffer</code></td><td>In-process <code>Notifications</code> (update signals)</td><td><code>tokio::sync::broadcast</code> (same in-process semantics)</td></tr><tr><td><em>(new)</em></td><td>Cross-process wake-up of outbox/broker relays</td><td><code>sqlx::postgres::PgListener</code> (<code>LISTEN/NOTIFY</code>), optional; the Scala drivers don&#x27;t have this</td></tr><tr><td>MUnit + ScalaCheck</td><td>Tests</td><td>built-in <code>#[test]</code>, <code>#[tokio::test]</code>, <code>proptest</code>, <code>testcontainers</code> (or <code>docker-compose</code>)</td></tr><tr><td>Logging (if any)</td><td>Diagnostics</td><td><code>tracing</code></td></tr><tr><td>sbt-mdoc / Docusaurus site</td><td>Documentation</td><td>rustdoc + <code>mdBook</code></td></tr></tbody></table>
+<p>Use only stable, mainstream crates. Don&#x27;t add a general-purpose FP crate to emulate Cats.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="target-workspace-layout">Target workspace layout<a href="#target-workspace-layout" class="hash-link" aria-label="Direct link to Target workspace layout" title="Direct link to Target workspace layout" translate="no">​</a></h2>
+<table><thead><tr><th>Scala module(s)</th><th>Rust crate</th><th>Notes</th></tr></thead><tbody><tr><td><code>core</code></td><td><code>edomata-core</code></td><td>Pure, no async runtime dependency; must compile to <code>wasm32-unknown-unknown</code> (this replaces the Scala.js/Native cross-build)</td></tr><tr><td><code>backend</code></td><td><code>edomata-backend</code></td><td>Runtime-agnostic traits (<code>async fn</code> in traits), in-memory implementations</td></tr><tr><td><code>postgres</code></td><td><code>edomata-postgres</code></td><td><code>PGNaming</code>, <code>PGNamespace</code>, <code>PGSchema</code>, <code>EventMigration</code>; DDL generation only, no I/O</td></tr><tr><td><code>skunk</code> + <code>doobie</code></td><td><code>edomata-sqlx</code></td><td>The single PostgreSQL driver (ES + CQRS). It must cover every capability of both Scala drivers</td></tr><tr><td><code>*-circe</code>, <code>*-jsoniter</code>, <code>*-upickle</code></td><td><code>edomata-serde</code></td><td>One codec crate built on <code>serde_json</code>. It serializes straight to JSON bytes (<code>serde_json::to_vec</code>) and stores them as <strong><code>jsonb</code> by default</strong>, so payloads stay queryable in SQL (<code>-&gt;</code>, <code>@&gt;</code>, GIN indexes). <code>json</code> and <code>bytea</code> are also supported, for tables that already use them</td></tr><tr><td><code>munit</code></td><td><code>edomata-testkit</code></td><td><code>DomainSuite</code>-equivalent assertion helpers for Rust tests</td></tr><tr><td><code>saas</code></td><td><code>edomata-saas</code></td><td>Tenancy, guards, policies, CRUD state, SaaS DSLs and services</td></tr><tr><td><code>saas-skunk</code></td><td><code>edomata-saas-sqlx</code></td><td>SaaS CQRS driver, outbox reader, RLS</td></tr><tr><td><code>java-api</code></td><td><code>edomata-simple</code></td><td>The Java facade&#x27;s purpose, as idiomatic Rust: a simplified, closure-based API (<code>SimpleDomainModel</code>, <code>SimpleDecision</code>, <code>SimpleBackend::builder()</code>, a blocking and an async <code>CommandHandler</code>, a <code>PGSchema</code> helper) for users who don&#x27;t want to touch the generic core types. Mirror every <code>J*</code> class&#x27;s capabilities, and back it with <code>edomata-sqlx</code> the way <code>java-api</code> is backed by Doobie.</td></tr><tr><td><code>backend-tests</code></td><td>shared test suite crate <code>edomata-backend-tests</code></td><td>Generic suites run against in-memory and <code>sqlx</code> storages</td></tr><tr><td><code>e2e</code></td><td><code>edomata-e2e</code> (test-only)</td><td></td></tr><tr><td><em>(new, no Scala equivalent)</em></td><td><code>edomata-broker</code></td><td>Optional broker publishing: <code>Publisher</code> trait + outbox relay (see &quot;Optional message broker distribution&quot;)</td></tr><tr><td><em>(new)</em></td><td><code>edomata-kafka</code></td><td>Kafka publisher, via <code>rdkafka</code></td></tr><tr><td><em>(new)</em></td><td><code>edomata-rabbitmq</code></td><td>RabbitMQ publisher, via <code>lapin</code></td></tr><tr><td><code>examples/</code></td><td><code>rust/examples/</code></td><td>Port every example, plus one Kafka and one RabbitMQ example</td></tr></tbody></table>
+<p>Codecs are defined once as a <code>Codec&lt;T&gt;</code> trait in <code>edomata-backend</code>, bridged to sqlx through
+<code>sqlx::Encode</code>/<code>Decode</code>/<code>Type</code>. <code>edomata-serde</code> implements it for any <code>T: Serialize + DeserializeOwned</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="translation-rules">Translation rules<a href="#translation-rules" class="hash-link" aria-label="Direct link to Translation rules" title="Direct link to Translation rules" translate="no">​</a></h2>
+<ul>
+<li class=""><strong><code>F[_]</code> / effect polymorphism</strong> → <code>async fn</code>, <code>impl Future</code>, and <code>Send + &#x27;static</code> bounds
+where the backend needs them. Core decision logic stays synchronous and pure.</li>
+<li class=""><strong><code>Decision[R, E, A]</code></strong> → an enum <code>Decision&lt;R, E, A&gt; { Accepted { events: NonEmpty&lt;E&gt;, result: A }, Rejected(NonEmpty&lt;R&gt;), InDecisive(A) }</code>,
+with <code>map</code>, <code>and_then</code>/<code>flat_map</code>, <code>validate</code>, accumulation, <code>to_result</code>, and every other
+constructor/combinator the Scala API exposes. The Monad/Applicative semantics must be
+identical, including event accumulation order and short-circuiting on rejection.</li>
+<li class=""><strong><code>NonEmptyChain</code></strong> → a small non-empty vector type (your own, or the <code>nonempty</code> crate).</li>
+<li class=""><strong><code>Edomaton</code> / <code>Stomaton</code> / <code>Action</code> / <code>DecisionT</code> / <code>ResponseT</code></strong> → structs wrapping
+boxed closures or traits, whichever gives the best ergonomics without losing
+composability (<code>map</code>, <code>flat_map</code>, <code>modify</code>/<code>set</code> for Stomaton, reading <code>RequestContext</code>,
+publishing notifications). Composition must work without macros; declarative macros are
+fine as sugar only.</li>
+<li class=""><strong>Typeclass instances (Cats)</strong> → inherent methods plus standard traits (<code>From</code>,
+<code>IntoIterator</code>, <code>FromIterator</code> for traverse/sequence). Don&#x27;t add a general-purpose FP crate.</li>
+<li class=""><strong>Opaque types</strong> (<code>PGNamespace</code>, <code>TenantId</code>, <code>UserId</code>) → validated newtypes with
+<code>TryFrom&lt;&amp;str&gt;</code>, with the same validation rules.</li>
+<li class=""><strong><code>fs2.Stream</code></strong> → <code>futures::Stream</code>.</li>
+<li class=""><strong>Errors</strong> → <code>thiserror</code> enums that mirror <code>BackendError</code> (<code>VersionConflict</code>,
+<code>MaxRetryExceeded</code>, <code>PersistenceError</code>, <code>UnknownError</code>). <code>Redundant</code> belongs to
+<code>CommandState</code>, as in Scala. No panics in library code.</li>
+<li class=""><strong>Concurrency and caching</strong> → the same optimistic concurrency (version conflict + retry
+policy), the same command idempotency (<code>CommandStore</code>), and the same LRU and snapshot
+semantics as <code>CachedRepository</code>, <code>LRUCache</code>, and <code>SnapshotStore</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="optional-message-broker-distribution-kafka-rabbitmq">Optional message broker distribution (Kafka, RabbitMQ)<a href="#optional-message-broker-distribution-kafka-rabbitmq" class="hash-link" aria-label="Direct link to Optional message broker distribution (Kafka, RabbitMQ)" title="Direct link to Optional message broker distribution (Kafka, RabbitMQ)" translate="no">​</a></h2>
+<p>This is a new capability that goes beyond Scala parity. Events and notifications can
+optionally be distributed to a message broker. It must be <strong>fully opt-in</strong>: without the
+<code>kafka</code> / <code>rabbitmq</code> features, no broker crate appears in the dependency tree.</p>
+<p><strong>Design: the transactional outbox is the only source.</strong> Never publish to a broker from
+inside a command. The command writes events and outbox items to PostgreSQL in one
+transaction (as today). A separate relay then publishes them. This keeps the existing
+guarantees: nothing is lost, nothing is published unless it was committed.</p>
+<ul>
+<li class=""><strong><code>Publisher</code> trait</strong> (<code>edomata-broker</code>): <code>async fn publish(&amp;self, batch: &amp;NonEmpty&lt;BrokerMessage&gt;) -&gt; Result&lt;(), PublishError&gt;</code>.
+A <code>BrokerMessage</code> carries the payload as JSON bytes (from <code>edomata-serde</code>), a message ID, the
+stream ID, the sequence number, the event/notification type, a timestamp, and headers
+(correlation/causation IDs from the <code>RequestContext</code>/<code>MessageMetadata</code>).</li>
+<li class=""><strong><code>OutboxRelay</code></strong>: the Rust port of <code>OutboxConsumer</code> wired to a <code>Publisher</code>. It reads the
+outbox, is woken up by the in-process <code>Notifications</code> signal, optionally by <code>LISTEN/NOTIFY</code> so it can
+run in a separate process (a new capability), plus a polling fallback interval, publishes a batch,
+waits for the broker&#x27;s acknowledgment, and <strong>only then</strong> calls <code>mark_all_as_sent</code>.</li>
+<li class=""><strong>Optional journal streaming</strong>: a <code>JournalRelay</code> that tails the journal (raw events, not
+just notifications) from a checkpoint stored in a <code>&lt;naming&gt;_relay_checkpoints</code> table. Add
+that table to <code>PGSchema</code> behind an opt-in flag, so the default DDL stays byte-identical to
+Scala.</li>
+<li class=""><strong>Delivery semantics</strong>: at-least-once. Every message has a stable, deterministic ID
+(derived from stream ID + sequence number, or from the outbox item ID), so consumers can
+deduplicate. Document this explicitly.</li>
+<li class=""><strong>Ordering</strong>: per-stream ordering is guaranteed. On Kafka, the partition key is the stream
+ID. On RabbitMQ, a stream always goes to the same routing key/queue, and the relay publishes
+sequentially per stream.</li>
+<li class=""><strong>Kafka</strong> (<code>edomata-kafka</code>, <code>rdkafka</code>): idempotent producer (<code>enable.idempotence=true</code>,
+<code>acks=all</code>), topic chosen by a user-provided function (default: one topic per aggregate
+namespace), message ID and metadata in Kafka headers.</li>
+<li class=""><strong>RabbitMQ</strong> (<code>edomata-rabbitmq</code>, <code>lapin</code>): publisher confirms enabled, persistent
+messages (<code>delivery_mode = 2</code>), exchange + routing key chosen by user-provided functions,
+<code>message_id</code> set to the message ID.</li>
+<li class=""><strong>Resilience</strong>: retry with exponential backoff on broker failures. Don&#x27;t mark items as sent
+on failure. Stop cleanly on shutdown (a cancellation token), and expose <code>tracing</code> spans and
+counters (published, retried, failed, lag).</li>
+<li class=""><strong>Multiple relay instances</strong>: only one relay per outbox publishes at a time. Use a
+PostgreSQL advisory lock (<code>pg_try_advisory_lock</code>) for leader election, so running several
+service replicas is safe.</li>
+<li class=""><strong>Tests</strong>: integration tests with <code>testcontainers</code> (Kafka and RabbitMQ), covering: no
+message is marked as sent before the broker acknowledges it, redelivery after a crash between
+publishing and marking, per-stream ordering, deduplication by message ID, and leader
+election with two relays.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="wire-compatibility-hard-requirement">Wire compatibility (hard requirement)<a href="#wire-compatibility-hard-requirement" class="hash-link" aria-label="Direct link to Wire compatibility (hard requirement)" title="Direct link to Wire compatibility (hard requirement)" translate="no">​</a></h2>
+<ol>
+<li class=""><code>PGSchema::eventsourcing</code> / <code>PGSchema::cqrs</code> / <code>SaaSPGSchema</code> must generate DDL that is
+<strong>byte-for-byte identical</strong> to the Scala output for both <code>Schema</code> and <code>Prefixed</code> naming
+and for every payload type. Capture golden files by running the Scala code, commit them
+under <code>rust/tests/golden/</code>, and assert against them. As in Scala, every payload column
+(events, notifications, snapshots, states) defaults to <code>jsonb</code>.</li>
+<li class="">Every SQL statement in the Rust <code>Queries</code> must match the skunk/doobie <code>Queries.scala</code>
+semantics: same tables, columns, constraints, index names, and naming via <code>naming.constraint()</code>
+/ <code>naming.index()</code>.</li>
+<li class="">Add a cross-language integration test: Scala writes events, commands, outbox items and
+snapshots; Rust reads them back and appends more; then Scala reads the result. Use the
+existing <code>docker-compose.yml</code> PostgreSQL.</li>
+<li class="">Known limitation: payloads written by uPickle&#x27;s <code>msgpack</code> codec (real MessagePack in
+<code>bytea</code>) can&#x27;t be read, because <code>serde_json</code> is the only serializer. Payloads written by the
+Circe, jsoniter (including jsoniter&#x27;s <code>msgpack</code>, which actually writes JSON bytes) and
+uPickle JSON codecs must be readable. Document this in the migration guide.</li>
+<li class=""><code>skip_setup: bool</code> must work on every driver constructor, with the same meaning as
+<code>skipSetup</code>.</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="quality-bar">Quality bar<a href="#quality-bar" class="hash-link" aria-label="Direct link to Quality bar" title="Direct link to Quality bar" translate="no">​</a></h2>
+<ul>
+<li class="">Port <strong>every</strong> test suite in <code>modules/*/src/test</code> and <code>modules/backend-tests</code>. Add a
+<code>PORTING.md</code> table that maps each Scala suite to its Rust counterpart. No suite is left
+unmapped without a written justification.</li>
+<li class="">Replace ScalaCheck property tests with <code>proptest</code>. Include law tests for <code>Decision</code>
+(functor/monad laws, accumulation) equivalent to the Cats law checks.</li>
+<li class=""><code>cargo fmt --check</code>, <code>cargo clippy --all-targets --all-features -- -D warnings</code>, and
+<code>cargo test --workspace --all-features</code> all pass. <code>cargo doc</code> has no warnings.</li>
+<li class=""><code>#![forbid(unsafe_code)]</code> in every crate. Declare an MSRV and test it in CI.</li>
+<li class="">Every public item has rustdoc, and runnable doc examples on the core types.</li>
+<li class="">Port <code>docs/</code> to an mdBook under <code>rust/book/</code>, covering the same tutorials (getting started,
+event sourcing, CQRS, backends, migrations, processes, SaaS), with compiled code samples.</li>
+<li class="">Add a GitHub Actions workflow for the Rust workspace (fmt, clippy, test with a
+PostgreSQL service, wasm32 build of <code>edomata-core</code>, MSRV).</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="milestones-one-pr-each-in-order">Milestones (one PR each, in order)<a href="#milestones-one-pr-each-in-order" class="hash-link" aria-label="Direct link to Milestones (one PR each, in order)" title="Direct link to Milestones (one PR each, in order)" translate="no">​</a></h2>
+<ol>
+<li class=""><strong>Workspace + core</strong>: <code>Decision</code>, <code>DecisionT</code>, <code>Response*</code>, <code>Action</code>, <code>RequestContext</code>,
+<code>Edomaton</code>, <code>Stomaton</code>, models, DSLs, <code>DomainCompiler</code>, with all core tests and law tests.</li>
+<li class=""><strong>Backend abstractions</strong>: traits, in-memory storage, repository, caching, command
+store, snapshots, outbox, notifications, command handler with retry, and the backend test
+suites against in-memory storage.</li>
+<li class=""><strong>Postgres DDL</strong>: <code>PGNaming</code>, <code>PGNamespace</code>, <code>PGSchema</code>, <code>EventMigration</code>, and the golden
+DDL tests.</li>
+<li class=""><strong>Codecs</strong>: <code>edomata-serde</code>, with <code>jsonb</code> as the default. It writes JSON bytes directly in
+the PostgreSQL <code>jsonb</code> binary format (version byte + UTF-8 JSON, as <code>sqlx::types::Json</code>
+does) without going through an intermediate <code>String</code> or <code>serde_json::Value</code>. Include
+round-trip tests, golden-payload tests against the Scala JSON output, and a SQL test that
+queries a stored payload with <code>-&gt;&gt;</code> / <code>@&gt;</code>.</li>
+<li class=""><strong>sqlx driver</strong> (replacing both Skunk and Doobie): event-sourcing and CQRS drivers,
+journal/outbox readers, snapshot persistence, migrations, in-process <code>Notifications</code>, <code>skip_setup</code>,
+and the full persistence/CQRS/snapshot suites against Docker PostgreSQL.</li>
+<li class=""><strong>Testkit + SaaS</strong>: <code>edomata-testkit</code>, <code>edomata-saas</code>, and <code>edomata-saas-sqlx</code>
+(guards, policies, CRUD state, RLS, tenant-aware readers).</li>
+<li class=""><strong>Simple facade</strong>: <code>edomata-simple</code> (the <code>java-api</code> equivalent), with every <code>J*</code> class&#x27;s
+capability and its tests ported.</li>
+<li class=""><strong>E2E, examples, cross-language compatibility test</strong>.</li>
+<li class=""><strong>Broker distribution (optional)</strong>: <code>edomata-broker</code>, <code>edomata-kafka</code>, <code>edomata-rabbitmq</code>,
+<code>OutboxRelay</code>, the opt-in <code>JournalRelay</code>, and the testcontainers integration tests.</li>
+<li class=""><strong>Documentation</strong>: mdBook (including a &quot;Simple API&quot; chapter in place of the Java API
+page and a &quot;Distributing events with Kafka / RabbitMQ&quot; chapter), READMEs, <code>PORTING.md</code>, a migration guide for Scala and Java users, and CI.</li>
+</ol>
+<p>After each milestone, run the full Rust check suite and report the results truthfully,
+including failures. Record non-obvious design decisions as ADRs under <code>rust/docs/adr/</code>
+(for example: the async runtime, the timestamp crate, how <code>Edomaton</code> is represented, the
+codec trait design, and how the sqlx queries are organized).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="constraints">Constraints<a href="#constraints" class="hash-link" aria-label="Direct link to Constraints" title="Direct link to Constraints" translate="no">​</a></h2>
+<ul>
+<li class="">All code, comments, commits, PR titles and descriptions, and docs are in English.</li>
+<li class="">Each milestone is developed in its own worktree and branch, never on <code>main</code>. Follow the
+repository&#x27;s contribution workflow, including the pre-PR documentation audit.</li>
+<li class="">Don&#x27;t modify the Scala modules, except to add the tooling that generates the golden DDL
+files and the Scala side of the cross-language test.</li>
+<li class="">When the Scala behavior is ambiguous, the Scala tests win. If there are none, write a
+Scala test that pins the behavior first, then port it.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="definition-of-done">Definition of done<a href="#definition-of-done" class="hash-link" aria-label="Direct link to Definition of done" title="Direct link to Definition of done" translate="no">​</a></h2>
+<ul>
+<li class="">Every row in <code>PORTING.md</code> is ported: all 17 Scala modules and every test suite. No
+out-of-scope rows.</li>
+<li class=""><code>cargo tree</code> shows no JVM, JNI, or Scala/Java artifact. Every connector uses the standard
+Rust crates listed above.</li>
+<li class="">The <code>sqlx</code> driver passes every shared backend test suite that the Skunk and Doobie drivers pass.</li>
+<li class="">All Rust checks are green in CI, including the PostgreSQL integration tests and the
+cross-language compatibility test.</li>
+<li class="">The golden DDL tests pass for every naming strategy and payload type.</li>
+<li class="">With the <code>kafka</code> / <code>rabbitmq</code> features on, the relays pass the broker integration tests (at-least-once
+delivery, per-stream ordering, leader election). With them off, <code>cargo tree</code> shows no broker crate.</li>
+<li class="">Every Scala example has a working Rust equivalent, and the mdBook builds.</li>
+</ul></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/beyond-scale-group/edomata/tree/main/docs/docs/plans/rust-port.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#mission" class="table-of-contents__link toc-highlight">Mission</a></li><li><a href="#source-of-truth" class="table-of-contents__link toc-highlight">Source of truth</a></li><li><a href="#scope-a-full-port-nothing-left-behind" class="table-of-contents__link toc-highlight">Scope: a full port, nothing left behind</a></li><li><a href="#connector-and-dependency-replacement" class="table-of-contents__link toc-highlight">Connector and dependency replacement</a></li><li><a href="#target-workspace-layout" class="table-of-contents__link toc-highlight">Target workspace layout</a></li><li><a href="#translation-rules" class="table-of-contents__link toc-highlight">Translation rules</a></li><li><a href="#optional-message-broker-distribution-kafka-rabbitmq" class="table-of-contents__link toc-highlight">Optional message broker distribution (Kafka, RabbitMQ)</a></li><li><a href="#wire-compatibility-hard-requirement" class="table-of-contents__link toc-highlight">Wire compatibility (hard requirement)</a></li><li><a href="#quality-bar" class="table-of-contents__link toc-highlight">Quality bar</a></li><li><a href="#milestones-one-pr-each-in-order" class="table-of-contents__link toc-highlight">Milestones (one PR each, in order)</a></li><li><a href="#constraints" class="table-of-contents__link toc-highlight">Constraints</a></li><li><a href="#definition-of-done" class="table-of-contents__link toc-highlight">Definition of done</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Documentation</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/edomata/docs/introduction">Introduction</a></li><li class="footer__item"><a class="footer__link-item" href="/edomata/docs/tutorials/getting-started">Getting Started</a></li><li class="footer__item"><a class="footer__link-item" href="/edomata/docs/principles/">Principles</a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Backends</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/edomata/docs/backends/skunk">Skunk</a></li><li class="footer__item"><a class="footer__link-item" href="/edomata/docs/backends/doobie">Doobie</a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Ecosystem</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://typelevel.org/cats/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Cats<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://typelevel.org/cats-effect/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Cats Effect<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://fs2.io/" target="_blank" rel="noopener noreferrer" class="footer__link-item">FS2<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/beyond-scale-group/edomata" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright 2026 Beyond Scale Group. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>
