@@ -83,7 +83,7 @@ Payload columns can be `jsonb` (the default, indexable and queryable), `json` or
 > **What's happening here?**
 > 1. Create a connection pool to PostgreSQL.
 > 2. Create a driver for the `account` namespace (tables are created automatically unless `skip_setup` is used).
-> 3. Build a backend with your domain model; `build_default` picks serde `jsonb` codecs.
+> 3. Build a backend with your domain model; `build_default` picks serde `jsonb` codecs for events and notifications, and the snapshot codec is given to `persisted_snapshot`.
 > 4. Compile the pure `Edomaton` into a service that talks to the database.
 > 5. Send commands and get results: `Ok(Ok(()))` when accepted (or already handled), `Ok(Err(reasons))` when rejected, `Err(BackendError)` on storage failures.
 

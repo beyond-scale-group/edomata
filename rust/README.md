@@ -32,7 +32,7 @@ The full roadmap is in [`docs/plans/rust-port.md`](../docs/plans/rust-port.md).
 
 ## Documentation
 
-- **The book** (`rust/book`, mdBook): tutorials (getting started, event sourcing, CQRS, running, processes, SaaS, migrations), principles, the PostgreSQL backend, the Simple API, distributing events with Kafka / RabbitMQ, a [migration guide for Scala and Java users](book/src/other/migration-guide.md), the porting map and the ADRs. Build it with `cargo install mdbook && mdbook build rust/book`; its code samples are the `edomata-book-samples` workspace member, compiled and tested with everything else.
+- **[The book](book/src/SUMMARY.md)** (`rust/book`, mdBook): tutorials (getting started, event sourcing, CQRS, running, processes, SaaS, migrations), principles, the PostgreSQL backend, the Simple API, distributing events with Kafka / RabbitMQ, a [migration guide for Scala and Java users](book/src/other/migration-guide.md), the porting map and the ADRs. Build it with `cargo install mdbook && mdbook build rust/book`; its code samples are the `edomata-book-samples` workspace member, compiled and tested with everything else.
 - **API docs**: `RUSTDOCFLAGS="-D warnings" cargo doc --workspace --all-features --no-deps --open`.
 - Every crate has a `README.md`.
 

@@ -95,7 +95,7 @@ The [Simple API](../backends/simple-api.md) chapter walks through a complete exa
 - **Cross-process wake-ups**: `with_outbox_notify_channel` / `with_journal_notify_channel` on the drivers plus `postgres::listen`.
 - **In-memory driver** reproducing the PostgreSQL constraints, for tests and prototypes.
 - **DDL under an advisory lock** when several replicas create tables at once.
-- `wasm32` support for `edomata-core`, `edomata-testkit` and `edomata-saas`.
+- `wasm32` support for `edomata-core` (built in CI).
 
 ## Step by step
 

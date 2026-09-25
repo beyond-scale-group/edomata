@@ -126,7 +126,7 @@ Now we model the aggregate root, and use `Decision` to write its logic:
 
 1. `perform` (on the model, see below) runs a decision on the current state and folds the accepted events into the new state, so you reuse the transition instead of repeating yourself.
 2. `validate_with` ensures that after applying the events we end up in an `Open` state, and returns its balance instead of the whole `Account`.
-3. A `Result<T, NonEmpty<Rejection>>` (Scala's `ValidatedNec`) is turned into a decision with `map_or_else(Decision::Rejected, ...)`, or with `to_decision()` from the syntax module.
+3. A `Result<T, NonEmpty<Rejection>>` (Scala's `ValidatedNec`) is turned into a decision with `map_or_else(Decision::Rejected, ...)`, or with `to_decision_nec()` from the syntax module.
 4. Since everything is a value, common validations like `must_be_open` are extracted and reused.
 
 But you might say: domain logic is not just deciding, you must perform what you decided. Right, so let's go to that part.

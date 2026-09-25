@@ -22,7 +22,8 @@ pub async fn main_example(database_url: &str) -> Result<(), Box<dyn std::error::
     let driver = SqlxDriver::for_namespace("account", pool).await?;
 
     // 3. Build the backend. `build_default` uses serde `jsonb` codecs for
-    //    events, notifications and (with `persisted_snapshot`) states.
+    //    events and notifications; the state codec of persisted snapshots
+    //    is given explicitly.
     let backend = Backend::builder(AccountModel, AccountModel.dsl::<Command, Notification>())
         .driver(driver)
         .persisted_snapshot(SqlxCodec::<Account>::jsonb())

@@ -52,7 +52,7 @@ Let's model an overly simplified food-delivery system with these requirements:
 The order lifecycle:
 
 ```text
-[*] → Empty → New → Cooking → WaitingPickUp → Delivering → Delivered → [*]
+[*] → Empty → New → Cooking → WaitingToPickUp → Delivering → Delivered → [*]
         place   allocate   ready        pick up       deliver
 ```
 

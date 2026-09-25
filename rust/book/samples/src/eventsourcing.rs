@@ -142,7 +142,8 @@ impl Account {
             .validate_with(|s| s.must_be_open())
     }
 
-    /// A reusable validation (`ValidatedNec` in Scala). // 4
+    // 4
+    /// A reusable validation (`ValidatedNec` in Scala).
     fn must_be_open(&self) -> Result<i64, NonEmpty<Rejection>> {
         match self {
             Account::Open { balance } => Ok(*balance),

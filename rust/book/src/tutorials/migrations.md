@@ -60,9 +60,9 @@ Application startup
   ├── SELECT applied versions
   ├── for each pending migration:
   │     ├── BEGIN
-  │     ├── SELECT id, payload FROM journal (in batches)
+  │     ├── SELECT id, payload FROM journal
   │     ├── apply the transformation to each payload
-  │     ├── UPDATE journal SET payload = new payload
+  │     ├── UPDATE journal SET payload = new payload (in batches)
   │     ├── INSERT INTO migrations (version, description)
   │     ├── TRUNCATE snapshots (cached state is invalid now)
   │     └── COMMIT
