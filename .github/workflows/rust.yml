@@ -60,6 +60,14 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: rust
+      # The Scala build is the external oracle of the cross-language
+      # compatibility test (crates/edomata-e2e/tests/cross_language.rs).
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: sbt
+      - uses: sbt/setup-sbt@v1
       - name: Create test databases
         working-directory: .
         run: psql "$DATABASE_URL" -f testdbs.sql && psql "$DATABASE_URL" -f testdata.sql
