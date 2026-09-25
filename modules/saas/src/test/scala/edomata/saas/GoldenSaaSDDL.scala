@@ -24,15 +24,15 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 /** Generates the golden SaaS DDL files asserted by the Rust port
-  * (`rust/crates/edomata-saas/tests/golden.rs`).
+  * (`rust/crates/edomata-saas/tests/schema.rs`).
   *
   * Usage (from the repository root):
   * {{{
   * sbt "saasJVM/Test/runMain edomata.saas.GoldenSaaSDDL rust/tests/golden"
   * }}}
   *
-  * The cases must stay in sync with `NAMINGS`, `TYPES` and `RLS` in the Rust
-  * test.
+  * The cases must stay in sync with `NAMINGS`, `TYPES` and the RLS cases of
+  * `saas_ddl_matches_scala_golden_files` in the Rust test.
   */
 object GoldenSaaSDDL {
   private val namings: List[(String, String)] = List(

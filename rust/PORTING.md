@@ -129,10 +129,10 @@ Method naming: Scala overloads become distinct names (`validate` /
 
 | Scala (`munit` module) | Rust (`edomata-testkit`) |
 |------------------------|--------------------------|
-| `DomainSuite[C, S, E, R, N]` (MUnit base class) | `EdomatonAssertions` extension trait on `Edomaton<RequestContext<C, S>, R, E, N, T>` (works with any test runner) |
-| `DomainSuite.TestCommand` (`msgId = "1"`, `time = Instant.EPOCH`, `address = "sut"`) | `TestCommand` (same defaults, `TestCommand::new(id, address)`, `message(payload)`) |
-| `runWith(app, cmd, state)` | `run_with(&model, cmd, state)`, `run_with_command(&model, &TestCommand, cmd, state)` |
-| `expect`, `expectAll`, `expectRejection`, `expectRejectionWith`, `expectRejectionAndNotify`, `expectRejectionNotify`, `expectThat` | `expect`, `expect_all`, `expect_rejection`, `expect_rejection_with`, `expect_rejection_and_notify`, `expect_rejection_notify`, `expect_that` |
+| `trait DomainSuite(msgId, address)` (MUnit base trait with an `extension [F[_], C, S, E, R, N]` on `Edomaton[F, RequestContext[C, S], R, E, N, Unit]`) | `EdomatonAssertions` extension trait on `Edomaton<RequestContext<C, S>, R, E, N, T>` (works with any test runner) |
+| `DomainSuite` constructor defaults (`msgId = "1"`, `address = "sut"`; commands timestamped `Instant.MIN`) | `TestCommand` (same defaults, `DateTime::<Utc>::MIN_UTC`; `TestCommand::new(id, address)`, `message(payload)`) |
+| `app.runWith(command, state)` | `app.run_with(&model, command, state)`, `app.run_with_command(&model, &TestCommand, command, state)` |
+| `expect`, `expectAll`, `expectRejection`, `expectRejectionWith(command, state)(err1, errs*)`, `expectRejectionWith(command, state)(expectedErrors, expectedNotifications)`, `expectRejectionNotify`, `expectThat` | `expect`, `expect_all`, `expect_rejection`, `expect_rejection_with`, `expect_rejection_and_notify`, `expect_rejection_notify`, `expect_that` |
 | *(none)* | `StomatonAssertions` (`run_with`, `expect`, `expect_rejection_with`) for CQRS programs |
 
 ## Type mapping (SaaS)
@@ -145,7 +145,7 @@ Method naming: Scala overloads become distinct names (`validate` /
 | `SaaSCommand[Auth, +C]` | `SaaSCommand<Auth, C>` |
 | `AuthPolicy[Auth]` (typeclass, `given`) | `AuthPolicy<Auth>` trait, passed as a value (ADR 0009) |
 | `CallerIdentity` + its default `given AuthPolicy` | `CallerIdentity` + `PermissivePolicy` |
-| `RoleBasedPolicy(requiredRoles)` | `RoleBasedPolicy::new(roles_for)`, `RoleBasedPolicy::none()` |
+| `RoleBasedPolicy(rolesFor)` | `RoleBasedPolicy::new(roles_for)`, `RoleBasedPolicy::none()` |
 | `SaaSGuard.checkTenant`, `checkAuthorization` | `SaaSGuard::check_tenant`, `check_authorization`, `check` |
 | `SaaSDomainDSL[Auth, C, A, E, R, N](mkRejection)` (`App[F, T]`) | `SaaSDomainDsl<Auth, C, A, E, R, N>::new(policy, mk_rejection)` (`SaaSEsApp<..., T>`) |
 | `SaaSCQRSDomainDSL[Auth, C, A, R, N](mkRejection)` | `SaaSCqrsDsl<Auth, C, A, R, N>::new(policy, mk_rejection)` (`SaaSCqrsApp<..., T>`) |
@@ -154,7 +154,7 @@ Method naming: Scala overloads become distinct names (`validate` /
 | `TenantAwareReader[F, Auth, A]`, `TenantScopedQuery[F, Auth, A, Q]`, `UnsafeCrossTenantQuery[F, A, Q]` | same names (`async_trait`); `TenantScopedQuery.apply` → `ScopedQueryFn::new(policy, run)`, `UnsafeCrossTenantQuery.apply` → `CrossTenantQueryFn::new(run)` |
 | `TenantExtractor[S]` (typeclass) | `TenantExtractor` trait implemented by `CrudState<A>` (`tenant_and_owner`) |
 | `SaaSPGSchema.cqrs(naming, stateType, notificationType, rls)`, `SaaSPGSchema.RLSConfig` | `SaaSPGSchema::cqrs(&naming)` / `cqrs_with(&naming, state_type, notification_type, rls)`, `RlsConfig`; statements in `edomata_saas::ddl` |
-| `edomata.saas` package re-exports (`CommandMessage`, `Decision`, `MessageMetadata`, `PGNaming`, `PGNamespace`) | re-exported from `edomata_saas` |
+| `edomata.saas` package re-exports (`CommandMessage`, `MessageMetadata`, `Decision`, `Backend`) | `edomata_saas` re-exports `CommandMessage`, `MessageMetadata`, `Decision`, `NonEmpty`, `PGNaming`, `PGNamespace` (no `Backend`: the SaaS crate does not depend on `edomata-backend`) |
 | `SaaSSkunkCQRSDriver` (`apply`, `from`, `from(naming, pool, skipSetup)`) | `SaaSSqlxCqrsDriver::for_namespace`, `new`, `new_with(naming, pool, skip_setup)` |
 | `BackendCodec[S]` + `TenantExtractor[S]` (driver requirements) | `SaaSCodec<T>` (`state`, `with_extractor`, `notification`, `jsonb_state`, `jsonb_notification`) |
 | `SaaSQueries` (`listByTenant`, tenant-aware `put` / outbox insert) | private `SaaSStateQueries` / `SaaSOutboxQueries`; `TenantStateLister::list_by_tenant` |

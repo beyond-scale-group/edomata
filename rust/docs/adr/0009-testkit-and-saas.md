@@ -18,11 +18,12 @@ columns. All three are ported in this milestone.
 
 1. **The test kit is a pair of extension traits, not a test framework.**
    `edomata-testkit` has no framework of its own: `EdomatonAssertions`
-   and `StomatonAssertions` are implemented for every `Edomaton` /
-   `Stomaton` whose environment is a `RequestContext` / `CommandMessage`,
-   and work with `#[test]`, `#[tokio::test]` or any runner. `TestCommand`
-   reproduces `DomainSuite`'s defaults (`msgId = "1"`, `time =
-   Instant.EPOCH`, `address = "sut"`). The `expect*` helpers panic with
+   is implemented for every `Edomaton` whose environment is a
+   `RequestContext` and `StomatonAssertions` for every unit-output
+   `Stomaton` whose environment is a `CommandMessage`; both work with
+   `#[test]`, `#[tokio::test]` or any runner. `TestCommand` reproduces
+   `DomainSuite`'s defaults (`msgId = "1"`, `address = "sut"`, commands
+   timestamped `Instant.MIN`, i.e. `DateTime::<Utc>::MIN_UTC`). The `expect*` helpers panic with
    the same wording as MUnit's `fail(...)` messages so that failures read
    alike in both languages, and `expect_rejection` returns the
    notifications and reasons like the Scala method.
