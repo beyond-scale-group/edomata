@@ -13,7 +13,7 @@ use serde::de::DeserializeOwned;
 /// in; the bytes are always compact JSON (`serde_json::to_writer`), so a
 /// `bytea` payload written by this codec is readable as JSON too.
 ///
-/// `SerdeCodec` is a zero-sized value: it is `Copy`, `Default` (`jsonb`) and
+/// `SerdeCodec` is a small `Copy` value (just the format): it is `Default` (`jsonb`) and
 /// can be passed to `BackendBuilder::build`.
 pub struct SerdeCodec<T> {
     format: PayloadFormat,

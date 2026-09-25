@@ -13,7 +13,7 @@ keywords.workspace = true
 
 [features]
 default = ["sqlx"]
-# PostgreSQL wire types (`JsonbPayload`, `JsonPayload`, `ByteaPayload`) implementing sqlx's Encode/Decode/Type.
+# PostgreSQL wire types (`JsonbPayload`, `JsonPayload`, `ByteaPayload`, `PgPayload`) implementing sqlx Encode/Decode/Type.
 sqlx = ["dep:sqlx"]
 
 [dependencies]

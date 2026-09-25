@@ -36,7 +36,7 @@
 //! | Scala codec | JSON shape of an ADT case | serde representation |
 //! |-------------|---------------------------|----------------------|
 //! | Circe `generic.auto` | `{"Opened":{...}}`, `{"Closed":{}}`, `None` → `null` | default (externally tagged); parameterless cases as `Closed {}` |
-//! | jsoniter `JsonCodecMaker.make` | `{"type":"Opened",...}`, `{"type":"Closed"}`, `None` omitted | `#[serde(tag = "type")]` |
+//! | jsoniter `JsonCodecMaker.make` | `{"type":"Opened",...}`, `{"type":"Closed"}`, `None` omitted | `#[serde(tag = "type")]` plus `#[serde(default, skip_serializing_if = "Option::is_none")]` on `Option` fields |
 //! | uPickle `ReadWriter.derived` | `{"$type":"Opened",...}`, `"Closed"`, `None` → `[]` / `Some(x)` → `[x]` | `#[serde(tag = "$type")]` inside an `#[serde(untagged)]` wrapper for bare-string cases, plus [`compat::upickle_option`] |
 //!
 //! The golden payload tests (`tests/golden_payloads.rs`) check these shapes
