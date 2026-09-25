@@ -9,11 +9,11 @@
 //!   builder for event-sourced aggregates.
 //! - [`cqrs`]: the same for state-only aggregates.
 //! - [`inmemory`]: an in-memory [`StorageDriver`](eventsourcing::StorageDriver)
-//!   and [`CqrsStorageDriver`](cqrs::StorageDriver) for tests and prototypes.
+//!   and [`cqrs::StorageDriver`] for tests and prototypes.
 //! - Shared pieces: [`Codec`], [`CommandStore`], [`Cache`] / [`LruCache`],
 //!   [`OutboxReader`] / [`OutboxConsumer`], [`BackendError`], [`retry`].
 //!
-//! All traits are runtime-agnostic (`async fn` in traits, `futures::Stream`);
+//! All traits are runtime-agnostic (`async fn` via `#[async_trait]`, `futures::Stream`);
 //! time and synchronisation primitives come from Tokio.
 
 #![forbid(unsafe_code)]
