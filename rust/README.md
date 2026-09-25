@@ -15,7 +15,7 @@ Cats: each abstraction is mapped to its idiomatic Rust equivalent (see
 |-------|-----------------|--------|
 | [`edomata-core`](crates/edomata-core) | `core` | available |
 | [`edomata-backend`](crates/edomata-backend) | `backend` | available (traits, in-memory driver, command handling, caching, snapshots, outbox) |
-| [`edomata-backend-tests`](crates/edomata-backend-tests) | `backend-tests` | available (shared suites, run in-memory) |
+| [`edomata-backend-tests`](crates/edomata-backend-tests) | `backend-tests` | available (shared suites, run in-memory and on PostgreSQL through `edomata-sqlx`) |
 | [`edomata-postgres`](crates/edomata-postgres) | `postgres` | available (`PGNaming`, `PGNamespace`, `PGSchema` with golden DDL tests, `EventMigration`) |
 | [`edomata-serde`](crates/edomata-serde) | `*-circe`, `*-jsoniter`, `*-upickle` | available (`SerdeCodec`, `jsonb` by default; sqlx wire types; golden payload tests) |
 | [`edomata-sqlx`](crates/edomata-sqlx) | `skunk`, `doobie` | available (event-sourcing and CQRS drivers, journal/outbox readers, snapshots, migrations, `skip_setup`) |

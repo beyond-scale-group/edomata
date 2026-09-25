@@ -170,7 +170,7 @@ All under `crates/edomata-backend/tests/`.
 
 The suites are a library crate, `crates/edomata-backend-tests`, so that the
 same checks run against every storage. `tests/inmemory.rs` runs them
-against the in-memory driver; milestone 5 adds the PostgreSQL runner.
+against the in-memory driver and `crates/edomata-sqlx/tests/shared_suites.rs` runs them against PostgreSQL.
 
 | Scala suite | Rust |
 |-------------|------|
@@ -209,7 +209,7 @@ single `edomata-sqlx` driver runs them once, under
 
 | Scala suite (classes) | Rust test | Notes |
 |-----------------------|-----------|-------|
-| `SkunkCompatibilitySuite` / `DoobieCompatibilitySuite` (`*JsonCompatibilitySuite`, `*JsonbCompatibilitySuite`, `*BinaryCompatibilitySuite`) | `shared_suites.rs` (`compatibility_json`, `compatibility_jsonb`, `compatibility_binary`) | same `compatibility_*` schemas from `testdata.sql`; `IntCodec` in `common/mod.rs` reproduces the Scala test codecs (hex bytes for `bytea`) |
+| `SkunkCompatibilitySuite` / `DoobieCompatibilitySuite` (`SkunkCompatibilitySuite` and `DoobieJsonCompatibilitySuite` for json, `*JsonbCompatibilitySuite`, `*BinaryCompatibilitySuite`) | `shared_suites.rs` (`compatibility_json`, `compatibility_jsonb`, `compatibility_binary`) | same `compatibility_*` schemas from `testdata.sql`; `IntCodec` in `common/mod.rs` reproduces the Scala test codecs (hex bytes for `bytea`) |
 | `*PersistenceSuite`, `*PersistenceKeywordNamespaceSuite`, `*PrefixedPersistenceSuite` | `shared_suites.rs` (`persistence`, `persistence_keyword_namespace`, `persistence_prefixed`) | checks of one namespace are serialised with a lock (MUnit runs a suite sequentially) |
 | `*SnapshotPersistenceSuite` | `shared_suites.rs` (`snapshot_*`) | |
 | `*CQRSSuite`, `*PrefixedCQRSSuite` | `shared_suites.rs` (`cqrs_schema`, `cqrs_prefixed`) | |
