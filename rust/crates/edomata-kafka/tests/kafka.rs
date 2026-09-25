@@ -193,7 +193,16 @@ async fn consume(topic: &str, expected: usize, quiet: Duration) -> Vec<Received>
                     headers,
                 });
             }
-            Ok(Err(e)) => panic!("consumer error: {e}"),
+            // Subscribing before the relay created the topic yields
+            // UnknownTopicOrPartition until the metadata refreshes: keep
+            // waiting (the deadline bounds the wait).
+            Ok(Err(e)) => {
+                eprintln!("consumer error (retrying): {e}");
+                tokio::time::sleep(Duration::from_millis(200)).await;
+                if Instant::now() > deadline {
+                    return out;
+                }
+            }
             Err(_) => {
                 if out.len() >= expected || Instant::now() > deadline {
                     return out;
@@ -226,14 +235,17 @@ impl<P: Publisher> Publisher for CrashAfterPublish<P> {
     }
 }
 
-/// Never reaches the broker.
-struct Unreachable;
-
-#[async_trait]
-impl Publisher for Unreachable {
-    async fn publish(&self, _: &NonEmpty<BrokerMessage>) -> Result<(), PublishError> {
-        Err(PublishError::transient("broker unreachable"))
-    }
+/// A real producer pointed at a closed port: deliveries time out.
+fn unreachable_publisher() -> Arc<KafkaPublisher> {
+    Arc::new(
+        KafkaPublisher::builder("127.0.0.1:1")
+            .with_config("message.timeout.ms", "1500")
+            .with_config("socket.connection.setup.timeout.ms", "1000")
+            .with_fixed_topic("unreachable")
+            .with_send_timeout(Duration::from_secs(5))
+            .build()
+            .unwrap(),
+    )
 }
 
 // ---------------------------------------------------------------------------
@@ -282,7 +294,7 @@ async fn nothing_is_marked_as_sent_before_the_broker_acknowledges() {
     write(&backend, &["a"], 3).await;
     let relay = OutboxRelay::new(
         Arc::clone(backend.outbox()),
-        Arc::new(Unreachable),
+        unreachable_publisher() as Arc<_>,
         MessageEncoder::<Notif>::serde(),
         config("accounts"),
     );

@@ -42,7 +42,8 @@ impl RetryPolicy {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RelayConfig {
     /// Name of the source (typically the aggregate namespace); part of every
-    /// message id, the default topic / exchange, and the leader-lock key.
+    /// message id and the default topic / exchange. Use it as the
+    /// `LeaderLock` source too so that replicas of one relay share a lock.
     pub source: String,
     /// Items published (and marked) per batch.
     pub batch_size: usize,

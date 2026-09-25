@@ -13,6 +13,8 @@
 //!   headers (see `edomata_broker::headers`).
 //!
 //! The publisher reconnects on the next batch after a connection failure.
+//! Soft AMQP errors that a retry cannot fix (`NOT_FOUND` exchange,
+//! `ACCESS_REFUSED`, `PRECONDITION_FAILED`) are reported as permanent.
 
 #![forbid(unsafe_code)]
 
@@ -21,7 +23,9 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use edomata_broker::{BrokerMessage, PublishError, Publisher, headers};
 use edomata_core::NonEmpty;
+use lapin::ErrorKind;
 use lapin::options::{BasicPublishOptions, ConfirmSelectOptions, ExchangeDeclareOptions};
+use lapin::protocol::{AMQPErrorKind, AMQPSoftError};
 use lapin::types::{AMQPValue, FieldTable, ShortString};
 use lapin::{
     BasicProperties, Channel, Confirmation, Connection, ConnectionProperties, ExchangeKind,
@@ -154,6 +158,28 @@ impl RabbitMqPublisher {
     }
 }
 
+/// Misconfigurations the relay must not retry are permanent; everything
+/// else (connection loss, channel closed, broker unavailable) is transient.
+fn classify(error: lapin::Error) -> PublishError {
+    let permanent = matches!(
+        error.kind(),
+        ErrorKind::ProtocolError(e)
+            if matches!(
+                e.kind(),
+                AMQPErrorKind::Soft(
+                    AMQPSoftError::NOTFOUND
+                        | AMQPSoftError::ACCESSREFUSED
+                        | AMQPSoftError::PRECONDITIONFAILED
+                )
+            )
+    );
+    if permanent {
+        PublishError::Permanent(Box::new(error))
+    } else {
+        PublishError::Transient(Box::new(error))
+    }
+}
+
 fn properties(message: &BrokerMessage) -> BasicProperties {
     let mut table = FieldTable::default();
     for (key, value) in message.headers() {
@@ -209,7 +235,7 @@ impl Publisher for RabbitMqPublisher {
                 }
                 Err(e) => {
                     self.reset().await;
-                    return Err(PublishError::Transient(Box::new(e)));
+                    return Err(classify(e));
                 }
             }
         }

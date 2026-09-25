@@ -182,7 +182,6 @@ impl<E: Payload> JournalRelay<E> {
                 .map(|e| self.message(e))
                 .collect::<Result<Vec<_>, _>>()?;
             let messages = NonEmpty::from_vec(messages).expect("same length as events");
-            self.metrics.set_lag(events.len() as u64);
             publish_with_retry(
                 &self.publisher,
                 &messages,
@@ -198,7 +197,7 @@ impl<E: Payload> JournalRelay<E> {
             total += events.len();
             tracing::debug!(relay = %self.name, count = events.len(), "published journal batch");
         }
-        self.metrics.set_lag(0);
+        self.metrics.set_lag(total as u64);
         self.metrics.add_pass();
         Ok(total)
     }

@@ -118,7 +118,6 @@ impl<N: Payload> OutboxRelay<N> {
                 .map(|item| self.message(item))
                 .collect::<Result<Vec<_>, _>>()?;
             let messages = NonEmpty::from_vec(messages).expect("same length as items");
-            self.metrics.set_lag(items.len() as u64);
             publish_with_retry(
                 &self.publisher,
                 &messages,
@@ -132,7 +131,7 @@ impl<N: Payload> OutboxRelay<N> {
             total += items.len();
             tracing::debug!(source = %self.config.source, count = items.len(), "published outbox batch");
         }
-        self.metrics.set_lag(0);
+        self.metrics.set_lag(total as u64);
         self.metrics.add_pass();
         Ok(total)
     }

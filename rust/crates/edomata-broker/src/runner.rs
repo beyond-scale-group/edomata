@@ -58,12 +58,12 @@ pub(crate) async fn publish_with_retry(
             Ok(()) => return Ok(()),
             Err(PublishError::Transient(e)) => {
                 retry += 1;
-                metrics.add_retried();
                 if config.retry.exhausted(retry) {
                     metrics.add_failed();
-                    tracing::error!(source = %config.source, error = %e, retries = retry, "publish retries exhausted");
+                    tracing::error!(source = %config.source, error = %e, retries = retry - 1, "publish retries exhausted");
                     return Err(RelayError::Publish(PublishError::Transient(e)));
                 }
+                metrics.add_retried();
                 let delay = config.retry.delay_for(retry);
                 tracing::warn!(source = %config.source, error = %e, retry, delay_ms = delay.as_millis() as u64, "transient publish failure, retrying");
                 tokio::select! {

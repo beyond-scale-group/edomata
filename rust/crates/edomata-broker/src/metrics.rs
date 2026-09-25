@@ -17,11 +17,12 @@ pub struct RelayMetrics {
 pub struct MetricsSnapshot {
     /// Messages acknowledged by the broker and marked / checkpointed.
     pub published: u64,
-    /// Publish attempts retried after a transient failure.
+    /// Batches retried after a transient publish failure (one per retry).
     pub retried: u64,
-    /// Permanent publish failures.
+    /// Batches given up on: a permanent publish failure or an exhausted
+    /// retry budget.
     pub failed: u64,
-    /// Pending items observed at the start of the last pass.
+    /// Items the last pass found pending (its backlog when it started).
     pub lag: u64,
     /// Relay passes completed.
     pub passes: u64,

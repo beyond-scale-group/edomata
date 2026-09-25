@@ -2,8 +2,10 @@
 //!
 //! A [`Publisher`] for `edomata-broker` relays backed by `rdkafka`:
 //!
-//! - idempotent producer (`enable.idempotence=true`, `acks=all`), so a
-//!   retried batch does not duplicate messages within the producer session;
+//! - idempotent producer (`enable.idempotence=true`, `acks=all`): librdkafka's
+//!   own retries never duplicate or reorder records (a batch retried by the
+//!   relay after a lost acknowledgment is redelivered, as at-least-once
+//!   requires);
 //! - the stream id is the partition key, which keeps per-stream ordering;
 //! - the topic is chosen by a function of the message (default: one topic
 //!   per relay source, i.e. per aggregate namespace);

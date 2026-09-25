@@ -87,8 +87,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .build_default()
         .await?;
 
-    // The relay: idempotent Kafka producer, one topic for the source, the
-    // stream id as partition key, ids and metadata as headers.
+    // The relay: idempotent Kafka producer, a fixed topic (the default would
+    // be one topic per source), the stream id as partition key, ids and
+    // metadata as headers.
     let publisher = KafkaPublisher::builder(&bootstrap)
         .with_fixed_topic("accounts-notifications")
         .build()?;

@@ -41,7 +41,9 @@ transactional outbox stays the only source of truth.
    stable header list (`edomata-id`, `edomata-source`, `edomata-kind`,
    `edomata-stream`, `edomata-seqnr`, `edomata-time`, `content-type`,
    `correlation-id`, `causation-id`, `edomata-event-id`,
-   `edomata-version`) that both publishers attach verbatim.
+   `edomata-version`). Kafka attaches them all as record headers; RabbitMQ
+   maps `edomata-id` and `content-type` to the `message_id` and
+   `content_type` properties and attaches the rest as headers.
 
 4. **Ordering.** Relays publish in sequence-number order, one batch at a
    time. Kafka uses the stream id as partition key with an idempotent
@@ -65,9 +67,12 @@ transactional outbox stays the only source of truth.
    exponential backoff (`RetryPolicy`: 200 ms doubling to 30 s, unlimited
    by default); permanent failures and an exhausted budget stop the relay
    with a `RelayError` for the supervisor to report. Nothing is ever
-   marked on failure. `RelayMetrics` counts published, retried and failed
-   messages, passes and the lag observed at the start of a pass, and the
-   relay emits `tracing` events.
+   marked on failure. `RelayMetrics` counts published messages, retried
+   batches, batches given up on (permanent failure or exhausted budget),
+   passes, and the backlog the last pass found (`lag`); the relay emits
+   `tracing` events. RabbitMQ reports `NOT_FOUND` / `ACCESS_REFUSED` /
+   `PRECONDITION_FAILED` as permanent, Kafka message-size and topic
+   errors.
 
 7. **Leader election.** `LeaderLock` takes
    `pg_try_advisory_lock(hashtext('edomata-relay:{source}'))` on a
@@ -79,7 +84,9 @@ transactional outbox stays the only source of truth.
    replaced automatically.
 
 8. **Journal streaming is opt-in DDL.** `JournalRelay` stores its
-   checkpoint in `<naming>_relay_checkpoints` (`PGSchema::relay_checkpoints`,
+   checkpoint in the namespace's `relay_checkpoints` table
+   (`ns_relay_checkpoints` in prefixed mode, `"ns".relay_checkpoints` in
+   schema mode; `PGSchema::relay_checkpoints`,
    `PgCheckpointStore::setup`), which is **not** part of
    `PGSchema::eventsourcing`, so the default DDL stays byte-identical to
    Scala's golden files.
@@ -92,7 +99,8 @@ between publishing and marking (redelivery with identical ids), permanent
 failures, wake-ups and polling, journal checkpoints; PostgreSQL tests of
 the leader lock, `LISTEN/NOTIFY` wake-ups, the checkpoint table and two
 relays with leader failover. `edomata-kafka` and `edomata-rabbitmq`:
-testcontainers integration tests covering the plan's list (no message
-marked before the broker acknowledges, redelivery after a crash between
-publishing and marking, per-stream ordering, deduplication by message id,
-leader election with two relays) against real brokers.
+testcontainers integration tests covering the plan's list against real
+brokers: no message marked before the broker acknowledges (a producer
+pointed at a closed port for Kafka, a missing exchange for RabbitMQ),
+redelivery after a crash between publishing and marking, per-stream
+ordering, deduplication by message id, leader election with two relays.

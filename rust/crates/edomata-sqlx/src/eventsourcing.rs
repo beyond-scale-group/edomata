@@ -77,7 +77,8 @@ impl SqlxDriver {
 
     /// Raises `NOTIFY channel` in the transaction that inserts outbox rows,
     /// so that an outbox relay in another process (`edomata-broker`,
-    /// `postgres::listen`) is woken up. Off by default, as in Scala.
+    /// `postgres::listen`) is woken up. Off by default (Scala has no such
+    /// option).
     pub fn with_outbox_notify_channel(mut self, channel: impl Into<String>) -> Self {
         self.outbox_notify_channel = Some(channel.into());
         self

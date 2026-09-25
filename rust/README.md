@@ -79,8 +79,9 @@ cargo build -p edomata-core --all-features --target wasm32-unknown-unknown
 The minimum supported Rust version is **1.88** (edition 2024) and is checked
 in CI. Every crate has `#![forbid(unsafe_code)]`.
 
-Integration tests (the `edomata-serde` SQL tests and the `edomata-sqlx` /
-`edomata-saas-sqlx` / `edomata-simple` storage tests) use the PostgreSQL instance started by the repository's
+Integration tests (the `edomata-serde` SQL tests, the `edomata-sqlx` /
+`edomata-saas-sqlx` / `edomata-simple` storage tests, the `edomata-broker`
+PostgreSQL tests and the broker leader-election tests) use the PostgreSQL instance started by the repository's
 `docker-compose.yml`, which also loads the `compatibility_*` fixtures of
 `testdata.sql` that the compatibility suites read. They connect to `DATABASE_URL`, defaulting to
 `postgres://postgres:postgres@localhost:5432/postgres`. If another PostgreSQL
@@ -96,8 +97,9 @@ variables. Set `EDOMATA_SBT` to point at a specific `sbt` binary.
 ## Examples
 
 `rust/examples` holds one binary per Scala example (`counter`, `stomaton`,
-`migration`, `saas_todo`, `product_catalog`). They connect to the same
-PostgreSQL instance:
+`migration`, `saas_todo`, `product_catalog`) plus the broker relays
+(`kafka_relay`, `rabbitmq_relay`, behind the `kafka` / `rabbitmq` features).
+They connect to the same PostgreSQL instance:
 
 ```bash
 cargo run -p edomata-examples --bin saas_todo
