@@ -186,7 +186,15 @@ async fn only_the_leader_publishes_and_a_standby_takes_over() {
     .await
     .expect("the leader relayed everything");
     assert_eq!(pub_b.messages().len(), 0, "the stand-by published nothing");
-    assert!(pending(backend.outbox().as_ref()).await.is_empty());
+    // The relay marks a batch as sent right after the broker acknowledged
+    // it, so the marking may lag the publication by a moment.
+    tokio::time::timeout(Duration::from_secs(10), async {
+        while !pending(backend.outbox().as_ref()).await.is_empty() {
+            tokio::time::sleep(Duration::from_millis(20)).await;
+        }
+    })
+    .await
+    .expect("the leader marked everything as sent");
 
     // The leader stops: the stand-by takes over.
     cancel_a.cancel();
