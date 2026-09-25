@@ -24,8 +24,9 @@ Cats: each abstraction is mapped to its idiomatic Rust equivalent (see
 | [`edomata-saas-sqlx`](crates/edomata-saas-sqlx) | `saas-skunk` | available (tenant-aware CQRS driver, `SaaSCodec`, `TenantStateLister`) |
 | [`edomata-simple`](crates/edomata-simple) | `java-api` | available (closure-based facade: `SimpleDomainModel`, `SimpleDecision`, `CommandHandler`, `SimpleBackend::builder`, blocking runtime, `SimplePGSchema`) |
 | [`edomata-e2e`](crates/edomata-e2e) | `e2e` | available (test-only: end-to-end suite and the Scala/Rust cross-language compatibility test) |
-| `edomata-broker`, `edomata-kafka`, `edomata-rabbitmq` | *(new)* | planned |
-| [`edomata-examples`](examples) | `examples/` | available (`cargo run -p edomata-examples --bin <name>` with `counter`, `stomaton`, `migration`, `saas_todo` or `product_catalog`) |
+| [`edomata-broker`](crates/edomata-broker) | *(new)* | available (`Publisher`, `OutboxRelay`, `JournalRelay`, leader election, `LISTEN/NOTIFY` wake-ups) |
+| [`edomata-kafka`](crates/edomata-kafka), [`edomata-rabbitmq`](crates/edomata-rabbitmq) | *(new)* | available (publishers over `rdkafka` and `lapin`; testcontainers integration tests) |
+| [`edomata-examples`](examples) | `examples/` | available (`cargo run -p edomata-examples --bin <name>` with `counter`, `stomaton`, `migration`, `saas_todo` or `product_catalog`; `kafka_relay` and `rabbitmq_relay` behind the `kafka` / `rabbitmq` features) |
 
 The full roadmap is in [`docs/plans/rust-port.md`](../docs/plans/rust-port.md).
 
@@ -100,4 +101,19 @@ PostgreSQL instance:
 
 ```bash
 cargo run -p edomata-examples --bin saas_todo
+KAFKA_BOOTSTRAP=localhost:9092 cargo run -p edomata-examples --features kafka --bin kafka_relay
 ```
+
+## Distributing events with Kafka or RabbitMQ
+
+Broker distribution is opt-in and never publishes from inside a command:
+commands write events and outbox rows in one PostgreSQL transaction, and an
+`OutboxRelay` from [`edomata-broker`](crates/edomata-broker) publishes the
+outbox through a `Publisher` ([`edomata-kafka`](crates/edomata-kafka) or
+[`edomata-rabbitmq`](crates/edomata-rabbitmq)), marking items as sent only
+after the broker acknowledged them (at-least-once, stable message ids,
+per-stream ordering). Several replicas can run the relay with a PostgreSQL
+advisory lock as leader election, and a relay in another process is woken
+up through `LISTEN/NOTIFY`. Applications that do not depend on the two
+broker crates pull no broker client. The broker integration tests use
+[testcontainers](https://rust.testcontainers.org/) and need Docker.
