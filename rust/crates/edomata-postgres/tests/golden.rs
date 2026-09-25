@@ -10,7 +10,7 @@
 //!
 //! Each file is the list of statements joined by `\n`, plus a trailing
 //! newline. Every naming strategy and payload type combination listed in
-//! `CASES` (which mirrors the generator) has a file.
+//! `NAMINGS`, `ES_TYPES` and `CQRS_TYPES` (which mirror the generator) has a file.
 
 use std::path::PathBuf;
 
@@ -29,7 +29,7 @@ fn naming(kind: &str, ns: &str) -> PGNaming {
     }
 }
 
-/// (file stem, naming kind, namespace, payload types)
+/// (naming kind, namespace)
 const NAMINGS: &[(&str, &str)] = &[
     ("schema", "auth"),
     ("prefixed", "myapp"),

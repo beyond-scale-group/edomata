@@ -96,7 +96,7 @@ Method naming: Scala overloads become distinct names (`validate` /
 | `PGNamespace.prefixed("x")` | `PGNamespace::prefixed(self)` / `PGNaming::prefixed_str` |
 | `PGSchema.eventsourcing(naming, eventType, notificationType, snapshotType)` | `PGSchema::eventsourcing(&naming)` (all `jsonb`) / `PGSchema::eventsourcing_with(&naming, ...)` |
 | `PGSchema.cqrs(naming, stateType, notificationType)` | `PGSchema::cqrs(&naming)` / `PGSchema::cqrs_with(&naming, ...)` |
-| private DDL helpers | `edomata_postgres::ddl::*_statements` (public, reused by drivers) |
+| private DDL helpers | `edomata_postgres::ddl::schema_statement` and `ddl::*_statements` (public, reused by drivers) |
 | `EventMigration(version, description, run)`, `EventMigration[A, B](...)`, `andThen` | `EventMigration::new`, `EventMigration::typed`, `and_then`, `run` |
 | `MigrationResult(applied, skipped)` | `MigrationResult { applied, skipped }` |
 

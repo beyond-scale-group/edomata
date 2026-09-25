@@ -26,7 +26,7 @@ every payload type, asserted against golden files produced by the Scala code.
    `schema_str` / `prefixed_str` replace the string-literal overloads.
 
 3. **DDL statements are public building blocks.** `edomata_postgres::ddl`
-   exposes each `*_statements` function so that the `sqlx` driver's automatic
+   exposes `schema_statement` and each `*_statements` function so that the `sqlx` driver's automatic
    setup and the generated migrations come from the same source. Payload
    types are spliced verbatim, as in Scala.
 
@@ -38,7 +38,7 @@ every payload type, asserted against golden files produced by the Scala code.
    with `assert_eq!` and checks that no golden file is left uncovered. The
    cases include a mixed-case namespace containing `$` to exercise quoting.
 
-5. **`EventMigration` keeps its shape**: version, description and a boxed
+5. **`EventMigration` keeps its shape**: version, description and an `Arc`-shared
    `Fn(&str) -> Result<String, String>`; `typed` replaces the generic
    factory (the exhaustiveness guarantee comes from Rust `match`), and
    `and_then` composes with the same "take the next version" rule. The
