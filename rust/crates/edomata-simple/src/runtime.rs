@@ -11,10 +11,13 @@ use tokio::runtime::{Handle, Runtime};
 use crate::backend::HandleResult;
 use crate::{CommandHandler, SimpleBackend, SimpleError};
 
-/// The runtime blocking calls run on. Mirrors Scala's `EdomataRuntime`:
-/// [`SimpleRuntime::create`] owns a multi-threaded Tokio runtime,
-/// [`SimpleRuntime::from_handle`] borrows an existing one (never shut
-/// down by [`close`](SimpleRuntime::close)).
+/// The runtime blocking calls run on, the counterpart of Scala's
+/// `EdomataRuntime`. One deliberate difference: Scala's `create()` wraps
+/// the global `IORuntime` and owns nothing, but Tokio has no global
+/// runtime, so [`SimpleRuntime::create`] owns a multi-threaded runtime
+/// that [`close`](SimpleRuntime::close) shuts down.
+/// [`SimpleRuntime::from_handle`] borrows an existing runtime (Scala's
+/// `fromExisting`), which `close` never shuts down.
 #[derive(Clone, Debug)]
 pub struct SimpleRuntime {
     owned: Option<Arc<Runtime>>,
@@ -22,8 +25,10 @@ pub struct SimpleRuntime {
 }
 
 impl SimpleRuntime {
-    /// A new runtime with default settings (`EdomataRuntime.create`).
-    /// Must not be called from within an asynchronous context.
+    /// A new, owned runtime with default settings (Scala's
+    /// `EdomataRuntime.create`, except that the runtime is owned, see the
+    /// type documentation). Must not be called from within an asynchronous
+    /// context.
     pub fn create() -> std::io::Result<Self> {
         let runtime = tokio::runtime::Builder::new_multi_thread()
             .enable_all()
@@ -138,6 +143,12 @@ impl<S: Payload, E: Payload, R: Payload, N: Payload> BlockingBackend<S, E, R, N>
     /// All pending outbox items.
     pub fn read_outbox(&self) -> Result<Vec<OutboxItem<N>>, SimpleError> {
         self.runtime.block_on(self.backend.outbox().read())
+    }
+
+    /// Marks one outbox item as sent.
+    pub fn mark_as_sent(&self, item: &OutboxItem<N>) -> Result<(), SimpleError> {
+        self.runtime
+            .block_on(self.backend.outbox().mark_as_sent(item))
     }
 
     /// Marks outbox items as sent.

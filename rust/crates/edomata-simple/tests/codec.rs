@@ -1,12 +1,12 @@
 //! Port of `JCodecSuite.scala`.
 
 use edomata_backend::{Codec, CodecError, PayloadFormat};
-use edomata_simple::{ClosureCodec, CodecAdapter, SimpleCodec};
+use edomata_simple::{ClosureCodec, CodecAdapter, SimpleCodec, serde_codec};
 
 #[test]
 fn of_creates_codec_from_closures() {
-    let codec = <ClosureCodec<i32> as SimpleCodec<i32>>::of(
-        |i: &i32| i.to_string(),
+    let codec = ClosureCodec::<i32>::new(
+        |i| i.to_string(),
         |s| s.parse::<i32>().map_err(|e| e.to_string()),
     );
     assert_eq!(codec.encode(&42), "42");
@@ -48,6 +48,6 @@ fn into_codec_decode_failure_returns_the_message() {
 
 #[test]
 fn serde_codec_is_jsonb() {
-    let codec = <ClosureCodec<i32> as SimpleCodec<i32>>::serde::<Vec<i32>>();
+    let codec = serde_codec::<Vec<i32>>();
     assert_eq!(codec.format(), PayloadFormat::Jsonb);
 }

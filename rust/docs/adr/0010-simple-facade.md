@@ -37,8 +37,12 @@ users who do not want to touch the generic core types, backed by
    asynchronous one (`new_async`) from a `Context` (Scala's
    `JRequestContext`: command, message, state) to an `AppResult`.
    `SimpleCodec` works on JSON strings and adapts to a `jsonb` storage
-   codec through `into_codec`; `SimpleCodec::serde()` is the shortcut Rust
-   users will actually take.
+   codec through `into_codec`; `serde_codec::<T>()` (and the builder's
+   `serde_codecs()`) is the shortcut Rust users will actually take.
+   Constructors live on the concrete types (`ClosureModel::new`,
+   `ClosureCodec::new`, the free `serde_codec`) rather than on the traits,
+   because a trait function that never mentions `Self` cannot be called
+   without naming an implementing type (E0790).
 
 3. **The builder validates late.** `SimpleBackend::builder(model)` mirrors
    `JBackendBuilder`: `namespace` (prefixed naming) / `schema_namespace`,
@@ -56,12 +60,17 @@ users who do not want to touch the generic core types, backed by
    `compile` return `HandleResult<R>` (`Ok(Ok(()))`, `Ok(Err(reasons))`
    or a storage error), `SimpleJournal` / `SimpleOutbox` collect the
    streams into vectors (`JJournalReader.readStream(...).compile.toList`).
-   `SimpleRuntime` is `EdomataRuntime` over Tokio: `create()` owns a
-   multi-threaded runtime, `from_handle` borrows one, `close` shuts down
-   only what it owns. `BlockingBackend` (built with `build_blocking`)
-   exposes the same operations as blocking calls for code outside an
-   asynchronous context, which is the role `CompletableFuture.join()`
-   played in Java. `SimpleOutbox` also offers `mark_as_sent` /
+   `SimpleRuntime` is `EdomataRuntime` over Tokio, with one deliberate
+   difference: Scala's `create()` wraps the global `IORuntime` and owns
+   nothing, but Tokio has no global runtime, so `create()` owns a
+   multi-threaded runtime and `close` shuts it down; `from_handle` borrows
+   one (Scala's `fromExisting`) and `close` leaves it alone.
+   `BlockingBackend` (built with `build_blocking`) exposes command
+   handling, journal and outbox reads, outbox marking and `close` as
+   blocking calls for code outside an asynchronous context, which is the
+   role `CompletableFuture.join()` played in Java (`compile` stays
+   asynchronous-only, a compiled service being a future-returning
+   function). `SimpleOutbox` also offers `mark_as_sent` /
    `mark_all_as_sent`, which the Java reader lacked and without which the
    outbox cannot be drained.
 

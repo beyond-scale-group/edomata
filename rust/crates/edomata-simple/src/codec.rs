@@ -9,8 +9,9 @@ use serde::Serialize;
 use serde::de::DeserializeOwned;
 
 /// A JSON codec working on strings, stored in `jsonb` columns. Mirrors
-/// Scala's `JCodec`: implement it, build one from closures with
-/// [`SimpleCodec::of`], or use [`SimpleCodec::serde`] for serde types.
+/// Scala's `JCodec`: implement it or build one from closures with
+/// [`ClosureCodec::new`] (`JCodec.of`). Serde types need no hand-written
+/// codec: use [`serde_codec`] (or the builder's `serde_codecs`).
 pub trait SimpleCodec<T>: Send + Sync + 'static {
     /// Encodes a value as JSON text.
     fn encode(&self, value: &T) -> String;
@@ -18,27 +19,6 @@ pub trait SimpleCodec<T>: Send + Sync + 'static {
     /// Decodes JSON text; the error message is reported as a decoding
     /// failure (Scala catches the exception and returns `Left(message)`).
     fn decode(&self, json: &str) -> Result<T, String>;
-
-    /// Builds a codec from closures (`JCodec.of`).
-    fn of<U, Enc, Dec>(encoder: Enc, decoder: Dec) -> ClosureCodec<U>
-    where
-        Enc: Fn(&U) -> String + Send + Sync + 'static,
-        Dec: Fn(&str) -> Result<U, String> + Send + Sync + 'static,
-    {
-        ClosureCodec {
-            encoder: Arc::new(encoder),
-            decoder: Arc::new(decoder),
-        }
-    }
-
-    /// The `jsonb` codec of a serde type (the usual choice in Rust, where
-    /// no hand-written codec is needed).
-    fn serde<U>() -> SqlxCodec<U>
-    where
-        U: Serialize + DeserializeOwned + Send + Sync + 'static,
-    {
-        SqlxCodec::new(SerdeCodec::<U>::jsonb())
-    }
 
     /// Adapts this codec to the storage codec used by the backend
     /// (`JCodec.toBackendCodec`): a `jsonb` codec whose decoding failures
@@ -50,6 +30,15 @@ pub trait SimpleCodec<T>: Send + Sync + 'static {
     {
         SqlxCodec::new(CodecAdapter(self))
     }
+}
+
+/// The `jsonb` storage codec of a serde type: the usual choice in Rust,
+/// where no hand-written codec is needed.
+pub fn serde_codec<T>() -> SqlxCodec<T>
+where
+    T: Serialize + DeserializeOwned + Send + Sync + 'static,
+{
+    SqlxCodec::new(SerdeCodec::<T>::jsonb())
 }
 
 type Encoder<T> = dyn Fn(&T) -> String + Send + Sync;
@@ -77,7 +66,7 @@ impl<T> std::fmt::Debug for ClosureCodec<T> {
 }
 
 impl<T> ClosureCodec<T> {
-    /// Builds a codec from closures.
+    /// Builds a codec from closures (`JCodec.of`).
     pub fn new<Enc, Dec>(encoder: Enc, decoder: Dec) -> Self
     where
         Enc: Fn(&T) -> String + Send + Sync + 'static,

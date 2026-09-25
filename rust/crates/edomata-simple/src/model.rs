@@ -7,7 +7,7 @@ use edomata_core::{DomainModel, NonEmpty};
 
 /// A domain model whose transition returns a plain `Result` with a vector
 /// of rejections. Mirrors Scala's `JDomainModel`; implement it directly or
-/// build one from closures with [`SimpleDomainModel::create`].
+/// build one from closures with [`ClosureModel::new`] (`JDomainModel.create`).
 pub trait SimpleDomainModel: Send + Sync + 'static {
     /// Aggregate state.
     type State;
@@ -28,21 +28,6 @@ pub trait SimpleDomainModel: Send + Sync + 'static {
         event: &Self::Event,
         state: Self::State,
     ) -> Result<Self::State, Vec<Self::Rejection>>;
-
-    /// Builds a model from an initial state and a transition closure
-    /// (`JDomainModel.create`).
-    fn create<S, E, R, F>(initial: S, transition: F) -> ClosureModel<S, E, R>
-    where
-        S: Clone + Send + Sync + 'static,
-        E: Send + Sync + 'static,
-        R: Send + Sync + 'static,
-        F: Fn(&E, S) -> Result<S, Vec<R>> + Send + Sync + 'static,
-    {
-        ClosureModel {
-            initial,
-            transition: Arc::new(transition),
-        }
-    }
 
     /// Adapts this model to the core [`DomainModel`] trait
     /// (`JDomainModel.toModelTC`).
@@ -85,7 +70,8 @@ where
     E: Send + Sync + 'static,
     R: Send + Sync + 'static,
 {
-    /// Builds a model from an initial state and a transition closure.
+    /// Builds a model from an initial state and a transition closure
+    /// (`JDomainModel.create`).
     pub fn new<F>(initial: S, transition: F) -> Self
     where
         F: Fn(&E, S) -> Result<S, Vec<R>> + Send + Sync + 'static,

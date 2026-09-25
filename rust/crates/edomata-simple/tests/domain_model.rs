@@ -77,9 +77,8 @@ fn into_model_performs_decisions_correctly() {
 
 #[test]
 fn create_factory_works() {
-    let model = <Counter as SimpleDomainModel>::create(0, |event: &String, state: i32| {
-        Ok::<_, Vec<String>>(state + event.len() as i32)
-    });
+    let model: ClosureModel<i32, String, String> =
+        ClosureModel::new(0, |event: &String, state| Ok(state + event.len() as i32));
     assert_eq!(model.initial(), 0);
     assert_eq!(model.transition(&"hello".to_string(), 5), Ok(10));
     let model2: ClosureModel<i32, String, String> = ClosureModel::new(1, |_, s| Ok(s));

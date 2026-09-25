@@ -7,11 +7,11 @@
 //!
 //! | Java API | Here |
 //! |----------|------|
-//! | `JDomainModel` | [`SimpleDomainModel`] (or [`ClosureModel`] via `SimpleDomainModel::create`) |
+//! | `JDomainModel` | [`SimpleDomainModel`] (or [`ClosureModel::new`]) |
 //! | `JDecision` | [`SimpleDecision`] |
 //! | `JAppResult` | [`AppResult`] |
 //! | `JCommandHandler`, `JRequestContext` | [`CommandHandler`], [`Context`] |
-//! | `JCodec` | [`SimpleCodec`] (or `SimpleCodec::serde`) |
+//! | `JCodec` | [`SimpleCodec`], [`ClosureCodec::new`] (or [`serde_codec`] for serde types) |
 //! | `JCommandMessage` | [`CommandMessage`] |
 //! | `JEventMessage`, `JOutboxItem` | [`EventMessage`], [`OutboxItem`] |
 //! | `JBackendBuilder`, `JBackend` | [`SimpleBackend::builder`], [`SimpleBackend`] |
@@ -65,7 +65,7 @@ pub use backend::{
     BuiltBackend, BuiltBlockingBackend, HandleResult, SimpleBackend, SimpleBackendBuilder,
     SimpleJournal, SimpleOutbox, SimpleService,
 };
-pub use codec::{ClosureCodec, CodecAdapter, SimpleCodec};
+pub use codec::{ClosureCodec, CodecAdapter, SimpleCodec, serde_codec};
 pub use decision::{EmptyRejection, SimpleDecision};
 pub use error::SimpleError;
 pub use handler::{CommandHandler, Context};

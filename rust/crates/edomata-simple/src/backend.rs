@@ -343,7 +343,7 @@ where
     }
 
     /// The event codec (from [`SimpleCodec::into_codec`] or
-    /// [`SimpleCodec::serde`]).
+    /// [`serde_codec`](crate::serde_codec)).
     pub fn event_codec(mut self, codec: SqlxCodec<M::Event>) -> Self {
         self.event_codec = Some(codec);
         self

@@ -23,7 +23,7 @@ pub enum SimpleError {
 }
 
 impl SimpleError {
-    /// Whether this is a version conflict that was retried without success.
+    /// Whether this is a storage error ([`SimpleError::Backend`]).
     pub fn is_backend(&self) -> bool {
         matches!(self, SimpleError::Backend(_))
     }

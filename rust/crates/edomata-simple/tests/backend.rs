@@ -291,7 +291,8 @@ fn blocking_backend_works_outside_an_async_context() {
     assert_eq!(backend.read_all_after(i64::MAX).unwrap().len(), 0);
     let items = backend.read_outbox().unwrap();
     assert_eq!(items.len(), 2);
-    backend.mark_all_as_sent(&items).unwrap();
+    backend.mark_as_sent(&items[0]).unwrap();
+    backend.mark_all_as_sent(&items[1..]).unwrap();
     assert!(backend.read_outbox().unwrap().is_empty());
     assert!(backend.runtime().owns_runtime());
     backend.close().unwrap();

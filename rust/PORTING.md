@@ -164,21 +164,21 @@ Method naming: Scala overloads become distinct names (`validate` /
 
 | Scala (`java-api`) | Rust (`edomata-simple`) |
 |--------------------|-------------------------|
-| `JDomainModel` (`initial`, `transition`, `create`, `toModelTC`) | `SimpleDomainModel` trait (`initial`, `transition` → `Result<S, Vec<R>>`, `create`, `into_model`), `ClosureModel::new`, `ModelAdapter` |
+| `JDomainModel` (`initial`, `transition`, `create`, `toModelTC`) | `SimpleDomainModel` trait (`initial`, `transition` → `Result<S, Vec<R>>`, `into_model`), `ClosureModel::new` (`create`), `ModelAdapter` |
 | `JDecision` (`Accepted`, `Rejected`, `Indecisive`; `accept`, `acceptReturn`, `reject`, `pure`, `unit`, `map`, `flatMap`, `toEither`) | `SimpleDecision` enum (same variants; `accept`, `accept_return`, `reject`, `pure`, `unit`, `map`, `and_then` / `flat_map`, `to_result`, `events`, `reasons`) |
 | `Converters.decisionToJava` / `decisionToScala` | `SimpleDecision::from(Decision)` / `SimpleDecision::into_decision` (`EmptyRejection` error) |
 | `Converters.toJavaList` / `toChain` / `toNonEmptyChain` | `NonEmpty::into_vec`, `Vec`, `NonEmpty::from_vec` |
 | `JAppResult` (`decide`, `decideAndPublish`, `accept`, `reject`, `publish`) | `AppResult` (same constructors + `and_publish`) |
 | `JCommandHandler.create`, `JRequestContext` (`command`, `commandMessage`, `state`, `address`, `messageId`) | `CommandHandler::new` / `new_async`, `Context` (`command`, `message`, `state`, `address()`, `message_id()`, `time()`) |
-| `JCodec` (`encode`, `decode`, `of`, `toBackendCodec`) | `SimpleCodec` trait (`encode`, `decode` → `Result<T, String>`, `of`, `into_codec`, `serde`), `ClosureCodec`, `CodecAdapter` |
+| `JCodec` (`encode`, `decode`, `of`, `toBackendCodec`) | `SimpleCodec` trait (`encode`, `decode` → `Result<T, String>`, `into_codec`), `ClosureCodec::new` (`of`), `CodecAdapter`, `serde_codec` for serde types |
 | `JCommandMessage.of(id, time, address, payload)` | `CommandMessage::new(id, time, address, payload)` (re-exported) |
 | `JEventMessage`, `JOutboxItem` | `EventMessage`, `OutboxItem` (re-exported) |
 | `JEither` (`left`, `right`, `isLeft`, `isRight`, `getLeft`, `getRight`, `fold`, `map`) | `Result<R, L>` (`Err`, `Ok`, `is_err`, `is_ok`, `unwrap_err`, `unwrap`, `map_or_else`, `map`) |
 | `JBackendBuilder.forDoobie(model)` (`namespace`, `schemaNamespace`, `dataSource`, `eventCodec`, `notificationCodec`, `maxRetry`, `inMemSnapshotSize`, `skipSetup`, `build(runtime)`) | `SimpleBackend::builder(model)` (`namespace`, `schema_namespace`, `naming`, `pool` / `database_url`, `event_codec` / `simple_event_codec`, `notification_codec` / `simple_notification_codec`, `serde_codecs`, `max_retry`, `in_mem_snapshot_size`, `skip_setup`, `build().await`, `build_blocking(runtime)`) |
 | `JBackend` (`handle`, `journal`, `outbox`, `close`) | `SimpleBackend` (`handle`, `compile`, `journal`, `outbox`, `close`, `inner`); `BlockingBackend` for blocking calls |
 | `JJournalReader` (`readStream`, `readStreamAfter`, `readAll`, `readAllAfter`) | `SimpleJournal` (`read_stream`, `read_stream_after`, `read_all`, `read_all_after`, returning `Vec`) |
-| `JOutboxReader.read` | `SimpleOutbox::read` (+ `mark_as_sent`, `mark_all_as_sent`) |
-| `EdomataRuntime` (`create`, `global`, `fromExisting`, `close`) | `SimpleRuntime` (`create`, `from_handle`, `block_on`, `close`) |
+| `JOutboxReader.read` | `SimpleOutbox::read` (+ `mark_as_sent`, `mark_all_as_sent`); blocking twins on `BlockingBackend` |
+| `EdomataRuntime` (`create`, `global`, `fromExisting`, `close`) | `SimpleRuntime` (`create` owns a Tokio runtime since there is no global one, `from_handle`, `block_on`, `close`) |
 | `JPGSchema` (`eventsourcing`, `cqrs`, `eventsourcingWithSchema`, `cqrsWithSchema`) | `SimplePGSchema` (`eventsourcing` / `eventsourcing_with`, `cqrs` / `cqrs_with`, `eventsourcing_with_schema`, `cqrs_with_schema`, returning `Result<Vec<String>, SimpleError>`) |
 | `IllegalArgumentException` / `IllegalStateException` | `SimpleError::InvalidNamespace` / `MissingConfig`; `SimpleError::Connection`, `SimpleError::Backend` |
 
