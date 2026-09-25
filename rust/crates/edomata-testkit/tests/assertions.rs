@@ -209,6 +209,7 @@ fn test_command_defaults_match_scala() {
     let t = TestCommand::default();
     assert_eq!(t.msg_id, "1");
     assert_eq!(t.address, "sut");
+    assert_eq!(t.time, chrono::DateTime::<chrono::Utc>::MIN_UTC);
     let m = t.message(42);
     assert_eq!(
         (m.id.as_str(), m.address.as_str(), m.payload),

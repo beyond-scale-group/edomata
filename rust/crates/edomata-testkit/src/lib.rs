@@ -39,7 +39,8 @@ use edomata_core::{
 };
 
 /// How test commands are built: message id, timestamp and aggregate address.
-/// `Default` uses id `"1"`, the Unix epoch and address `"sut"`, like Scala's
+/// `Default` uses id `"1"`, the minimum timestamp (Scala's `Instant.MIN`,
+/// here `DateTime::<Utc>::MIN_UTC`) and address `"sut"`, like Scala's
 /// `DomainSuite`.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct TestCommand {
@@ -55,7 +56,7 @@ impl Default for TestCommand {
     fn default() -> Self {
         Self {
             msg_id: "1".to_string(),
-            time: DateTime::UNIX_EPOCH,
+            time: DateTime::<Utc>::MIN_UTC,
             address: "sut".to_string(),
         }
     }
