@@ -35,7 +35,7 @@ mod v1 {
     use super::*;
 
     #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-    #[serde(rename_all = "camelCase")]
+    #[serde(rename_all_fields = "camelCase")]
     pub enum Event {
         Created { name: String, price_cents: i64 },
         PriceUpdated { price_cents: i64 },
@@ -47,7 +47,7 @@ mod v2 {
     use super::*;
 
     #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-    #[serde(rename_all = "camelCase")]
+    #[serde(rename_all_fields = "camelCase")]
     pub enum Event {
         Created { name: String, price_cents: i64 },
         PriceUpdated { price_cents: i64, currency: String },
@@ -61,7 +61,7 @@ mod v3 {
     use super::*;
 
     #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-    #[serde(rename_all = "camelCase")]
+    #[serde(rename_all_fields = "camelCase")]
     pub enum Event {
         Created {
             name: String,
@@ -173,7 +173,15 @@ impl<E: Clone + Send + Sync + 'static> DomainModel for Counting<E> {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let naming = PGNaming::prefixed_str("products")?;
+    // A fresh namespace per run: a V1 journal written after the migrations
+    // were applied would not be migrated (migrations run once per
+    // namespace), so the scenario starts from an empty journal every time.
+    let namespace = format!(
+        "products_{}",
+        &uuid::Uuid::new_v4().simple().to_string()[..8]
+    );
+    let naming = PGNaming::prefixed_str(&namespace)?;
+    println!("namespace: {namespace}");
     let pool = connect().await?;
 
     // Seed a V1 journal (an old version of the application writing events).
@@ -205,10 +213,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("wrote 3 V1 events for {product}");
 
     // Run migrations: idempotent, safe to call on every startup.
-    let result = SqlxMigrations::run(&naming, &pool, &[v1_to_v2(), v2_to_v3()]).await?;
+    let migrations = [v1_to_v2(), v2_to_v3()];
+    let result = SqlxMigrations::run(&naming, &pool, &migrations).await?;
     println!(
         "Migrations applied: {:?}, skipped: {:?}",
         result.applied, result.skipped
+    );
+    // Running them again (the next startup) applies nothing.
+    let again = SqlxMigrations::run(&naming, &pool, &migrations).await?;
+    println!(
+        "Second run applied: {:?}, skipped: {:?}",
+        again.applied, again.skipped
     );
 
     // Now build the backend with the V3 codec only: the journal is guaranteed

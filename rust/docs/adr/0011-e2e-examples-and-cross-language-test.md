@@ -52,15 +52,18 @@ and Scala reads the result, using the Scala build as an external oracle.
    workspace member (`edomata-examples`, not published) with one binary per
    Scala example under `src/bin/`, so `cargo build --all-targets` and
    clippy check them and `cargo run -p edomata-examples --bin <name>` runs
-   them against the docker-compose PostgreSQL. Two deliberate differences:
+   them against the docker-compose PostgreSQL. Four deliberate differences:
    the counter example's transition really counts (the Scala one leaves the
-   state unchanged), and the migration example seeds a V1 journal and reads
-   it back as V3 after migrating, where the Scala one stops after running
-   the migrations. The migration example uses persisted snapshots because
-   the migration runner truncates the snapshots table, in Scala as in Rust.
-   The SaaS todo example runs its tenant-scoped read queries for real
-   (Scala's raise `NotImplementedError`). Kafka and RabbitMQ examples come
-   with milestone 9.
+   state unchanged); the migration example seeds a V1 journal and reads it
+   back as V3 after migrating, where the Scala one stops after running the
+   migrations (it uses persisted snapshots because the migration runner
+   truncates the snapshots table, in Scala as in Rust, and a fresh
+   namespace per run since migrations apply once per namespace); the SaaS todo
+   example runs its tenant-scoped read queries for real (Scala's raise
+   `NotImplementedError`); and the product catalogue example replaces the
+   unimplemented `ProductQueries` with `TenantStateLister::list_by_tenant`
+   on the tenant-aware driver. Kafka and RabbitMQ examples come with
+   milestone 9.
 
 ## Tests
 

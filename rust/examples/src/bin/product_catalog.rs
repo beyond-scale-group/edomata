@@ -81,7 +81,7 @@ enum ProductCommand {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all_fields = "camelCase")]
 enum ProductNotification {
     Created { name: String, price_cents: i64 },
     DetailsUpdated { name: String },

@@ -338,5 +338,5 @@ All under `rust/examples/src/bin/`; run with `cargo run -p edomata-examples --bi
 | `StomatonExample.scala` | `stomaton.rs` | runnable (the Scala one has `???` placeholders) |
 | `MigrationExample.scala` | `migration.rs` | also seeds a V1 journal and reads it back as V3 |
 | `SaaSExample.scala` | `saas_todo.rs` | tenant-scoped read queries run real SQL |
-| `ProductCatalogExample.scala` | `product_catalog.rs` | |
+| `ProductCatalogExample.scala` | `product_catalog.rs` | the unimplemented `ProductQueries` read queries are replaced by `TenantStateLister::list_by_tenant` |
 | *(new)* | Kafka and RabbitMQ examples (planned, milestone 9) | |

@@ -38,7 +38,7 @@ enum TodoCommand {
 
 /// Notifications emitted to the outbox (integration events).
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all_fields = "camelCase")]
 enum TodoNotification {
     Created {
         entity_id: String,

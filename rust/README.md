@@ -25,7 +25,7 @@ Cats: each abstraction is mapped to its idiomatic Rust equivalent (see
 | [`edomata-simple`](crates/edomata-simple) | `java-api` | available (closure-based facade: `SimpleDomainModel`, `SimpleDecision`, `CommandHandler`, `SimpleBackend::builder`, blocking runtime, `SimplePGSchema`) |
 | [`edomata-e2e`](crates/edomata-e2e) | `e2e` | available (test-only: end-to-end suite and the Scala/Rust cross-language compatibility test) |
 | `edomata-broker`, `edomata-kafka`, `edomata-rabbitmq` | *(new)* | planned |
-| [`edomata-examples`](examples) | `examples/` | available (`cargo run -p edomata-examples --bin counter|stomaton|migration|saas_todo|product_catalog`) |
+| [`edomata-examples`](examples) | `examples/` | available (`cargo run -p edomata-examples --bin <name>` with `counter`, `stomaton`, `migration`, `saas_todo` or `product_catalog`) |
 
 The full roadmap is in [`docs/plans/rust-port.md`](../docs/plans/rust-port.md).
 
