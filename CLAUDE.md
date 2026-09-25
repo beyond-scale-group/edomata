@@ -264,6 +264,14 @@ cargo build -p edomata-core --all-features --target wasm32-unknown-unknown
 Do not modify the Scala modules for the port, except to add golden-DDL tooling and the Scala
 side of the cross-language compatibility test.
 
+- **Golden DDL**: `rust/tests/golden/*.sql` is generated from the Scala `PGSchema` by
+  `modules/postgres/src/test/scala/GoldenDDL.scala` and asserted byte-for-byte by
+  `rust/crates/edomata-postgres/tests/golden.rs`. Regenerate after changing `PGSchema.scala`:
+
+```bash
+sbt "postgresJVM/Test/runMain edomata.backend.GoldenDDL rust/tests/golden"
+```
+
 ## CI/CD
 
 GitHub Actions runs on:
