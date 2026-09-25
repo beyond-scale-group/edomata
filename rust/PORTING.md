@@ -28,6 +28,7 @@ port is complete when no row is left *planned*.
 | 17 | `java-api` | `edomata-simple` | ported (milestone 7) |
 | — | `examples/` | `rust/examples/` (`edomata-examples`, one binary per example) | ported (milestone 8); Kafka and RabbitMQ examples added (milestone 9) |
 | — | *(new)* | `edomata-broker`, `edomata-kafka`, `edomata-rabbitmq` | added (milestone 9; no Scala equivalent) |
+| — | `docs/`, `website/` | `rust/book/` (mdBook) with `rust/book/samples` (`edomata-book-samples`) | ported (milestone 10) |
 
 ## Type mapping (core)
 
@@ -358,3 +359,23 @@ All under `rust/examples/src/bin/`; run with `cargo run -p edomata-examples --bi
 | `SaaSExample.scala` | `saas_todo.rs` | tenant-scoped read queries run real SQL |
 | `ProductCatalogExample.scala` | `product_catalog.rs` | the unimplemented `ProductQueries` read queries are replaced by `TenantStateLister::list_by_tenant` |
 | *(new)* | `kafka_relay.rs`, `rabbitmq_relay.rs` (features `kafka` / `rabbitmq`) | outbox relays to Kafka and RabbitMQ (milestone 9) |
+
+## Documentation
+
+| Scala page (`docs/`) | Book chapter (`rust/book/src/`) | Compiled samples |
+|----------------------|---------------------------------|------------------|
+| `introduction.md` | `introduction.md` | |
+| `about/design-goals.md`, `about/features.md` | `about/design-goals.md`, `about/features.md` | |
+| `tutorials/getting-started.md` | `tutorials/getting-started.md` | |
+| `tutorials/eventsourcing.md` | `tutorials/eventsourcing.md` | `samples/src/eventsourcing.rs`, `samples/src/testing.rs` |
+| `tutorials/cqrs.md` | `tutorials/cqrs.md` | `samples/src/cqrs.rs` |
+| `tutorials/backends.md` | `tutorials/backends.md` | `samples/src/running.rs` |
+| `tutorials/processes.md` | `tutorials/processes.md` | `samples/src/processes.rs` |
+| `tutorials/saas.md` | `tutorials/saas.md` | `samples/src/saas.rs` |
+| `tutorials/migrations.md` | `tutorials/migrations.md` | `samples/src/migrations.rs` |
+| `principles/index.md`, `principles/definitions.md` | `principles/index.md`, `principles/definitions.md` | |
+| `backends/skunk.md`, `backends/doobie.md` | `backends/postgres.md` (one sqlx page) | `samples/src/running.rs` |
+| `backends/java-api.md` | `backends/simple-api.md` | `samples/src/simple.rs` |
+| *(none)* | `backends/brokers.md` | `samples/src/processes.rs`, `examples/src/bin/{kafka,rabbitmq}_relay.rs` |
+| `other/modules.md`, `other/faq.md` | `other/modules.md`, `other/faq.md` | |
+| *(none)* | `other/migration-guide.md`, `other/porting.md` (this file), `design/*` (the ADRs) | |
