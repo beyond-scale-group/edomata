@@ -51,7 +51,7 @@ mod tests {
         use edomata_testkit::TestCommand;
 
         let app = account_service();
-        // A predicate on the new state instead of an exact value.
+        // Assertions on the new state instead of an exact value.
         app.expect_that(
             &AccountModel,
             Command::Deposit(10),

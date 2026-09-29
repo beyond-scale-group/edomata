@@ -28,7 +28,7 @@ tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 |--------|---------|
 | `expect(model, command, state, new_state, notifications)` | accepted, exactly this state and these notifications, in order |
 | `expect_all(...)` | the same, with the notifications in any order |
-| `expect_that(model, command, state, notifications, predicate)` | accepted, these notifications, and the predicate holds for the new state |
+| `expect_that(model, command, state, notifications, check)` | accepted, these notifications, then runs `check` (a closure with your own assertions) on the new state |
 | `expect_rejection(model, command, state)` | rejected; returns the notifications and the reasons |
 | `expect_rejection_with(model, command, state, reasons)` | rejected with exactly these reasons, and no notification |
 | `expect_rejection_and_notify(model, command, state, reasons, notifications)` | rejected with these reasons and these notifications |
@@ -55,7 +55,7 @@ A `TestCommand` sets another message id, time or address, for programs that read
 {{#include ../../samples/src/testing.rs:in_memory}}
 ```
 
-To start from an existing history, create an `InMemoryEventStore` (or an `InMemoryStateStore` for CQRS), seed it with `seed_journal`, `seed_outbox`, `seed_commands` or `seed_snapshots`, and pass it to `InMemoryDriver::with_event_store` (or `with_state_store`); `journal_rows()` then shows what the backend wrote.
+To start from an existing history, create an `InMemoryEventStore`, seed it with `seed_journal`, `seed_outbox`, `seed_commands` or `seed_snapshots`, and pass it to `InMemoryDriver::with_event_store`; `journal_rows()` then shows what the backend wrote. For CQRS, seed an `InMemoryStateStore` with `seed_states`, `seed_outbox` or `seed_commands` and pass it to `InMemoryDriver::with_state_store`.
 
 ## Integration tests against PostgreSQL
 

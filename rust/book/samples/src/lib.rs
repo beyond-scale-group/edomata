@@ -2,7 +2,7 @@
 //!
 //! Every chapter includes its code from here with mdBook's
 //! `{{#include ...:anchor}}` directive, so the samples are compiled and
-//! linted by `cargo clippy --workspace --all-targets`, and the pure ones are
+//! linted by `cargo clippy --workspace --all-targets --all-features`, and the pure ones are
 //! exercised by `cargo test -p edomata-book-samples`, like the PostgreSQL
 //! integration test of the testing chapter. The other samples that need
 //! PostgreSQL or a broker are compiled but not run; the broker ones are
