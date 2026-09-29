@@ -321,6 +321,20 @@ GitHub Actions runs on:
 - Platforms: JVM, JS, Native
 - Checks: format, compile, test
 
+### Releases
+
+Every push to `main` runs `.github/workflows/auto-tag.yml`, which tags a release only when a
+published artifact changed (the rules live in `.github/scripts/detect-changes.sh`):
+
+| Change in the push | Tag | Effect |
+|--------------------|-----|--------|
+| Sources of a published Scala module (`modules/*/src/main`, except `backend-tests` and `e2e`), `build.sbt` or `project/` | `v0.12.N` | `publish.yml` publishes to Maven Central |
+| A published crate (`rust/crates/*/src`, `Cargo.toml`, `README.md`, except `edomata-backend-tests` and `edomata-e2e`) or `rust/Cargo.toml` | `rust-v0.1.N` | none yet: there is no crates.io release workflow |
+| Anything else (docs, tests, examples, book, website, CI files) | none | none |
+
+A push can create both tags. Maven Central releases can't be deleted, so check what a merge changes
+before merging.
+
 ## Language
 
 All contributions MUST be in English: commit messages, PR titles/descriptions, code comments, documentation, and branch names. This is an international open-source library.
