@@ -25,10 +25,10 @@ sbt compile
 # Run all tests
 sbt test
 
-# Pre-commit checks (format, headers, compile, test)
+# Pre-commit (format sources and sbt files, create headers, regenerate the GitHub workflow, compile, test)
 sbt precommit
 
-# Full release checklist (clean, format check, compile, test)
+# Full release checklist (clean, format and sbt-format check, header check, GitHub workflow check, compile, test)
 sbt commit
 
 # Generate documentation
