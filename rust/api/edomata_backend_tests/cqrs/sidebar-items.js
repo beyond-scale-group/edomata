@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["inserts_state","publishes_notifications","save_must_be_correct","save_must_be_idempotent","updates_existing_state"],"type":["CqrsBackend"]};

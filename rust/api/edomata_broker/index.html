@@ -1,0 +1,135 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Edomata Broker"><title>edomata_broker - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-1ed95124.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="edomata_broker" data-themes="" data-resource-suffix="" data-rustdoc-version="1.98.1 (48a229cea 2026-09-01)" data-channel="1.98.1" data-search-js="search-9944d736.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="../static.files/storage-41dd4d93.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate edomata_broker</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../edomata_broker/index.html">edomata_<wbr>broker</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#edomata-broker" title="Edomata Broker">Edomata Broker</a><ul><li><a href="#where-it-fits" title="Where it fits">Where it fits</a></li><li><a href="#example" title="Example">Example</a></li><li><a href="#feature-flags" title="Feature flags">Feature flags</a></li></ul></li></ul><h3><a href="#modules">Crate Items</a></h3><ul class="block"><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#enums" title="Enums">Enums</a></li><li><a href="#constants" title="Constants">Constants</a></li><li><a href="#traits" title="Traits">Traits</a></li><li><a href="#types" title="Type Aliases">Type Aliases</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1>Crate <span>edomata_<wbr>broker</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/edomata_broker/lib.rs.html#1-189">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="edomata-broker"><a class="doc-anchor" href="#edomata-broker">§</a>Edomata Broker</h2>
+<p>Optional distribution of Edomata’s outbox notifications and journal
+events to a message broker, independent of the broker itself. Concrete
+publishers live in <code>edomata-kafka</code> (rdkafka) and <code>edomata-rabbitmq</code>
+(lapin); an application that does not depend on those crates pulls no
+broker client into its dependency tree.</p>
+<p><strong>The transactional outbox is the only source.</strong> Commands write events
+and outbox items to PostgreSQL in one transaction, as always; a relay
+then publishes them:</p>
+<ul>
+<li><a href="trait.Publisher.html" title="trait edomata_broker::Publisher"><code>Publisher</code></a>: <code>publish(batch)</code> must return only once the broker
+acknowledged every <a href="struct.BrokerMessage.html" title="struct edomata_broker::BrokerMessage"><code>BrokerMessage</code></a> of the batch.</li>
+<li><a href="struct.OutboxRelay.html" title="struct edomata_broker::OutboxRelay"><code>OutboxRelay</code></a>: reads unpublished outbox items, publishes them in
+sequence order and <strong>only then</strong> marks them as sent.</li>
+<li><a href="struct.JournalRelay.html" title="struct edomata_broker::JournalRelay"><code>JournalRelay</code></a>: tails the journal from a checkpoint
+(<a href="trait.CheckpointStore.html" title="trait edomata_broker::CheckpointStore"><code>CheckpointStore</code></a>, <a href="postgres/struct.PgCheckpointStore.html" title="struct edomata_broker::postgres::PgCheckpointStore"><code>postgres::PgCheckpointStore</code></a>) and advances it
+after the broker acknowledged.</li>
+<li>wake-ups: the backend’s in-process signals, <a href="postgres/fn.listen.html" title="fn edomata_broker::postgres::listen"><code>postgres::listen</code></a>
+(<code>LISTEN/NOTIFY</code>, so a relay can run in another process) and a polling
+fallback; shutdown through a <code>CancellationToken</code>.</li>
+<li><a href="postgres/struct.LeaderLock.html" title="struct edomata_broker::postgres::LeaderLock"><code>postgres::LeaderLock</code></a>: an advisory lock so that only one relay per
+source publishes when several replicas run.</li>
+</ul>
+<p>Delivery is <strong>at-least-once</strong>: every message has a stable id
+(<a href="struct.BrokerMessage.html#method.outbox_id" title="associated function edomata_broker::BrokerMessage::outbox_id"><code>BrokerMessage::outbox_id</code></a> / <a href="struct.BrokerMessage.html#method.journal_id" title="associated function edomata_broker::BrokerMessage::journal_id"><code>BrokerMessage::journal_id</code></a>) for
+consumers to deduplicate. Per-stream ordering is preserved: messages are
+published in sequence order and keyed / routed by stream id. Transient
+publish failures are retried with exponential backoff
+(<a href="struct.RetryPolicy.html" title="struct edomata_broker::RetryPolicy"><code>RetryPolicy</code></a>); counters are exposed through <a href="struct.RelayMetrics.html" title="struct edomata_broker::RelayMetrics"><code>RelayMetrics</code></a> and
+<code>tracing</code> events.</p>
+<h3 id="where-it-fits"><a class="doc-anchor" href="#where-it-fits">§</a>Where it fits</h3>
+<p><code>edomata-broker</code> sits on top of the storage layer: it reads the
+<a href="edomata_backend::OutboxReader"><code>OutboxReader</code></a> and
+<a href="edomata_backend::eventsourcing::JournalReader"><code>JournalReader</code></a> of an
+<code>edomata-backend</code> <a href="edomata_backend::eventsourcing::Backend"><code>Backend</code></a>
+(in-memory, or PostgreSQL through <code>edomata-sqlx</code>), and its <a href="postgres/index.html" title="mod edomata_broker::postgres"><code>postgres</code></a>
+module uses the <code>edomata-postgres</code> naming for the checkpoint table. It
+has no Scala counterpart. <code>edomata-kafka</code> and <code>edomata-rabbitmq</code>
+implement <a href="trait.Publisher.html" title="trait edomata_broker::Publisher"><code>Publisher</code></a> on top of it.</p>
+<div class="example-wrap"><pre class="language-text"><code>edomata-core ── edomata-backend ─┬─ edomata-sqlx (writers, NOTIFY)
+                                 └─ edomata-broker ─┬─ edomata-kafka
+                                                    └─ edomata-rabbitmq</code></pre></div><h3 id="example"><a class="doc-anchor" href="#example">§</a>Example</h3>
+<p>A relay from an in-memory backend’s outbox to a custom <a href="trait.Publisher.html" title="trait edomata_broker::Publisher"><code>Publisher</code></a>
+that collects what it receives:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::sync::{Arc, Mutex};
+
+<span class="kw">use </span>edomata_backend::eventsourcing::Backend;
+<span class="kw">use </span>edomata_backend::inmemory::InMemoryDriver;
+<span class="kw">use </span>edomata_broker::{
+    BrokerMessage, MessageEncoder, OutboxRelay, PublishError, Publisher, RelayConfig,
+};
+<span class="kw">use </span>edomata_core::<span class="kw-2">*</span>;
+
+<span class="kw">struct </span>Counter;
+<span class="kw">impl </span>DomainModel <span class="kw">for </span>Counter {
+    <span class="kw">type </span>State = i32; <span class="kw">type </span>Event = i32; <span class="kw">type </span>Rejection = String;
+    <span class="kw">fn </span>initial(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 { <span class="number">0 </span>}
+    <span class="kw">fn </span>transition(<span class="kw-2">&amp;</span><span class="self">self</span>, e: <span class="kw-2">&amp;</span>i32, s: i32) -&gt; <span class="prelude-ty">Result</span>&lt;i32, NonEmpty&lt;String&gt;&gt; { <span class="prelude-val">Ok</span>(s + e) }
+}
+
+<span class="doccomment">/// Collects every message. A real publisher sends the batch to a broker
+/// and returns only after the broker acknowledged all of it.
+</span><span class="attr">#[derive(Default)]
+</span><span class="kw">struct </span>Collect(Mutex&lt;Vec&lt;BrokerMessage&gt;&gt;);
+
+<span class="attr">#[async_trait::async_trait]
+</span><span class="kw">impl </span>Publisher <span class="kw">for </span>Collect {
+    <span class="kw">async fn </span>publish(<span class="kw-2">&amp;</span><span class="self">self</span>, batch: <span class="kw-2">&amp;</span>NonEmpty&lt;BrokerMessage&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), PublishError&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.lock().unwrap().extend(batch.iter().cloned());
+        <span class="prelude-val">Ok</span>(())
+    }
+}
+
+<span class="kw">let </span>dsl = Counter.dsl::&lt;i32, String&gt;();
+<span class="kw">let </span>backend = Backend::builder(Counter, dsl)
+    .driver(InMemoryDriver::new())
+    .build_default()
+    .<span class="kw">await</span><span class="question-mark">?</span>;
+<span class="kw">let </span>service = backend.compile(dsl.router(<span class="kw">move </span>|n: i32| dsl.accept(n).publish([<span class="macro">format!</span>(<span class="string">"+{n}"</span>)])));
+<span class="kw">let </span>cmd = CommandMessage::new(<span class="string">"cmd-1"</span>, chrono::Utc::now(), <span class="string">"counter-1"</span>, <span class="number">5</span>);
+<span class="macro">assert!</span>(service(cmd).<span class="kw">await</span><span class="question-mark">?</span>.is_ok());
+
+<span class="kw">let </span>publisher = Arc::new(Collect::default());
+<span class="kw">let </span>relay = OutboxRelay::new(
+    Arc::clone(backend.outbox()),
+    Arc::clone(<span class="kw-2">&amp;</span>publisher) <span class="kw">as </span>Arc&lt;<span class="kw">dyn </span>Publisher&gt;,
+    MessageEncoder::serde(),
+    RelayConfig::new(<span class="string">"counters"</span>),
+);
+
+<span class="comment">// One pass publishes every pending item, then marks it as sent.
+</span><span class="macro">assert_eq!</span>(relay.relay_once().<span class="kw">await</span><span class="question-mark">?</span>, <span class="number">1</span>);
+<span class="kw">let </span>sent = publisher.<span class="number">0</span>.lock().unwrap().clone();
+<span class="macro">assert_eq!</span>(sent[<span class="number">0</span>].id, BrokerMessage::outbox_id(<span class="string">"counters"</span>, sent[<span class="number">0</span>].seq_nr));
+<span class="macro">assert_eq!</span>(sent[<span class="number">0</span>].stream_id, <span class="string">"counter-1"</span>);
+<span class="macro">assert_eq!</span>(sent[<span class="number">0</span>].payload_text(), <span class="string">r#""+5""#</span>);
+<span class="comment">// The item was marked as sent once the publish succeeded.
+</span><span class="macro">assert_eq!</span>(relay.relay_once().<span class="kw">await</span><span class="question-mark">?</span>, <span class="number">0</span>);</code></pre></div>
+<p>In production, the relay reads the PostgreSQL outbox, is woken up by
+<code>LISTEN/NOTIFY</code>, and competes with its replicas for a leader lock:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Writers raise `NOTIFY counters_outbox` whenever they append to the outbox.
+</span><span class="kw">let </span>driver = SqlxDriver::for_namespace(<span class="string">"counters"</span>, pool.clone())
+    .<span class="kw">await</span><span class="question-mark">?
+    </span>.with_outbox_notify_channel(<span class="string">"counters_outbox"</span>);
+<span class="kw">let </span>backend = Backend::builder(Counter, Counter.dsl::&lt;i32, String&gt;())
+    .driver(driver)
+    .build_default()
+    .<span class="kw">await</span><span class="question-mark">?</span>;
+
+<span class="kw">let </span>publisher = Arc::new(RecordingPublisher::new()); <span class="comment">// a KafkaPublisher, a RabbitMqPublisher...
+</span><span class="kw">let </span>relay = OutboxRelay::new(
+    Arc::clone(backend.outbox()),
+    publisher,
+    MessageEncoder::&lt;String&gt;::serde(),
+    RelayConfig::new(<span class="string">"counters"</span>),
+)
+.wake_on(backend.updates().outbox())
+.wake_on(listen(pool.clone(), <span class="string">"counters_outbox"</span>));
+
+<span class="comment">// Returns when `cancel` fires, or with the error that stopped the relay.
+</span><span class="kw">let </span>cancel = CancellationToken::new();
+relay.run_as_leader(LeaderLock::new(pool, <span class="string">"counters"</span>), cancel).<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div><h3 id="feature-flags"><a class="doc-anchor" href="#feature-flags">§</a>Feature flags</h3>
+<p>This crate has no Cargo feature flags.</p>
+</div></details><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="headers/index.html" title="mod edomata_broker::headers">headers</a></dt><dd>Names of the standard headers every publisher attaches to a message.</dd><dt><a class="mod" href="postgres/index.html" title="mod edomata_broker::postgres">postgres</a></dt><dd>PostgreSQL support for relays: leader election with advisory locks,
+<code>LISTEN</code>-based wake-ups and a checkpoint table.</dd></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.BrokerMessage.html" title="struct edomata_broker::BrokerMessage">Broker<wbr>Message</a></dt><dd>A message handed to a <a href="trait.Publisher.html" title="trait edomata_broker::Publisher"><code>Publisher</code></a>.</dd><dt><a class="struct" href="struct.CancellationToken.html" title="struct edomata_broker::CancellationToken">Cancellation<wbr>Token</a></dt><dd>A token which can be used to signal a cancellation request to one or more
+tasks.</dd><dt><a class="struct" href="struct.InMemoryCheckpointStore.html" title="struct edomata_broker::InMemoryCheckpointStore">InMemory<wbr>Checkpoint<wbr>Store</a></dt><dd>An in-memory <a href="trait.CheckpointStore.html" title="trait edomata_broker::CheckpointStore"><code>CheckpointStore</code></a> (tests, single-process tools).</dd><dt><a class="struct" href="struct.JournalRelay.html" title="struct edomata_broker::JournalRelay">Journal<wbr>Relay</a></dt><dd>Tails the journal and publishes every event (not just notifications)
+after the checkpoint stored in a <a href="trait.CheckpointStore.html" title="trait edomata_broker::CheckpointStore"><code>CheckpointStore</code></a>; the checkpoint
+advances only after the broker acknowledged a batch.</dd><dt><a class="struct" href="struct.MessageEncoder.html" title="struct edomata_broker::MessageEncoder">Message<wbr>Encoder</a></dt><dd>Encodes notifications or events into message payloads.</dd><dt><a class="struct" href="struct.MetricsSnapshot.html" title="struct edomata_broker::MetricsSnapshot">Metrics<wbr>Snapshot</a></dt><dd>A point-in-time copy of <a href="struct.RelayMetrics.html" title="struct edomata_broker::RelayMetrics"><code>RelayMetrics</code></a>.</dd><dt><a class="struct" href="struct.OutboxRelay.html" title="struct edomata_broker::OutboxRelay">Outbox<wbr>Relay</a></dt><dd>Publishes unpublished outbox items to a <a href="trait.Publisher.html" title="trait edomata_broker::Publisher"><code>Publisher</code></a> and marks them as
+sent only after the broker acknowledged them: the <code>OutboxConsumer</code> of
+<code>edomata-backend</code> wired to a broker.</dd><dt><a class="struct" href="struct.RecordingPublisher.html" title="struct edomata_broker::RecordingPublisher">Recording<wbr>Publisher</a></dt><dd>An in-memory publisher that records every message it receives, with
+programmable failures. Meant for tests and examples.</dd><dt><a class="struct" href="struct.RelayConfig.html" title="struct edomata_broker::RelayConfig">Relay<wbr>Config</a></dt><dd>Settings shared by the outbox and journal relays.</dd><dt><a class="struct" href="struct.RelayMetrics.html" title="struct edomata_broker::RelayMetrics">Relay<wbr>Metrics</a></dt><dd>Counters of a relay, also reported as <code>tracing</code> events.</dd><dt><a class="struct" href="struct.RetryPolicy.html" title="struct edomata_broker::RetryPolicy">Retry<wbr>Policy</a></dt><dd>Exponential backoff for transient publish failures.</dd></dl><h2 id="enums" class="section-header">Enums<a href="#enums" class="anchor">§</a></h2><dl class="item-table"><dt><a class="enum" href="enum.MessageKind.html" title="enum edomata_broker::MessageKind">Message<wbr>Kind</a></dt><dd>What a message carries: which relay produced it.</dd><dt><a class="enum" href="enum.PublishError.html" title="enum edomata_broker::PublishError">Publish<wbr>Error</a></dt><dd>Why a batch could not be published.</dd><dt><a class="enum" href="enum.RelayError.html" title="enum edomata_broker::RelayError">Relay<wbr>Error</a></dt><dd>Why a relay pass or a running relay stopped.</dd></dl><h2 id="constants" class="section-header">Constants<a href="#constants" class="anchor">§</a></h2><dl class="item-table"><dt><a class="constant" href="constant.APPLICATION_JSON.html" title="constant edomata_broker::APPLICATION_JSON">APPLICATION_<wbr>JSON</a></dt><dd>The JSON content type, used by <a href="struct.MessageEncoder.html#method.serde" title="associated function edomata_broker::MessageEncoder::serde"><code>MessageEncoder::serde</code></a> and for <code>json</code> /
+<code>jsonb</code> codecs.</dd><dt><a class="constant" href="constant.APPLICATION_OCTET_STREAM.html" title="constant edomata_broker::APPLICATION_OCTET_STREAM">APPLICATION_<wbr>OCTET_<wbr>STREAM</a></dt><dd>The binary content type, used for <code>bytea</code> codecs.</dd></dl><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><dl class="item-table"><dt><a class="trait" href="trait.CheckpointStore.html" title="trait edomata_broker::CheckpointStore">Checkpoint<wbr>Store</a></dt><dd>Where a <a href="struct.JournalRelay.html" title="struct edomata_broker::JournalRelay"><code>JournalRelay</code></a> remembers the last published sequence number.</dd><dt><a class="trait" href="trait.Publisher.html" title="trait edomata_broker::Publisher">Publisher</a></dt><dd>Publishes batches of messages to a broker.</dd></dl><h2 id="types" class="section-header">Type Aliases<a href="#types" class="anchor">§</a></h2><dl class="item-table"><dt><a class="type" href="type.BoxError.html" title="type edomata_broker::BoxError">BoxError</a></dt><dd>A boxed, thread-safe error: the source of <a href="enum.PublishError.html" title="enum edomata_broker::PublishError"><code>PublishError</code></a> and of some
+<a href="enum.RelayError.html" title="enum edomata_broker::RelayError"><code>RelayError</code></a> variants.</dd></dl><script type="text/json" id="notable-traits-data">{"&[u8]":"<h3>Notable traits for <code>&amp;[<a class=\"primitive\" href=\"https://doc.rust-lang.org/1.98.1/std/primitive.u8.html\">u8</a>]</code></h3><pre><code><div class=\"where\">impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.98.1/std/io/trait.Read.html\" title=\"trait std::io::Read\">Read</a> for &amp;[<a class=\"primitive\" href=\"https://doc.rust-lang.org/1.98.1/std/primitive.u8.html\">u8</a>]</div>"}</script></section></div></main></body></html>

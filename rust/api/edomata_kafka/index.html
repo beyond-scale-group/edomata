@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Edomata Kafka"><title>edomata_kafka - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-1ed95124.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="edomata_kafka" data-themes="" data-resource-suffix="" data-rustdoc-version="1.98.1 (48a229cea 2026-09-01)" data-channel="1.98.1" data-search-js="search-9944d736.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="../static.files/storage-41dd4d93.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate edomata_kafka</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../edomata_kafka/index.html">edomata_<wbr>kafka</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#edomata-kafka" title="Edomata Kafka">Edomata Kafka</a><ul><li><a href="#where-it-fits" title="Where it fits">Where it fits</a></li><li><a href="#example" title="Example">Example</a></li><li><a href="#feature-flags" title="Feature flags">Feature flags</a></li></ul></li></ul><h3><a href="#reexports">Crate Items</a></h3><ul class="block"><li><a href="#reexports" title="Re-exports">Re-exports</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1>Crate <span>edomata_<wbr>kafka</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/edomata_kafka/lib.rs.html#1-362">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="edomata-kafka"><a class="doc-anchor" href="#edomata-kafka">§</a>Edomata Kafka</h2>
+<p>A <a href="../edomata_broker/publisher/trait.Publisher.html" title="trait edomata_broker::publisher::Publisher"><code>Publisher</code></a> for <code>edomata-broker</code> relays backed by <code>rdkafka</code>:</p>
+<ul>
+<li>idempotent producer (<code>enable.idempotence=true</code>, <code>acks=all</code>): librdkafka’s
+own retries never duplicate or reorder records (a batch retried by the
+relay after a lost acknowledgment is redelivered, as at-least-once
+requires);</li>
+<li>the stream id is the partition key, which keeps per-stream ordering;</li>
+<li>the topic is chosen by a function of the message (default: one topic
+per relay source, i.e. per aggregate namespace);</li>
+<li>the message id and metadata travel as Kafka headers (see
+<code>edomata_broker::headers</code>).</li>
+</ul>
+<p><code>publish</code> returns only after every message of the batch was
+acknowledged by the brokers; the relay marks outbox items as sent after
+that, so delivery is at-least-once and consumers deduplicate on the
+<code>edomata-id</code> header.</p>
+<p>Errors are classified for the relay: oversized or invalid messages,
+invalid topics and topic authorization failures are
+<a href="../edomata_broker/publisher/enum.PublishError.html#variant.Permanent" title="variant edomata_broker::publisher::PublishError::Permanent"><code>PublishError::Permanent</code></a>; everything else (broker unavailable,
+timeouts, queue full…) is <a href="../edomata_broker/publisher/enum.PublishError.html#variant.Transient" title="variant edomata_broker::publisher::PublishError::Transient"><code>PublishError::Transient</code></a> and retried.</p>
+<h3 id="where-it-fits"><a class="doc-anchor" href="#where-it-fits">§</a>Where it fits</h3>
+<p><code>edomata-kafka</code> depends only on <code>edomata-core</code> and <code>edomata-broker</code>: it
+is one <a href="../edomata_broker/publisher/trait.Publisher.html" title="trait edomata_broker::publisher::Publisher"><code>Publisher</code></a> implementation for the broker-agnostic
+<a href="../edomata_broker/outbox_relay/struct.OutboxRelay.html" title="struct edomata_broker::outbox_relay::OutboxRelay"><code>OutboxRelay</code></a> and
+<a href="../edomata_broker/journal_relay/struct.JournalRelay.html" title="struct edomata_broker::journal_relay::JournalRelay"><code>JournalRelay</code></a>. Applications that do not
+use Kafka don’t depend on it and don’t build librdkafka. It has no Scala
+counterpart. The [<code>rdkafka</code>] crate is re-exported for its configuration
+and error types.</p>
+<h3 id="example"><a class="doc-anchor" href="#example">§</a>Example</h3>
+<p>An outbox relay publishing to one Kafka topic:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::sync::Arc;
+
+<span class="kw">use </span>edomata_backend::eventsourcing::Backend;
+<span class="kw">use </span>edomata_broker::postgres::LeaderLock;
+<span class="kw">use </span>edomata_broker::{CancellationToken, MessageEncoder, OutboxRelay, RelayConfig};
+<span class="kw">use </span>edomata_core::<span class="kw-2">*</span>;
+<span class="kw">use </span>edomata_kafka::KafkaPublisher;
+<span class="kw">use </span>edomata_sqlx::SqlxDriver;
+
+<span class="kw">struct </span>Counter;
+<span class="kw">impl </span>DomainModel <span class="kw">for </span>Counter {
+    <span class="kw">type </span>State = i32; <span class="kw">type </span>Event = i32; <span class="kw">type </span>Rejection = String;
+    <span class="kw">fn </span>initial(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 { <span class="number">0 </span>}
+    <span class="kw">fn </span>transition(<span class="kw-2">&amp;</span><span class="self">self</span>, e: <span class="kw-2">&amp;</span>i32, s: i32) -&gt; <span class="prelude-ty">Result</span>&lt;i32, NonEmpty&lt;String&gt;&gt; { <span class="prelude-val">Ok</span>(s + e) }
+}
+
+<span class="kw">let </span>backend = Backend::builder(Counter, Counter.dsl::&lt;i32, String&gt;())
+    .driver(SqlxDriver::for_namespace(<span class="string">"counters"</span>, pool.clone()).<span class="kw">await</span><span class="question-mark">?</span>)
+    .build_default()
+    .<span class="kw">await</span><span class="question-mark">?</span>;
+
+<span class="kw">let </span>publisher = KafkaPublisher::builder(<span class="string">"localhost:9092"</span>)
+    .with_fixed_topic(<span class="string">"counters-notifications"</span>)
+    .with_config(<span class="string">"compression.type"</span>, <span class="string">"lz4"</span>)
+    .build()<span class="question-mark">?</span>;
+
+<span class="kw">let </span>relay = OutboxRelay::new(
+    Arc::clone(backend.outbox()),
+    Arc::new(publisher),
+    MessageEncoder::&lt;String&gt;::serde(),
+    RelayConfig::new(<span class="string">"counters"</span>),
+)
+.wake_on(backend.updates().outbox());
+
+relay
+    .run_as_leader(LeaderLock::new(pool, <span class="string">"counters"</span>), CancellationToken::new())
+    .<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div><h3 id="feature-flags"><a class="doc-anchor" href="#feature-flags">§</a>Feature flags</h3>
+<p>This crate has no Cargo feature flags of its own. librdkafka is built
+with the <code>rdkafka</code> features chosen by the workspace (<code>tokio</code>, <code>libz</code>);
+enable further ones (for example <code>ssl</code> or <code>gssapi</code>) on your own
+<code>rdkafka</code> dependency, which Cargo unifies with this one.</p>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><dl class="item-table reexports"><dt id="reexport.rdkafka"><code>pub use rdkafka;</code></dt></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.KafkaPublisher.html" title="struct edomata_kafka::KafkaPublisher">Kafka<wbr>Publisher</a></dt><dd>Publishes broker messages to Kafka.</dd><dt><a class="struct" href="struct.KafkaPublisherBuilder.html" title="struct edomata_kafka::KafkaPublisherBuilder">Kafka<wbr>Publisher<wbr>Builder</a></dt><dd>Builds a <a href="struct.KafkaPublisher.html" title="struct edomata_kafka::KafkaPublisher"><code>KafkaPublisher</code></a>.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.default_topic.html" title="fn edomata_kafka::default_topic">default_<wbr>topic</a></dt><dd>The default topic: the relay source with every character outside
+<code>[A-Za-z0-9._-]</code> replaced by <code>-</code> (Kafka’s topic name alphabet), that is
+one topic per relay source, see <a href="fn.sanitize_topic.html" title="fn edomata_kafka::sanitize_topic"><code>sanitize_topic</code></a>.</dd><dt><a class="fn" href="fn.sanitize_topic.html" title="fn edomata_kafka::sanitize_topic">sanitize_<wbr>topic</a></dt><dd>Makes a string a valid Kafka topic name: every character outside
+<code>[A-Za-z0-9._-]</code> becomes <code>-</code>, and an empty name becomes <code>"edomata"</code>.
+It does not enforce Kafka’s 249-character limit.</dd></dl></section></div></main></body></html>

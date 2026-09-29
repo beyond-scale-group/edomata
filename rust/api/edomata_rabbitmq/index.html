@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Edomata RabbitMQ"><title>edomata_rabbitmq - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-1ed95124.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="edomata_rabbitmq" data-themes="" data-resource-suffix="" data-rustdoc-version="1.98.1 (48a229cea 2026-09-01)" data-channel="1.98.1" data-search-js="search-9944d736.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="../static.files/storage-41dd4d93.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate edomata_rabbitmq</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../edomata_rabbitmq/index.html">edomata_<wbr>rabbitmq</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#edomata-rabbitmq" title="Edomata RabbitMQ">Edomata RabbitMQ</a><ul><li><a href="#where-it-fits" title="Where it fits">Where it fits</a></li><li><a href="#example" title="Example">Example</a></li><li><a href="#feature-flags" title="Feature flags">Feature flags</a></li></ul></li></ul><h3><a href="#reexports">Crate Items</a></h3><ul class="block"><li><a href="#reexports" title="Re-exports">Re-exports</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1>Crate <span>edomata_<wbr>rabbitmq</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/edomata_rabbitmq/lib.rs.html#1-360">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="edomata-rabbitmq"><a class="doc-anchor" href="#edomata-rabbitmq">§</a>Edomata RabbitMQ</h2>
+<p>A <a href="../edomata_broker/publisher/trait.Publisher.html" title="trait edomata_broker::publisher::Publisher"><code>Publisher</code></a> for <code>edomata-broker</code> relays backed by <code>lapin</code>:</p>
+<ul>
+<li>publisher confirms are enabled and every message is awaited before
+the next one is sent, so <code>publish</code> returns only after the broker
+acknowledged the whole batch, in order (per-stream ordering);</li>
+<li>messages are persistent (<code>delivery_mode = 2</code>);</li>
+<li>the exchange and the routing key are chosen by functions of the
+message (defaults: the relay source as exchange, the stream id as
+routing key), so a stream always goes to the same routing key;</li>
+<li><code>message_id</code> is the stable message id and the metadata travels as
+headers (see <code>edomata_broker::headers</code>).</li>
+</ul>
+<p>The publisher reconnects on the next batch after a connection failure.
+Soft AMQP errors that a retry cannot fix (<code>NOT_FOUND</code> exchange,
+<code>ACCESS_REFUSED</code>, <code>PRECONDITION_FAILED</code>) are reported as permanent.
+Connection and channel failures and broker nacks are transient.</p>
+<h3 id="where-it-fits"><a class="doc-anchor" href="#where-it-fits">§</a>Where it fits</h3>
+<p><code>edomata-rabbitmq</code> depends only on <code>edomata-core</code> and <code>edomata-broker</code>:
+it is one <a href="../edomata_broker/publisher/trait.Publisher.html" title="trait edomata_broker::publisher::Publisher"><code>Publisher</code></a> implementation for the broker-agnostic
+<a href="../edomata_broker/outbox_relay/struct.OutboxRelay.html" title="struct edomata_broker::outbox_relay::OutboxRelay"><code>OutboxRelay</code></a> and
+<a href="../edomata_broker/journal_relay/struct.JournalRelay.html" title="struct edomata_broker::journal_relay::JournalRelay"><code>JournalRelay</code></a>. Applications that do not
+use RabbitMQ don’t depend on it. It has no Scala counterpart. The
+[<code>lapin</code>] crate is re-exported for its topology and error types.</p>
+<h3 id="example"><a class="doc-anchor" href="#example">§</a>Example</h3>
+<p>An outbox relay publishing to a topic exchange, with the stream id as
+routing key:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::sync::Arc;
+
+<span class="kw">use </span>edomata_backend::eventsourcing::Backend;
+<span class="kw">use </span>edomata_broker::postgres::LeaderLock;
+<span class="kw">use </span>edomata_broker::{CancellationToken, MessageEncoder, OutboxRelay, RelayConfig};
+<span class="kw">use </span>edomata_core::<span class="kw-2">*</span>;
+<span class="kw">use </span>edomata_rabbitmq::RabbitMqPublisher;
+<span class="kw">use </span>edomata_rabbitmq::lapin::ExchangeKind;
+<span class="kw">use </span>edomata_sqlx::SqlxDriver;
+
+<span class="kw">struct </span>Counter;
+<span class="kw">impl </span>DomainModel <span class="kw">for </span>Counter {
+    <span class="kw">type </span>State = i32; <span class="kw">type </span>Event = i32; <span class="kw">type </span>Rejection = String;
+    <span class="kw">fn </span>initial(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 { <span class="number">0 </span>}
+    <span class="kw">fn </span>transition(<span class="kw-2">&amp;</span><span class="self">self</span>, e: <span class="kw-2">&amp;</span>i32, s: i32) -&gt; <span class="prelude-ty">Result</span>&lt;i32, NonEmpty&lt;String&gt;&gt; { <span class="prelude-val">Ok</span>(s + e) }
+}
+
+<span class="kw">let </span>backend = Backend::builder(Counter, Counter.dsl::&lt;i32, String&gt;())
+    .driver(SqlxDriver::for_namespace(<span class="string">"counters"</span>, pool.clone()).<span class="kw">await</span><span class="question-mark">?</span>)
+    .build_default()
+    .<span class="kw">await</span><span class="question-mark">?</span>;
+
+<span class="kw">let </span>publisher = RabbitMqPublisher::connect(<span class="string">"amqp://guest:guest@localhost:5672/%2f"</span>)
+    .<span class="kw">await</span><span class="question-mark">?
+    </span>.with_fixed_exchange(<span class="string">"counters"</span>);
+publisher.declare_exchange(<span class="string">"counters"</span>, ExchangeKind::Topic).<span class="kw">await</span><span class="question-mark">?</span>;
+
+<span class="kw">let </span>relay = OutboxRelay::new(
+    Arc::clone(backend.outbox()),
+    Arc::new(publisher),
+    MessageEncoder::&lt;String&gt;::serde(),
+    RelayConfig::new(<span class="string">"counters"</span>),
+)
+.wake_on(backend.updates().outbox());
+
+relay
+    .run_as_leader(LeaderLock::new(pool, <span class="string">"counters"</span>), CancellationToken::new())
+    .<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div><h3 id="feature-flags"><a class="doc-anchor" href="#feature-flags">§</a>Feature flags</h3>
+<p>This crate has no Cargo feature flags.</p>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><dl class="item-table reexports"><dt id="reexport.lapin"><code>pub use lapin;</code></dt></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.RabbitMqPublisher.html" title="struct edomata_rabbitmq::RabbitMqPublisher">Rabbit<wbr>MqPublisher</a></dt><dd>Publishes broker messages to RabbitMQ.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.default_exchange.html" title="fn edomata_rabbitmq::default_exchange">default_<wbr>exchange</a></dt><dd>The default exchange: the relay source (<a href="../edomata_broker/message/struct.BrokerMessage.html#structfield.source" title="field edomata_broker::message::BrokerMessage::source"><code>BrokerMessage::source</code></a>),
+that is one exchange per aggregate namespace.</dd><dt><a class="fn" href="fn.default_routing_key.html" title="fn edomata_rabbitmq::default_routing_key">default_<wbr>routing_<wbr>key</a></dt><dd>The default routing key: the stream id (<a href="../edomata_broker/message/struct.BrokerMessage.html#structfield.stream_id" title="field edomata_broker::message::BrokerMessage::stream_id"><code>BrokerMessage::stream_id</code></a>),
+so that all messages of a stream follow the same route.</dd></dl></section></div></main></body></html>

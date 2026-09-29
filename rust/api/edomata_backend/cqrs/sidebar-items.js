@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CommandState"],"struct":["AggregateState","Backend","BackendBuilder","CachedRepository","CommandHandler","Notifications","PartialBackendBuilder","Storage"],"trait":["NotificationsConsumer","NotificationsPublisher","Repository","RepositoryReader","StateModel","StorageDriver"],"type":["SharedStateModel"]};

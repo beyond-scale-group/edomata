@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Account","Command","Event","Notification","Rejection"],"fn":["account_service","pool","random_string"],"struct":["AccountModel","Amount"],"type":["AccountApp"]};

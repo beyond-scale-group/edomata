@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Foo"],"fn":["apply","apply2","main","service"],"struct":["FooModel"],"type":["FooApp"]};

@@ -1,0 +1,353 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Assertion helpers for event-sourced programs, implemented for every `Edomaton` over a `RequestContext` (the programs built with `DomainDsl`)."><title>EdomatonAssertions in edomata_testkit - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-1ed95124.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="edomata_testkit" data-themes="" data-resource-suffix="" data-rustdoc-version="1.98.1 (48a229cea 2026-09-01)" data-channel="1.98.1" data-search-js="search-9944d736.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="../static.files/storage-41dd4d93.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc trait"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">EdomatonAssertions</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../edomata_testkit/index.html">edomata_<wbr>testkit</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Edomaton<wbr>Assertions</a></h2><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.expect" title="expect">expect</a></li><li><a href="#tymethod.expect_all" title="expect_all">expect_all</a></li><li><a href="#tymethod.expect_rejection" title="expect_rejection">expect_rejection</a></li><li><a href="#tymethod.expect_rejection_and_notify" title="expect_rejection_and_notify">expect_rejection_and_notify</a></li><li><a href="#tymethod.expect_rejection_notify" title="expect_rejection_notify">expect_rejection_notify</a></li><li><a href="#tymethod.expect_rejection_with" title="expect_rejection_with">expect_rejection_with</a></li><li><a href="#tymethod.expect_that" title="expect_that">expect_that</a></li><li><a href="#tymethod.run_with" title="run_with">run_with</a></li><li><a href="#tymethod.run_with_command" title="run_with_command">run_with_command</a></li></ul><h3><a href="#foreign-impls">Implementations on Foreign Types</a></h3><ul class="block"><li><a href="#impl-EdomatonAssertions%3CC,+S,+E,+R,+N%3E-for-Edomaton%3CRequestContext%3CC,+S%3E,+R,+E,+N,+T%3E" title="Edomaton&#60;RequestContext&#60;C, S&#62;, R, E, N, T&#62;">Edomaton&#60;RequestContext&#60;C, S&#62;, R, E, N, T&#62;</a></li></ul><h3><a href="#dyn-compatibility">Dyn Compatibility</a></h3><h3><a href="#implementors">Implementors</a></h3></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="index.html">In crate edomata_<wbr>testkit</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="index.html">edomata_testkit</a></div><h1>Trait <span class="trait">Edomaton<wbr>Assertions</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/edomata_testkit/lib.rs.html#163-283">Source</a> </span></div><pre class="rust item-decl"><code>pub trait EdomatonAssertions&lt;C, S, E, R, N&gt; {
+    // Required methods
+    async fn <a href="#tymethod.run_with" class="fn">run_with</a>&lt;M&gt;(
+        &amp;self,
+        model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+        command: C,
+        state: S,
+    ) -&gt; EdomatonResult&lt;S, E, R, N&gt;
+       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a></span>;
+<span class="item-spacer"></span>    async fn <a href="#tymethod.run_with_command" class="fn">run_with_command</a>&lt;M&gt;(
+        &amp;self,
+        model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+        test: &amp;<a class="struct" href="struct.TestCommand.html" title="struct edomata_testkit::TestCommand">TestCommand</a>,
+        command: C,
+        state: S,
+    ) -&gt; EdomatonResult&lt;S, E, R, N&gt;
+       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a></span>;
+<span class="item-spacer"></span>    async fn <a href="#tymethod.expect" class="fn">expect</a>&lt;M&gt;(
+        &amp;self,
+        model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+        command: C,
+        state: S,
+        expected_state: S,
+        expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+    )
+       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+             S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a></span>;
+<span class="item-spacer"></span>    async fn <a href="#tymethod.expect_all" class="fn">expect_all</a>&lt;M&gt;(
+        &amp;self,
+        model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+        command: C,
+        state: S,
+        expected_state: S,
+        expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+    )
+       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+             S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.Ord.html" title="trait core::cmp::Ord">Ord</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a></span>;
+<span class="item-spacer"></span>    async fn <a href="#tymethod.expect_rejection" class="fn">expect_rejection</a>&lt;M&gt;(
+        &amp;self,
+        model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+        command: C,
+        state: S,
+    ) -&gt; (<a class="struct" href="https://doc.rust-lang.org/1.98.1/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;N&gt;, NonEmpty&lt;R&gt;)
+       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+             S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a></span>;
+<span class="item-spacer"></span>    async fn <a href="#tymethod.expect_rejection_with" class="fn">expect_rejection_with</a>&lt;M&gt;(
+        &amp;self,
+        model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+        command: C,
+        state: S,
+        expected_errors: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = R&gt;,
+    )
+       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+             S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a></span>;
+<span class="item-spacer"></span>    async fn <a href="#tymethod.expect_rejection_and_notify" class="fn">expect_rejection_and_notify</a>&lt;M&gt;(
+        &amp;self,
+        model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+        command: C,
+        state: S,
+        expected_errors: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = R&gt;,
+        expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+    )
+       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+             S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a></span>;
+<span class="item-spacer"></span>    async fn <a href="#tymethod.expect_rejection_notify" class="fn">expect_rejection_notify</a>&lt;M&gt;(
+        &amp;self,
+        model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+        command: C,
+        state: S,
+        notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+    )
+       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+             S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a></span>;
+<span class="item-spacer"></span>    async fn <a href="#tymethod.expect_that" class="fn">expect_that</a>&lt;M&gt;(
+        &amp;self,
+        model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+        command: C,
+        state: S,
+        expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+        that: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>(<a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;S</a>),
+    )
+       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+             S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+             N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a></span>;
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Assertion helpers for event-sourced programs, implemented for every
+[<code>Edomaton</code>] over a [<code>RequestContext</code>] (the programs built with
+<a href="edomata_core::DomainDsl"><code>DomainDsl</code></a>).</p>
+<p>Each assertion runs the program once with the given command and state,
+folds its events into the model with
+[<code>Edomaton::execute</code>], and panics if the [<code>EdomatonResult</code>] differs from
+the expectation. [<code>EdomatonResult::Indecisive</code>] (no event accepted) and
+[<code>EdomatonResult::Conflicted</code>] (events the model refuses) fail every
+<code>expect*</code> assertion; use <a href="trait.EdomatonAssertions.html#tymethod.run_with" title="method edomata_testkit::EdomatonAssertions::run_with"><code>run_with</code></a> to assert on them.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>edomata_core::<span class="kw-2">*</span>;
+<span class="kw">use </span>edomata_testkit::{EdomatonAssertions, TestCommand};
+
+<span class="kw">struct </span>Account;
+<span class="kw">impl </span>DomainModel <span class="kw">for </span>Account {
+    <span class="kw">type </span>State = u32; <span class="kw">type </span>Event = u32; <span class="kw">type </span>Rejection = String;
+    <span class="kw">fn </span>initial(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 { <span class="number">0 </span>}
+    <span class="kw">fn </span>transition(<span class="kw-2">&amp;</span><span class="self">self</span>, e: <span class="kw-2">&amp;</span>u32, s: u32) -&gt; <span class="prelude-ty">Result</span>&lt;u32, NonEmpty&lt;String&gt;&gt; { <span class="prelude-val">Ok</span>(s + e) }
+}
+
+<span class="kw">let </span>dsl = Account.dsl::&lt;u32, String&gt;();
+<span class="kw">let </span>deposit = dsl.router(<span class="kw">move </span>|amount: u32| {
+    <span class="kw">if </span>amount &gt; <span class="number">1000 </span>{
+        dsl.reject(<span class="string">"too large"</span>.to_string())
+    } <span class="kw">else </span>{
+        dsl.accept(amount)
+    }
+});
+
+futures::executor::block_on(<span class="kw">async </span>{
+    deposit.expect(<span class="kw-2">&amp;</span>Account, <span class="number">10</span>, <span class="number">5</span>, <span class="number">15</span>, []).<span class="kw">await</span>;
+    deposit.expect_that(<span class="kw-2">&amp;</span>Account, <span class="number">10</span>, <span class="number">5</span>, [], |balance| <span class="macro">assert!</span>(<span class="kw-2">*</span>balance &gt; <span class="number">10</span>)).<span class="kw">await</span>;
+    <span class="kw">let </span>(<span class="kw">_</span>, reasons) = deposit.expect_rejection(<span class="kw-2">&amp;</span>Account, <span class="number">5000</span>, <span class="number">0</span>).<span class="kw">await</span>;
+    <span class="macro">assert_eq!</span>(reasons.head(), <span class="string">"too large"</span>);
+
+    <span class="comment">// The raw outcome, with a custom command id and address.
+    </span><span class="kw">let </span>outcome = deposit
+        .run_with_command(<span class="kw-2">&amp;</span>Account, <span class="kw-2">&amp;</span>TestCommand::new(<span class="string">"cmd-2"</span>, <span class="string">"acc-9"</span>), <span class="number">1</span>, <span class="number">0</span>)
+        .<span class="kw">await</span>;
+    <span class="macro">assert!</span>(<span class="macro">matches!</span>(outcome, EdomatonResult::Accepted { new_state: <span class="number">1</span>, .. }));
+});</code></pre></div></div></details><h2 id="required-methods" class="section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="tymethod.run_with" class="method"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#166-168">Source</a><h4 class="code-header">async fn <a href="#tymethod.run_with" class="fn">run_with</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+) -&gt; EdomatonResult&lt;S, E, R, N&gt;<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h4></section></summary><div class="docblock"><p>Runs the program against <code>state</code> with <code>command</code> (default
+<a href="struct.TestCommand.html" title="struct edomata_testkit::TestCommand"><code>TestCommand</code></a>) and folds the decision into <code>model</code>.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.run_with_command" class="method"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#171-179">Source</a><h4 class="code-header">async fn <a href="#tymethod.run_with_command" class="fn">run_with_command</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    test: &amp;<a class="struct" href="struct.TestCommand.html" title="struct edomata_testkit::TestCommand">TestCommand</a>,
+    command: C,
+    state: S,
+) -&gt; EdomatonResult&lt;S, E, R, N&gt;<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h4></section></summary><div class="docblock"><p>Like <a href="trait.EdomatonAssertions.html#tymethod.run_with" title="method edomata_testkit::EdomatonAssertions::run_with"><code>run_with</code></a> with a custom <a href="struct.TestCommand.html" title="struct edomata_testkit::TestCommand"><code>TestCommand</code></a>.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.expect" class="method"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#183-195">Source</a><h4 class="code-header">async fn <a href="#tymethod.expect" class="fn">expect</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+    expected_state: S,
+    expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section></summary><div class="docblock"><p>Asserts that the program accepts and yields exactly <code>expected_state</code>
+and <code>expected_notifications</code>, in order.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.expect_all" class="method"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#199-211">Source</a><h4 class="code-header">async fn <a href="#tymethod.expect_all" class="fn">expect_all</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+    expected_state: S,
+    expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.Ord.html" title="trait core::cmp::Ord">Ord</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section></summary><div class="docblock"><p>Asserts exactly <code>expected_state</code>, and the same notifications in any
+order.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.expect_rejection" class="method"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#215-221">Source</a><h4 class="code-header">async fn <a href="#tymethod.expect_rejection" class="fn">expect_rejection</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+) -&gt; (<a class="struct" href="https://doc.rust-lang.org/1.98.1/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;N&gt;, NonEmpty&lt;R&gt;)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section></summary><div class="docblock"><p>Asserts that the program rejects, returning the notifications and
+reasons.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.expect_rejection_with" class="method"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#225-236">Source</a><h4 class="code-header">async fn <a href="#tymethod.expect_rejection_with" class="fn">expect_rejection_with</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+    expected_errors: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = R&gt;,
+)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section></summary><div class="docblock"><p>Asserts that the program rejects with exactly <code>expected_errors</code> and
+no notifications.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.expect_rejection_and_notify" class="method"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#240-252">Source</a><h4 class="code-header">async fn <a href="#tymethod.expect_rejection_and_notify" class="fn">expect_rejection_and_notify</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+    expected_errors: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = R&gt;,
+    expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section></summary><div class="docblock"><p>Asserts that the program rejects with exactly <code>expected_errors</code> and
+<code>expected_notifications</code>.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.expect_rejection_notify" class="method"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#255-266">Source</a><h4 class="code-header">async fn <a href="#tymethod.expect_rejection_notify" class="fn">expect_rejection_notify</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+    notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section></summary><div class="docblock"><p>Asserts that the program rejects and publishes exactly <code>notifications</code>.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.expect_that" class="method"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#270-282">Source</a><h4 class="code-header">async fn <a href="#tymethod.expect_that" class="fn">expect_that</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+    expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+    that: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>(<a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;S</a>),
+)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section></summary><div class="docblock"><p>Asserts that the program accepts with exactly <code>expected_notifications</code>
+and that <code>that</code> holds for the new state.</p>
+</div></details></div><h2 id="dyn-compatibility" class="section-header">Dyn Compatibility<a href="#dyn-compatibility" class="anchor">§</a></h2><div class="dyn-compatibility-info"><p>This trait is <b>not</b> <a href="https://doc.rust-lang.org/1.98.1/reference/items/traits.html#dyn-compatibility">dyn compatible</a>.</p><p><i>In older versions of Rust, dyn compatibility was called "object safety".</i></p></div><h2 id="foreign-impls" class="section-header">Implementations on Foreign Types<a href="#foreign-impls" class="anchor">§</a></h2><details class="toggle implementors-toggle"><summary><section id="impl-EdomatonAssertions%3CC,+S,+E,+R,+N%3E-for-Edomaton%3CRequestContext%3CC,+S%3E,+R,+E,+N,+T%3E" class="impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#289-490">Source</a><a href="#impl-EdomatonAssertions%3CC,+S,+E,+R,+N%3E-for-Edomaton%3CRequestContext%3CC,+S%3E,+R,+E,+N,+T%3E" class="anchor">§</a><h3 class="code-header">impl&lt;C, S, E, R, N, T&gt; <a class="trait" href="trait.EdomatonAssertions.html" title="trait edomata_testkit::EdomatonAssertions">EdomatonAssertions</a>&lt;C, S, E, R, N&gt; for Edomaton&lt;RequestContext&lt;C, S&gt;, R, E, N, T&gt;<div class="where">where
+    C: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,
+    T: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,</div></h3></section></summary><div class="impl-items"><section id="method.run_with" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#299-305">Source</a><a href="#method.run_with" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.run_with" class="fn">run_with</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+) -&gt; EdomatonResult&lt;S, E, R, N&gt;<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h4></section><section id="method.run_with_command" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#307-319">Source</a><a href="#method.run_with_command" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.run_with_command" class="fn">run_with_command</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    test: &amp;<a class="struct" href="struct.TestCommand.html" title="struct edomata_testkit::TestCommand">TestCommand</a>,
+    command: C,
+    state: S,
+) -&gt; EdomatonResult&lt;S, E, R, N&gt;<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h4></section><section id="method.expect" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#321-350">Source</a><a href="#method.expect" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.expect" class="fn">expect</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+    expected_state: S,
+    expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section><section id="method.expect_all" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#352-380">Source</a><a href="#method.expect_all" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.expect_all" class="fn">expect_all</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+    expected_state: S,
+    expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.Ord.html" title="trait core::cmp::Ord">Ord</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section><section id="method.expect_rejection" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#382-397">Source</a><a href="#method.expect_rejection" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.expect_rejection" class="fn">expect_rejection</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+) -&gt; (<a class="struct" href="https://doc.rust-lang.org/1.98.1/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;N&gt;, NonEmpty&lt;R&gt;)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section><section id="method.expect_rejection_with" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#399-414">Source</a><a href="#method.expect_rejection_with" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.expect_rejection_with" class="fn">expect_rejection_with</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+    expected_errors: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = R&gt;,
+)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section><section id="method.expect_rejection_and_notify" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#416-441">Source</a><a href="#method.expect_rejection_and_notify" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.expect_rejection_and_notify" class="fn">expect_rejection_and_notify</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+    expected_errors: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = R&gt;,
+    expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section><section id="method.expect_rejection_notify" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#443-458">Source</a><a href="#method.expect_rejection_notify" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.expect_rejection_notify" class="fn">expect_rejection_notify</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+    notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section><section id="method.expect_that" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#460-489">Source</a><a href="#method.expect_that" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.expect_that" class="fn">expect_that</a>&lt;M&gt;(
+    &amp;self,
+    model: <a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;M</a>,
+    command: C,
+    state: S,
+    expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
+    that: impl <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>(<a class="primitive" href="https://doc.rust-lang.org/1.98.1/std/primitive.reference.html">&amp;S</a>),
+)<div class="where">where
+    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    S: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    E: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    R: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
+    N: <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.98.1/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section></div></details><h2 id="implementors" class="section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"></div><script src="../trait.impl/edomata_testkit/trait.EdomatonAssertions.js" data-ignore-extern-crates="edomata_core" async></script></section></div></main></body></html>

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["LOW_STOCK"],"enum":["StockCommand","StockEvent","StockNotification","StockRejection"],"fn":["describe","in_memory_backend","positive","receive","receive_and_report","report","restock_and_ship","ship","shipment_command","stock_service","tuned_backend"],"struct":["Stock","StockModel"],"type":["StockApp"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["default_topic","sanitize_topic"],"struct":["KafkaPublisher","KafkaPublisherBuilder"]};

@@ -1,0 +1,663 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Event sourcing - Edomata for Rust</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Event-driven automata in Rust: event sourcing and CQRS on PostgreSQL, with the same wire format as the Scala library">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-9c6ed84e.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-8a9e2bd7.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Edomata for Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/beyond-scale-group/edomata" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="event-sourcing"><a class="header" href="#event-sourcing">Event sourcing</a></h1>
+<p>All the code of this chapter is compiled and tested as part of the workspace (<code>rust/book/samples/src/eventsourcing.rs</code>).</p>
+<h2 id="what-is-event-sourcing"><a class="header" href="#what-is-event-sourcing">What is event sourcing?</a></h2>
+<p>Before diving into code, let’s understand what event sourcing is and why it matters.</p>
+<blockquote>
+<p><strong>Traditional approach</strong>: store only the current state.</p>
+<pre><code class="language-text">Account: { id: "123", balance: 500 }
+</code></pre>
+<p>When the balance changes, you overwrite the old value.</p>
+</blockquote>
+<blockquote>
+<p><strong>Event sourcing approach</strong>: store the sequence of events that led to the current state.</p>
+<pre><code class="language-text">Events for Account "123":
+  1. AccountOpened
+  2. Deposited(1000)
+  3. Withdrawn(300)
+  4. Deposited(100)
+  5. Withdrawn(300)
+Current balance: 1000 - 300 + 100 - 300 = 500
+</code></pre>
+</blockquote>
+<p><strong>Why event sourcing?</strong></p>
+<ul>
+<li><strong>Complete audit trail</strong>: you know exactly what happened and when.</li>
+<li><strong>Time travel</strong>: rebuild the state at any point in history.</li>
+<li><strong>Debugging</strong>: see the exact sequence of events that led to a bug.</li>
+<li><strong>Analytics</strong>: derive new insights from historical events.</li>
+<li><strong>Flexibility</strong>: build multiple views (projections) from the same events.</li>
+</ul>
+<h2 id="imports"><a class="header" href="#imports">Imports</a></h2>
+<pre><code class="language-rust ignore">use edomata_core::syntax::*; // convenient extension methods
+use edomata_core::*;
+use serde::{Deserialize, Serialize};</code></pre>
+<h2 id="domain-layer"><a class="header" href="#domain-layer">Domain layer</a></h2>
+<h3 id="decision"><a class="header" href="#decision">Decision</a></h3>
+<p>It all starts with decisions!</p>
+<blockquote>
+<p><strong>What is a <code>Decision</code>?</strong> Think of a committee making a choice. Asked to approve something, it can:</p>
+<ul>
+<li><strong>accept</strong> it (and record what it decided, e.g. “approved the budget”);</li>
+<li><strong>reject</strong> it (and say why, e.g. “insufficient funds”);</li>
+<li><strong>stay undecided</strong> (need more information).</li>
+</ul>
+</blockquote>
+<p><code>Decision&lt;R, E, A&gt;</code> models programs that decide in an event-driven context. These programs are pure and can accept events (<code>E</code>), reject with reasons (<code>R</code>), or stay indecisive, always producing an output <code>A</code>:</p>
+<pre><code class="language-text"> InDecisive(output) ──event──▶ Accepted(events, output) ──accumulates──▶ Accepted
+        │                             │
+        └──────── reason(s) ──────────┴──────────▶ Rejected(reasons)
+</code></pre>
+<p>Examples:</p>
+<pre><code class="language-rust ignore">    let d1: Decision&lt;String, String, i32&gt; = Decision::pure(1);
+    let d2: Decision&lt;String, String, ()&gt; = Decision::accept("Missile Launched!".to_string());
+    let d3: Decision&lt;String, String, ()&gt; =
+        Decision::reject("No remained missiles to launch!".to_string());</code></pre>
+<blockquote>
+<p><strong>Reading the code above</strong>:</p>
+<ul>
+<li><code>Decision::pure(1)</code> creates an indecisive decision that just returns <code>1</code>;</li>
+<li><code>Decision::accept(...)</code> accepts with an event (the string is the event here);</li>
+<li><code>Decision::reject(...)</code> rejects with a reason.</li>
+</ul>
+</blockquote>
+<p>With the <code>edomata_core::syntax</code> extension methods, the same reads as:</p>
+<pre><code class="language-rust ignore">    let s1: Decision&lt;String, String, i32&gt; = 1.into_decision();
+    let s2: Decision&lt;String, String, ()&gt; = "Missile Launched!".to_string().accept();
+    let s3: Decision&lt;String, String, ()&gt; = "No remained missiles to launch!".to_string().reject();</code></pre>
+<p>Decisions are composable: you can chain them together.</p>
+<pre><code class="language-rust ignore">    let d4 = d1.clone().map(|i| i * 2);
+    let d5 = d2.clone().then(d1.clone()); // `&gt;&gt;` in Scala
+    let d6 = d5.clone().then(d3.clone());</code></pre>
+<blockquote>
+<p><strong>What does <code>then</code> do?</strong> It is the sequencing operator (<code>&gt;&gt;</code> in Scala): do the left side, then the right side. If either rejects, the whole thing rejects. Accepted events accumulate in order.</p>
+</blockquote>
+<p>Scala’s for-comprehension becomes a chain of <code>and_then</code> (<code>flat_map</code> is an alias) and <code>map</code>:</p>
+<pre><code class="language-rust ignore">    // The for-comprehension of the Scala tutorial, written with `and_then`.
+    let d7: Decision&lt;String, String, i32&gt; = Decision::pure(1).and_then(|i| {
+        Decision::accept("A".to_string()) // accepting one event
+            .then(Decision::accept(nonempty![
+                "B".to_string(),
+                "C".to_string()
+            ])) // several events
+            .then(Decision::accept_return(
+                i * 2,
+                nonempty!["D".to_string(), "E".to_string()],
+            )) // several events and a value
+            .map(move |j| i + j)
+    });</code></pre>
+<p>If any step rejects, the chain stops and returns the rejection. <code>Decision</code> also offers <code>validate</code> / <code>validate_with</code>, <code>assert_with</code>, <code>to_result</code>, <code>to_option</code>, <code>handle_error_with</code> and <code>tail_rec</code>; see the API documentation.</p>
+<h3 id="modelling"><a class="header" href="#modelling">Modelling</a></h3>
+<p>Let’s use what we’ve learned so far to create an overly simplified model of a bank account. Assume the following business requirements:</p>
+<ul>
+<li>we must be able to open an account, if that account name was not used before;</li>
+<li>we can deposit or withdraw some amount from an open account;</li>
+<li>we must be able to close an account if it is settled (its balance is zero).</li>
+</ul>
+<p>We start by modelling the domain events that came out of event storming or other design practices:</p>
+<blockquote>
+<p><strong>What is event storming?</strong> A workshop technique where you use sticky notes to discover domain events by asking “what happens in the system?”.</p>
+</blockquote>
+<pre><code class="language-rust ignore">/// What happened to an account. Events are named in the past tense: by the
+/// time we record them, they have already happened.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Event {
+    Opened,
+    Deposited(i64),
+    Withdrawn(i64),
+    Closed,
+}</code></pre>
+<blockquote>
+<p><strong>Why the past tense?</strong> Events represent facts that already happened: “Deposited”, not “Deposit”.</p>
+</blockquote>
+<p>We continue with the rejection scenarios:</p>
+<pre><code class="language-rust ignore">/// Why a command may be refused. Not errors: expected business outcomes.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Rejection {
+    ExistingAccount,
+    NoSuchAccount,
+    InsufficientBalance,
+    NotSettled,
+    AlreadyClosed,
+    BadRequest,
+}</code></pre>
+<blockquote>
+<p><strong>What are rejections?</strong> The reasons a command may fail. They are not exceptions; they are expected business outcomes. “You can’t withdraw $500 when you only have $100” is a valid rejection, not an error.</p>
+</blockquote>
+<p>Now we model the aggregate root, and use <code>Decision</code> to write its logic:</p>
+<pre><code class="language-rust ignore">/// The aggregate root: a small state machine.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Account {
+    New,
+    Open { balance: i64 },
+    Close,
+}
+
+impl Account {
+    pub fn open(&amp;self) -&gt; Decision&lt;Rejection, Event, i64&gt; {
+        let decision = match self {
+            Account::New =&gt; Decision::accept(Event::Opened),
+            _ =&gt; Decision::reject(Rejection::ExistingAccount),
+        };
+        AccountModel // 1
+            .perform(self.clone(), decision)
+            .validate_with(|s| s.must_be_open()) // 2
+    }
+
+    pub fn close(&amp;self) -&gt; Decision&lt;Rejection, Event, Account&gt; {
+        let decision = self
+            .must_be_open()
+            .map_or_else(Decision::Rejected, |balance| {
+                // 3
+                if balance == 0 {
+                    Decision::accept(Event::Closed)
+                } else {
+                    Decision::reject(Rejection::NotSettled)
+                }
+            });
+        AccountModel.perform(self.clone(), decision)
+    }
+
+    pub fn withdraw(&amp;self, amount: i64) -&gt; Decision&lt;Rejection, Event, i64&gt; {
+        let decision = self
+            .must_be_open()
+            .map_or_else(Decision::Rejected, |balance| {
+                if balance &gt;= amount &amp;&amp; amount &gt; 0 {
+                    Decision::accept(Event::Withdrawn(amount))
+                } else {
+                    Decision::reject(Rejection::InsufficientBalance)
+                }
+            });
+        AccountModel
+            .perform(self.clone(), decision)
+            .validate_with(|s| s.must_be_open())
+    }
+
+    pub fn deposit(&amp;self, amount: i64) -&gt; Decision&lt;Rejection, Event, i64&gt; {
+        let decision = self.must_be_open().map_or_else(Decision::Rejected, |_| {
+            if amount &gt; 0 {
+                Decision::accept(Event::Deposited(amount))
+            } else {
+                Decision::reject(Rejection::BadRequest)
+            }
+        });
+        AccountModel
+            .perform(self.clone(), decision)
+            .validate_with(|s| s.must_be_open())
+    }
+
+    // 4
+    /// A reusable validation (`ValidatedNec` in Scala).
+    fn must_be_open(&amp;self) -&gt; Result&lt;i64, NonEmpty&lt;Rejection&gt;&gt; {
+        match self {
+            Account::Open { balance } =&gt; Ok(*balance),
+            Account::New =&gt; Err(NonEmpty::new(Rejection::NoSuchAccount)),
+            Account::Close =&gt; Err(NonEmpty::new(Rejection::AlreadyClosed)),
+        }
+    }
+}</code></pre>
+<blockquote>
+<p><strong>Why three states?</strong> An account has a lifecycle: <code>New</code> (the initial state every aggregate starts in), <code>Open</code> with a balance, <code>Close</code>. This is a <strong>state machine</strong>: the account only transitions between states in specific ways.</p>
+</blockquote>
+<blockquote>
+<p><strong>Reading the type</strong> <code>Decision&lt;Rejection, Event, i64&gt;</code>: can reject with a <code>Rejection</code>, can accept <code>Event</code>s, and yields the balance of the open account on success.</p>
+</blockquote>
+<ol>
+<li><code>perform</code> (on the model, see below) runs a decision on the current state and folds the accepted events into the new state, so you reuse the transition instead of repeating yourself.</li>
+<li><code>validate_with</code> ensures that after applying the events we end up in an <code>Open</code> state, and returns its balance instead of the whole <code>Account</code>.</li>
+<li>A <code>Result&lt;T, NonEmpty&lt;Rejection&gt;&gt;</code> (Scala’s <code>ValidatedNec</code>) is turned into a decision with <code>map_or_else(Decision::Rejected, ...)</code>, or with <code>to_decision_nec()</code> from the syntax module.</li>
+<li>Since everything is a value, common validations like <code>must_be_open</code> are extracted and reused.</li>
+</ol>
+<p>But you might say: domain logic is not just deciding, you must perform what you decided. Right, so let’s go to that part.</p>
+<h3 id="domainmodel"><a class="header" href="#domainmodel">DomainModel</a></h3>
+<p>To complete the model we define the transitions (the famous event-sourcing fold) and the starting point with the <code>DomainModel</code> trait:</p>
+<blockquote>
+<p><strong>What is a fold?</strong> Rebuilding state from events is like folding a list: <code>initial + event1 → state1</code>, <code>state1 + event2 → state2</code>, … Each event transforms the previous state into the next.</p>
+</blockquote>
+<pre><code class="language-rust ignore">/// The domain model: the initial state and the fold.
+#[derive(Clone, Copy, Debug, Default)]
+pub struct AccountModel;
+
+impl DomainModel for AccountModel {
+    type State = Account;
+    type Event = Event;
+    type Rejection = Rejection;
+
+    fn initial(&amp;self) -&gt; Account {
+        Account::New // 1
+    }
+
+    fn transition(&amp;self, event: &amp;Event, state: Account) -&gt; Result&lt;Account, NonEmpty&lt;Rejection&gt;&gt; {
+        // 2
+        match event {
+            Event::Opened =&gt; Ok(Account::Open { balance: 0 }),
+            Event::Withdrawn(amount) =&gt; state
+                .must_be_open() // 3
+                .map(|balance| Account::Open {
+                    balance: balance - amount,
+                }),
+            Event::Deposited(amount) =&gt; state.must_be_open().map(|balance| Account::Open {
+                balance: balance + amount,
+            }),
+            Event::Closed =&gt; Ok(Account::Close),
+        }
+    }
+}</code></pre>
+<ol>
+<li><code>initial</code> is the initial state of your domain model, the first point in the timeline; think of it as <code>None</code> in <code>Option&lt;T&gt;</code>. Defining it explicitly keeps you working with your model (not <code>Option&lt;Model&gt;</code>) and lets you add defaults later, which reduces the need for migrations.</li>
+<li><code>transition</code> is the fold: given an event and a state, the next state, or a <strong>conflict</strong> (<code>Err</code>) when the event cannot be applied. Conflicts come from programming errors, storage manipulation, or transitions that changed meaning against an existing history.</li>
+<li>Reusing <code>must_be_open</code> keeps the fold honest: a <code>Withdrawn</code> on a <code>New</code> account is a conflict, not a silent mistake.</li>
+</ol>
+<blockquote>
+<p><strong>Thinking further</strong>: not all timelines are valid, and you do not control what you read from a journal. With states modelled as enums, the compiler makes those impossible cases explicit, which lets you find logical problems very easily.</p>
+</blockquote>
+<blockquote>
+<p><strong>Info</strong>: if a programming error in your fold would cause a conflict, Edomata has your back: a decision whose events conflict with the model is never persisted. <code>execute</code> reports it as <code>EdomatonResult::Conflicted</code>, and the backend returns the reasons as a rejection. A journal that already conflicts with the model (after a change of meaning of an event, for instance) is read as <code>AggregateState::Conflicted</code>, see the <a href="processes.html#repository">processes</a> chapter.</p>
+</blockquote>
+<p>As simple as that!</p>
+<h3 id="testing-the-domain-model"><a class="header" href="#testing-the-domain-model">Testing the domain model</a></h3>
+<p>Everything is pure and every piece of logic is a value, so tests are plain assertions:</p>
+<pre><code class="language-rust ignore">        assert!(Account::New.open().is_accepted());
+        assert_eq!(Account::Open { balance: 10 }.deposit(2).result(), Some(&amp;12));
+        assert!(Account::Open { balance: 5 }.close().is_rejected());
+        assert!(
+            Account::New
+                .open()
+                .and_then(|_| Account::Open { balance: 0 }.close())
+                .is_accepted()
+        );</code></pre>
+<blockquote>
+<p><strong>Why is testing so easy?</strong> No database to mock, no external service to stub: call the function and check the result. That is the biggest benefit of separating domain logic from side effects.</p>
+</blockquote>
+<h2 id="service-layer"><a class="header" href="#service-layer">Service layer</a></h2>
+<p>Domain models are pure state machines in isolation. To build a complete service you need a way to store and load models, interact with them, and possibly perform side effects.</p>
+<p>Edomata’s tools for building services are also event-driven state machines. Like <a href="../principles/index.html#actor-model">actors</a>, they respond to incoming messages (domain commands), may change state by emitting events, may emit other events (notifications) for integration with other services, and may perform idempotent side effects, as they may run several times in case of failure.</p>
+<h3 id="edomaton"><a class="header" href="#edomaton">Edomaton</a></h3>
+<p>An <code>Edomaton</code> (plural: Edomata) is an event-driven automaton that can:</p>
+<ul>
+<li>read the current state;</li>
+<li>ask what is requested (the command message);</li>
+<li>perform side effects;</li>
+<li>decide (as described above);</li>
+<li>notify (emit notifications, integration events, …);</li>
+<li>output a value.</li>
+</ul>
+<p>Edomata are composable: you assemble them, transform them, and treat them like normal data.</p>
+<blockquote>
+<p>An <code>Edomaton</code> is like an employee; a <code>Decision</code> is like a business rule. <strong>Employee</strong>: “I received a request to withdraw money. Let me check the account, apply our rules, record the withdrawal and notify accounting.” <strong>Business rule</strong>: “You can only withdraw if balance &gt;= amount and amount &gt; 0.”</p>
+</blockquote>
+<p>We need two more types: commands and notifications.</p>
+<blockquote>
+<p><strong>Commands vs events</strong>: a command is a request to do something (“Deposit $100”), an event a fact that happened (“Deposited $100”). Commands can be rejected; events cannot.</p>
+</blockquote>
+<blockquote>
+<p><strong>What are notifications?</strong> Messages sent to other systems after something happened, also called integration events. Unlike domain events (which rebuild state), notifications tell the outside world what happened.</p>
+</blockquote>
+<pre><code class="language-rust ignore">#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Command {
+    Open,
+    Deposit(i64),
+    Withdraw(i64),
+    Close,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Notification {
+    AccountOpened { account_id: String },
+    BalanceUpdated { account_id: String, balance: i64 },
+    AccountClosed { account_id: String },
+}</code></pre>
+<p>And our first service:</p>
+<pre><code class="language-rust ignore">/// The program type of our service: an `Edomaton` over a `RequestContext`.
+pub type AccountApp = App&lt;Command, Account, Event, Rejection, Notification, ()&gt;;
+
+pub fn account_service() -&gt; AccountApp {
+    let dsl = AccountModel.dsl::&lt;Command, Notification&gt;();
+    dsl.router(move |command| match command {
+        Command::Open =&gt; dsl
+            .state()
+            .and_then(move |account| dsl.decide(account.open()))
+            .and_then(move |_| dsl.aggregate_id())
+            .and_then(move |account_id| dsl.publish([Notification::AccountOpened { account_id }])),
+
+        Command::Deposit(amount) =&gt; dsl
+            .state()
+            .and_then(move |account| dsl.decide(account.deposit(amount)))
+            .and_then(move |balance| {
+                dsl.aggregate_id().and_then(move |account_id| {
+                    dsl.publish([Notification::BalanceUpdated {
+                        account_id,
+                        balance,
+                    }])
+                })
+            }),
+
+        Command::Withdraw(amount) =&gt; dsl
+            .state()
+            .and_then(move |account| dsl.decide(account.withdraw(amount)))
+            .and_then(move |balance| {
+                dsl.aggregate_id().and_then(move |account_id| {
+                    dsl.publish([Notification::BalanceUpdated {
+                        account_id,
+                        balance,
+                    }])
+                })
+            }),
+
+        Command::Close =&gt; dsl
+            .state()
+            .and_then(move |account| dsl.decide(account.close()))
+            .void(),
+    })
+}</code></pre>
+<blockquote>
+<p><strong>Reading the service code</strong>:</p>
+<ul>
+<li><code>AccountModel.dsl::&lt;Command, Notification&gt;()</code> fixes every type parameter once; the DSL marker is <code>Copy</code>, so closures capture it freely;</li>
+<li><code>dsl.router(...)</code> matches on the incoming command;</li>
+<li><code>dsl.state().and_then(|account| dsl.decide(account.open()))</code> reads the current state and runs the domain decision;</li>
+<li><code>dsl.aggregate_id()</code> is the id of the aggregate being handled;</li>
+<li><code>dsl.publish(...)</code> emits a notification for other systems;</li>
+<li>the program runs on any <code>Future</code>-based runtime: there is no <code>F[_]</code> parameter to thread through.</li>
+</ul>
+</blockquote>
+<p>That’s it! We have written our first <code>Edomaton</code>.</p>
+<h3 id="testing-an-edomaton"><a class="header" href="#testing-an-edomaton">Testing an Edomaton</a></h3>
+<p>An <code>Edomaton</code> takes an environment and works in that context. Programs built with the DSL require a <code>RequestContext</code>: the command message (id for idempotency, time, address of the aggregate, payload) and the current state.</p>
+<p>There are two ways of running it:</p>
+<ul>
+<li><code>execute(&amp;model, ctx)</code>, the recommended one, folds the decision into the model and returns an <code>EdomatonResult</code>, exactly what the real backends do;</li>
+<li><code>run(ctx)</code> returns the raw <code>ResponseD</code> (decision and notifications), which you can interpret as you like.</li>
+</ul>
+<pre><code class="language-rust ignore">    let scenario1 = RequestContext::new(
+        CommandMessage::new(
+            "some random id for request",
+            chrono::DateTime::&lt;chrono::Utc&gt;::MIN_UTC,
+            "our account id",
+            Command::Open,
+        ),
+        Account::New,
+    );
+
+    // `execute` folds the decision into the model and yields an `EdomatonResult`.
+    let obtained = account_service()
+        .execute(&amp;AccountModel, scenario1.clone())
+        .await;
+
+    // `run` yields the raw response (decision and notifications).
+    let raw: ResponseD&lt;Rejection, Event, Notification, ()&gt; = account_service().run(scenario1).await;</code></pre>
+<p>Now we can assert our expectations with any test framework:</p>
+<pre><code class="language-rust ignore">        assert_eq!(
+            obtained,
+            EdomatonResult::Accepted {
+                new_state: Account::Open { balance: 0 },
+                events: nonempty![Event::Opened],
+                notifications: vec![Notification::AccountOpened {
+                    account_id: "our account id".to_string()
+                }],
+            }
+        );</code></pre>
+<p>The <code>edomata-testkit</code> crate makes such tests one-liners (see <a href="../guides/testing.html">Testing</a>):</p>
+<pre><code class="language-rust ignore">            let app = account_service();
+            // command, state → expected new state and notifications (in order)
+            app.expect(
+                &amp;AccountModel,
+                Command::Open,
+                Account::New,
+                Account::Open { balance: 0 },
+                [Notification::AccountOpened {
+                    account_id: "sut".to_string(),
+                }],
+            )
+            .await;
+            // rejections, and no notification
+            app.expect_rejection_with(
+                &amp;AccountModel,
+                Command::Deposit(-1),
+                Account::Open { balance: 0 },
+                [Rejection::BadRequest],
+            )
+            .await;
+            let (notifications, reasons) = app
+                .expect_rejection(&amp;AccountModel, Command::Close, Account::Open { balance: 5 })
+                .await;
+            assert!(notifications.is_empty());
+            assert_eq!(reasons, nonempty![Rejection::NotSettled]);</code></pre>
+<h2 id="whats-next"><a class="header" href="#whats-next">What’s next?</a></h2>
+<p>So far we have created program definitions. To run them as a real application, we compile them with a backend, the subject of the <a href="backends.html">next chapter</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../tutorials/getting-started.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../tutorials/cqrs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../tutorials/getting-started.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../tutorials/cqrs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

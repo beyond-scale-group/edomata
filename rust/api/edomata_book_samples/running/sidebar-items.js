@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["builder_options","cqrs_backend","main_example","prefixed_naming","print_ddl","skip_setup"]};

@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Edomata testkit"><title>edomata_testkit - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-1ed95124.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="edomata_testkit" data-themes="" data-resource-suffix="" data-rustdoc-version="1.98.1 (48a229cea 2026-09-01)" data-channel="1.98.1" data-search-js="search-9944d736.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="../static.files/storage-41dd4d93.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate edomata_testkit</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../edomata_testkit/index.html">edomata_<wbr>testkit</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#edomata-testkit" title="Edomata testkit">Edomata testkit</a><ul><li><a href="#panics" title="Panics">Panics</a></li><li><a href="#where-it-fits" title="Where it fits">Where it fits</a></li><li><a href="#feature-flags" title="Feature flags">Feature flags</a></li></ul></li></ul><h3><a href="#structs">Crate Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#traits" title="Traits">Traits</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1>Crate <span>edomata_<wbr>testkit</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/edomata_testkit/lib.rs.html#1-621">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="edomata-testkit"><a class="doc-anchor" href="#edomata-testkit">§</a>Edomata testkit</h2>
+<p>Assertion helpers for testing domain programs, the port of
+<code>edomata-munit</code>’s <code>DomainSuite</code>. They run an [<code>Edomaton</code>] (or a
+[<code>Stomaton</code>]) with a command and a state, and assert on the outcome with
+plain panics, so they work with <code>#[test]</code>, <code>#[tokio::test]</code> or any
+executor.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>edomata_core::<span class="kw-2">*</span>;
+<span class="kw">use </span>edomata_testkit::EdomatonAssertions;
+
+<span class="kw">struct </span>Counter;
+<span class="kw">impl </span>DomainModel <span class="kw">for </span>Counter {
+    <span class="kw">type </span>State = i32; <span class="kw">type </span>Event = i32; <span class="kw">type </span>Rejection = String;
+    <span class="kw">fn </span>initial(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 { <span class="number">0 </span>}
+    <span class="kw">fn </span>transition(<span class="kw-2">&amp;</span><span class="self">self</span>, e: <span class="kw-2">&amp;</span>i32, s: i32) -&gt; <span class="prelude-ty">Result</span>&lt;i32, NonEmpty&lt;String&gt;&gt; { <span class="prelude-val">Ok</span>(s + e) }
+}
+
+<span class="kw">let </span>dsl = Counter.dsl::&lt;i32, String&gt;();
+<span class="kw">let </span>app = dsl.router(<span class="kw">move </span>|by| {
+    <span class="kw">if </span>by == <span class="number">0 </span>{ dsl.reject(<span class="string">"zero"</span>.to_string()) } <span class="kw">else </span>{ dsl.accept(by).publish([<span class="string">"changed"</span>.to_string()]) }
+});
+
+futures::executor::block_on(<span class="kw">async </span>{
+    app.expect(<span class="kw-2">&amp;</span>Counter, <span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>, [<span class="string">"changed"</span>.to_string()]).<span class="kw">await</span>;
+    app.expect_rejection_with(<span class="kw-2">&amp;</span>Counter, <span class="number">0</span>, <span class="number">10</span>, [<span class="string">"zero"</span>.to_string()]).<span class="kw">await</span>;
+});</code></pre></div><h3 id="panics"><a class="doc-anchor" href="#panics">§</a>Panics</h3>
+<p>The <code>expect*</code> assertions panic, with the unexpected outcome in the
+message, when the program does not behave as asserted: that is how they
+fail a test. The <code>run_with*</code> methods never panic and return the outcome
+for custom assertions.</p>
+<h3 id="where-it-fits"><a class="doc-anchor" href="#where-it-fits">§</a>Where it fits</h3>
+<p><code>edomata-testkit</code> depends only on <code>edomata-core</code>: it runs programs
+purely, without a backend, so it belongs in <code>[dev-dependencies]</code>. To
+test storages rather than domains, see <code>edomata-backend-tests</code>.</p>
+<h3 id="feature-flags"><a class="doc-anchor" href="#feature-flags">§</a>Feature flags</h3>
+<p>This crate has no Cargo feature flags.</p>
+</div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.TestCommand.html" title="struct edomata_testkit::TestCommand">Test<wbr>Command</a></dt><dd>How test commands are built: message id, timestamp and aggregate address.
+<code>Default</code> uses id <code>"1"</code>, the minimum timestamp (Scala’s <code>Instant.MIN</code>,
+here <code>DateTime::&lt;Utc&gt;::MIN_UTC</code>) and address <code>"sut"</code>, like Scala’s
+<code>DomainSuite</code>.</dd></dl><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><dl class="item-table"><dt><a class="trait" href="trait.EdomatonAssertions.html" title="trait edomata_testkit::EdomatonAssertions">Edomaton<wbr>Assertions</a></dt><dd>Assertion helpers for event-sourced programs, implemented for every
+[<code>Edomaton</code>] over a [<code>RequestContext</code>] (the programs built with
+<a href="edomata_core::DomainDsl"><code>DomainDsl</code></a>).</dd><dt><a class="trait" href="trait.StomatonAssertions.html" title="trait edomata_testkit::StomatonAssertions">Stomaton<wbr>Assertions</a></dt><dd>Assertion helpers for CQRS programs (no Scala equivalent; <code>DomainSuite</code>
+only covers <code>Edomaton</code>), implemented for every [<code>Stomaton</code>] over a
+[<code>CommandMessage</code>] with a <code>()</code> output (the programs built with
+<a href="edomata_core::CqrsDomainDsl"><code>CqrsDomainDsl</code></a>).</dd></dl></section></div></main></body></html>

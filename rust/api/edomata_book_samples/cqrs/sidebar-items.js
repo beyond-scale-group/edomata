@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Command","Notification","Order","OrderStatus","Rejection"],"fn":["either_examples","order_service","run_scenario"],"struct":["OrderModel"],"type":["OrderApp","ResultNec"]};

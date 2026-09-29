@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Edomata SaaS sqlx driver"><title>edomata_saas_sqlx - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-1ed95124.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="edomata_saas_sqlx" data-themes="" data-resource-suffix="" data-rustdoc-version="1.98.1 (48a229cea 2026-09-01)" data-channel="1.98.1" data-search-js="search-9944d736.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="../static.files/storage-41dd4d93.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate edomata_saas_sqlx</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../edomata_saas_sqlx/index.html">edomata_<wbr>saas_<wbr>sqlx</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#edomata-saas-sqlx-driver" title="Edomata SaaS sqlx driver">Edomata SaaS sqlx driver</a><ul><li><a href="#tables-created-by-hand" title="Tables created by hand">Tables created by hand</a></li><li><a href="#where-it-fits" title="Where it fits">Where it fits</a></li><li><a href="#feature-flags" title="Feature flags">Feature flags</a></li></ul></li></ul><h3><a href="#structs">Crate Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1>Crate <span>edomata_<wbr>saas_<wbr>sqlx</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/edomata_saas_sqlx/lib.rs.html#1-76">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="edomata-saas-sqlx-driver"><a class="doc-anchor" href="#edomata-saas-sqlx-driver">§</a>Edomata SaaS sqlx driver</h2>
+<p>A tenant-aware PostgreSQL CQRS driver, the port of <code>saas-skunk</code>. It is a
+drop-in replacement for <code>edomata_sqlx::SqlxCqrsDriver</code> whose <code>states</code>
+table carries <code>tenant_id</code> / <code>owner_id</code> columns and whose <code>outbox</code> table
+carries <code>tenant_id</code> (the DDL of
+<code>edomata_saas::SaaSPGSchema</code>), populated from the state through
+[<code>edomata_saas::TenantExtractor</code>], so that PostgreSQL Row-Level Security
+and tenant-scoped indexes can be used.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>service = SaaSCqrsService::&lt;CallerIdentity, String, Todo, String, String&gt;::new(PermissivePolicy, |m| m);
+<span class="kw">let </span>driver = SaaSSqlxCqrsDriver::new(PGNaming::prefixed_str(<span class="string">"todos"</span>)<span class="question-mark">?</span>, pool).<span class="kw">await</span><span class="question-mark">?</span>;
+<span class="kw">let </span>backend = Backend::builder(Todos, service.domain())
+    .driver(driver)
+    .build(SaaSCodec::jsonb_state(), SaaSCodec::jsonb_notification())
+    .<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div><h3 id="tables-created-by-hand"><a class="doc-anchor" href="#tables-created-by-hand">§</a>Tables created by hand</h3>
+<p>With <code>skip_setup</code> (<a href="struct.SaaSSqlxCqrsDriver.html#method.new_with" title="associated function edomata_saas_sqlx::SaaSSqlxCqrsDriver::new_with"><code>SaaSSqlxCqrsDriver::new_with</code></a>), generate the tables
+(and, optionally, the RLS policies) with
+<a href="edomata_saas::SaaSPGSchema"><code>SaaSPGSchema</code></a> and run them from a
+migration tool:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>naming = PGNaming::prefixed_str(<span class="string">"todos"</span>)<span class="question-mark">?</span>;
+<span class="kw">let </span>rls = RlsConfig::new(<span class="string">"app_user"</span>, <span class="string">"app.tenant_id"</span>);
+<span class="kw">for </span>statement <span class="kw">in </span>SaaSPGSchema::cqrs_with(<span class="kw-2">&amp;</span>naming, <span class="string">"jsonb"</span>, <span class="string">"jsonb"</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>rls)) {
+    <span class="macro">println!</span>(<span class="string">"{statement}"</span>); <span class="comment">// into V1__todos.sql
+</span>}
+<span class="kw">let </span>driver = SaaSSqlxCqrsDriver::new_with(naming, pool, <span class="bool-val">true</span>).<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div><h3 id="where-it-fits"><a class="doc-anchor" href="#where-it-fits">§</a>Where it fits</h3>
+<p>It depends on <code>edomata-saas</code> (tenancy types, <a href="edomata_saas::TenantExtractor"><code>TenantExtractor</code></a>
+and the tenant-aware DDL), <code>edomata-backend</code> (the
+<a href="edomata_backend::cqrs::StorageDriver"><code>cqrs::StorageDriver</code></a> trait it
+implements), <code>edomata-sqlx</code> (shared query helpers, the outbox reader and
+<a href="struct.SqlxHandler.html" title="struct edomata_saas_sqlx::SqlxHandler"><code>SqlxHandler</code></a>), <code>edomata-postgres</code> and <code>edomata-serde</code>. No library crate
+builds on it (the examples and the book samples use it); applications use it in place of <code>edomata-sqlx</code>’s
+CQRS driver.</p>
+<h3 id="feature-flags"><a class="doc-anchor" href="#feature-flags">§</a>Feature flags</h3>
+<p>This crate has no Cargo feature flags.</p>
+</div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.SaaSCodec.html" title="struct edomata_saas_sqlx::SaaSCodec">SaaS<wbr>Codec</a></dt><dd>The codec value the SaaS driver requires: a payload codec plus, for
+states, how to extract the tenant and owner written to the <code>tenant_id</code>
+/ <code>owner_id</code> columns (Scala’s <code>TenantExtractor</code> given).</dd><dt><a class="struct" href="struct.SaaSSqlxCqrsDriver.html" title="struct edomata_saas_sqlx::SaaSSqlxCqrsDriver">SaaS<wbr>Sqlx<wbr>Cqrs<wbr>Driver</a></dt><dd>Tenant-aware PostgreSQL CQRS driver. Mirrors Scala’s
+<code>SaaSSkunkCQRSDriver</code>; constructors follow
+<a href="edomata_sqlx::SqlxCqrsDriver"><code>SqlxCqrsDriver</code></a>.</dd><dt><a class="struct" href="struct.SqlxHandler.html" title="struct edomata_saas_sqlx::SqlxHandler">Sqlx<wbr>Handler</a></dt><dd>A hook run inside the <code>save</code> transaction for every non-empty batch of
+notifications, with the transaction’s connection. Use it to maintain
+projections atomically with the state. Mirrors Scala’s <code>SkunkHandler</code> /
+<code>DoobieHandler</code>.</dd><dt><a class="struct" href="struct.TenantStateLister.html" title="struct edomata_saas_sqlx::TenantStateLister">Tenant<wbr>State<wbr>Lister</a></dt><dd>Tenant-scoped listing of states, the counterpart of Scala’s
+<code>listByTenant</code> query. It reads the driver’s <code>states</code> table directly (no
+cache), filtered on the <code>tenant_id</code> column.</dd></dl></section></div></main></body></html>

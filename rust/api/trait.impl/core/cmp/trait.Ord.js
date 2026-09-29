@@ -1,0 +1,9 @@
+(function() {
+    const implementors = Object.fromEntries([["edomata_core",[["impl&lt;T: <a class=\"trait\" href=\"https://doc.rust-lang.org/1.98.1/core/cmp/trait.Ord.html\" title=\"trait core::cmp::Ord\">Ord</a>&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/1.98.1/core/cmp/trait.Ord.html\" title=\"trait core::cmp::Ord\">Ord</a> for <a class=\"struct\" href=\"edomata_core/struct.NonEmpty.html\" title=\"struct edomata_core::NonEmpty\">NonEmpty</a>&lt;T&gt;",0]]],["edomata_postgres",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.98.1/core/cmp/trait.Ord.html\" title=\"trait core::cmp::Ord\">Ord</a> for <a class=\"struct\" href=\"edomata_postgres/struct.PGNamespace.html\" title=\"struct edomata_postgres::PGNamespace\">PGNamespace</a>",0]]],["edomata_saas",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.98.1/core/cmp/trait.Ord.html\" title=\"trait core::cmp::Ord\">Ord</a> for <a class=\"enum\" href=\"edomata_saas/enum.CrudAction.html\" title=\"enum edomata_saas::CrudAction\">CrudAction</a>",0],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.98.1/core/cmp/trait.Ord.html\" title=\"trait core::cmp::Ord\">Ord</a> for <a class=\"struct\" href=\"edomata_saas/struct.TenantId.html\" title=\"struct edomata_saas::TenantId\">TenantId</a>",0],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.98.1/core/cmp/trait.Ord.html\" title=\"trait core::cmp::Ord\">Ord</a> for <a class=\"struct\" href=\"edomata_saas/struct.UserId.html\" title=\"struct edomata_saas::UserId\">UserId</a>",0]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":59,"fragment_lengths":[416,295,778]}

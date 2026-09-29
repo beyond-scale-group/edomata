@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["REDUNDANT_CMD","STREAM_ID"],"fn":["aggregate","journal","must_load_for_non_existing_command_id","must_read_all_journal","must_read_all_outbox_items","must_skip_loading_for_existing_command_id","outbox"]};

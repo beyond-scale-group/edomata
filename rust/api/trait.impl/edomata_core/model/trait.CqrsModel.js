@@ -1,0 +1,9 @@
+(function() {
+    const implementors = Object.fromEntries([["edomata_backend_tests",[["impl CqrsModel for <a class=\"struct\" href=\"edomata_backend_tests/struct.TestCqrsModel.html\" title=\"struct edomata_backend_tests::TestCqrsModel\">TestCqrsModel</a>",0]]],["edomata_book_samples",[["impl <a class=\"trait\" href=\"edomata_core/model/trait.CqrsModel.html\" title=\"trait edomata_core::model::CqrsModel\">CqrsModel</a> for <a class=\"struct\" href=\"edomata_book_samples/cqrs/struct.OrderModel.html\" title=\"struct edomata_book_samples::cqrs::OrderModel\">OrderModel</a>",0],["impl <a class=\"trait\" href=\"edomata_core/model/trait.CqrsModel.html\" title=\"trait edomata_core::model::CqrsModel\">CqrsModel</a> for <a class=\"struct\" href=\"edomata_book_samples/saas/struct.TodoModel.html\" title=\"struct edomata_book_samples::saas::TodoModel\">TodoModel</a>",0]]],["product_catalog",[["impl <a class=\"trait\" href=\"edomata_core/model/trait.CqrsModel.html\" title=\"trait edomata_core::model::CqrsModel\">CqrsModel</a> for <a class=\"struct\" href=\"product_catalog/struct.ProductModel.html\" title=\"struct product_catalog::ProductModel\">ProductModel</a>",0]]],["saas_todo",[["impl <a class=\"trait\" href=\"edomata_core/model/trait.CqrsModel.html\" title=\"trait edomata_core::model::CqrsModel\">CqrsModel</a> for <a class=\"struct\" href=\"saas_todo/struct.TodoModel.html\" title=\"struct saas_todo::TodoModel\">TodoModel</a>",0]]],["stomaton",[["impl <a class=\"trait\" href=\"edomata_core/model/trait.CqrsModel.html\" title=\"trait edomata_core::model::CqrsModel\">CqrsModel</a> for <a class=\"struct\" href=\"stomaton/struct.FooModel.html\" title=\"struct stomaton::FooModel\">FooModel</a>",0]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":59,"fragment_lengths":[201,610,300,273,267]}

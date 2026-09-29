@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["MAX_LEN"],"enum":["PGNamespaceError","PGNaming"],"mod":["ddl"],"struct":["EventMigration","MigrationResult","PGNamespace","PGSchema"]};

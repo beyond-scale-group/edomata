@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["all_migrations","run_migrations","v1_to_v2","v1_to_v3","v2_to_v3"],"mod":["v1","v2"]};

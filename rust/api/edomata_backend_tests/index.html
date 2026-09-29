@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Shared behavioural suites for Edomata storages: the port of `modules/backend-tests`."><title>edomata_backend_tests - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-1ed95124.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="edomata_backend_tests" data-themes="" data-resource-suffix="" data-rustdoc-version="1.98.1 (48a229cea 2026-09-01)" data-channel="1.98.1" data-search-js="search-9944d736.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="../static.files/storage-41dd4d93.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate edomata_backend_tests</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../edomata_backend_tests/index.html">edomata_<wbr>backend_<wbr>tests</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#panics" title="Panics">Panics</a></li><li><a href="#where-it-fits" title="Where it fits">Where it fits</a></li><li><a href="#feature-flags" title="Feature flags">Feature flags</a></li></ul><h3><a href="#modules">Crate Items</a></h3><ul class="block"><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1>Crate <span>edomata_<wbr>backend_<wbr>tests</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/edomata_backend_tests/lib.rs.html#1-114">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Shared behavioural suites for Edomata storages: the port of
+<code>modules/backend-tests</code>.</p>
+<p>Every check is an <code>async fn</code> taking a backend (or a snapshot
+persistence) so that the same checks run against the in-memory driver
+and against PostgreSQL. Test crates call them from <code>#[tokio::test]</code>
+functions, which replaces Scala’s <code>StorageSuite.check</code>.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>edomata_backend::cqrs::Backend <span class="kw">as </span>CqrsBackend;
+<span class="kw">use </span>edomata_backend::eventsourcing::Backend;
+<span class="kw">use </span>edomata_backend::inmemory::InMemoryDriver;
+<span class="kw">use </span>edomata_backend_tests::{cqrs, eventsourcing <span class="kw">as </span>es};
+<span class="kw">use </span>edomata_backend_tests::{TestCqrsModel, TestDomain, test_cqrs_dsl, test_domain_dsl};
+
+<span class="comment">// In a test crate, each check is usually its own `#[tokio::test]`.
+</span><span class="kw">let </span>backend = Backend::builder(TestDomain, test_domain_dsl())
+    .driver(InMemoryDriver::new())
+    .build_default()
+    .<span class="kw">await
+    </span>.unwrap();
+es::must_append_correctly(<span class="kw-2">&amp;</span>backend).<span class="kw">await</span>;
+es::appending_must_be_idempotent(<span class="kw-2">&amp;</span>backend).<span class="kw">await</span>;
+
+<span class="kw">let </span>backend = CqrsBackend::builder(TestCqrsModel, test_cqrs_dsl())
+    .driver(InMemoryDriver::new())
+    .build_default()
+    .<span class="kw">await
+    </span>.unwrap();
+cqrs::inserts_state(<span class="kw-2">&amp;</span>backend).<span class="kw">await</span>;</code></pre></div>
+<p>To check a new storage driver, build its backends with <a href="struct.TestDomain.html" title="struct edomata_backend_tests::TestDomain"><code>TestDomain</code></a> /
+<a href="struct.TestCqrsModel.html" title="struct edomata_backend_tests::TestCqrsModel"><code>TestCqrsModel</code></a> and run every check of <a href="eventsourcing/index.html" title="mod edomata_backend_tests::eventsourcing"><code>eventsourcing</code></a> and <a href="cqrs/index.html" title="mod edomata_backend_tests::cqrs"><code>cqrs</code></a>;
+for the <a href="eventsourcing/prepared_data/index.html" title="mod edomata_backend_tests::eventsourcing::prepared_data"><code>eventsourcing::prepared_data</code></a> checks, seed the storage with
+the rows that module describes first. <code>edomata-sqlx</code> does this in
+<code>tests/shared_suites.rs</code>.</p>
+<h3 id="panics"><a class="doc-anchor" href="#panics">§</a>Panics</h3>
+<p>Every check panics (through <code>assert!</code> and <code>unwrap</code>) when the storage does
+not behave as expected: that is how it fails the calling test.</p>
+<h3 id="where-it-fits"><a class="doc-anchor" href="#where-it-fits">§</a>Where it fits</h3>
+<p>A test-support crate: it depends on <code>edomata-core</code> and <code>edomata-backend</code>
+and is a dev-dependency of the storage drivers (<code>edomata-sqlx</code>). It is
+the port of the Scala <code>backend-tests</code> module. Its checks run against the
+in-memory driver in this crate’s own tests.</p>
+<h3 id="feature-flags"><a class="doc-anchor" href="#feature-flags">§</a>Feature flags</h3>
+<p>This crate has no Cargo feature flags.</p>
+</div></details><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="cqrs/index.html" title="mod edomata_backend_tests::cqrs">cqrs</a></dt><dd>Port of <code>CqrsSuite.scala</code>.</dd><dt><a class="mod" href="eventsourcing/index.html" title="mod edomata_backend_tests::eventsourcing">eventsourcing</a></dt><dd>Port of <code>PersistenceSuite.scala</code>, <code>BackendCompatibilitySuite.scala</code> and
+<code>SnapshotPersistenceSuite.scala</code>.</dd></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.TestCqrsModel.html" title="struct edomata_backend_tests::TestCqrsModel">Test<wbr>Cqrs<wbr>Model</a></dt><dd>Port of <code>TestCQRSModel</code>: an <code>i32</code> state.</dd><dt><a class="struct" href="struct.TestDomain.html" title="struct edomata_backend_tests::TestDomain">Test<wbr>Domain</a></dt><dd>Port of <code>TestDomain</code>: an event-sourced counter whose events are added to
+the state.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.random_string.html" title="fn edomata_backend_tests::random_string">random_<wbr>string</a></dt><dd>A random string (a UUID), the port of <code>Utils.randomString</code>.</dd><dt><a class="fn" href="fn.test_cqrs_dsl.html" title="fn edomata_backend_tests::test_cqrs_dsl">test_<wbr>cqrs_<wbr>dsl</a></dt><dd>The DSL of <a href="struct.TestCqrsModel.html" title="struct edomata_backend_tests::TestCqrsModel"><code>TestCqrsModel</code></a> with <code>i32</code> commands and notifications.</dd><dt><a class="fn" href="fn.test_domain_dsl.html" title="fn edomata_backend_tests::test_domain_dsl">test_<wbr>domain_<wbr>dsl</a></dt><dd>The DSL of <a href="struct.TestDomain.html" title="struct edomata_backend_tests::TestDomain"><code>TestDomain</code></a> with <code>i32</code> commands and notifications.</dd></dl></section></div></main></body></html>

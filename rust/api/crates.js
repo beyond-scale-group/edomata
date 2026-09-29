@@ -1,0 +1,2 @@
+window.ALL_CRATES = ["counter","edomata_backend","edomata_backend_tests","edomata_book_samples","edomata_broker","edomata_core","edomata_e2e","edomata_examples","edomata_kafka","edomata_postgres","edomata_rabbitmq","edomata_saas","edomata_saas_sqlx","edomata_serde","edomata_simple","edomata_sqlx","edomata_testkit","kafka_relay","migration","product_catalog","rabbitmq_relay","saas_todo","stomaton"];
+//{"start":21,"fragment_lengths":[9,18,24,23,17,15,14,19,16,19,19,15,20,16,17,15,18,14,12,18,17,12,11]}

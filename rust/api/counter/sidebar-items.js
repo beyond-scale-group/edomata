@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Counter","Event","Rejection","Updates"],"fn":["app","counter_service","main","syntax_example"],"struct":["CounterModel"],"type":["CounterApp"]};

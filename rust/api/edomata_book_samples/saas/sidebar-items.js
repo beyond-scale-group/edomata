@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["TodoCommand"],"fn":["admin_app","admin_list_all","list_todos","policy","todo_app","todo_service","wiring"],"struct":["JwtClaims","JwtPolicy","Todo","TodoModel"],"type":["TodoApp","TodoService"]};

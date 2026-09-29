@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["assert_inserted","command_exists","execute_all","insert_command","insert_outbox","invalid_namespace","is_unique_violation","map_sqlx","map_write","notify","now"],"struct":["SqlxOutboxReader"]};

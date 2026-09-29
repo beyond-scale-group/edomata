@@ -1,0 +1,720 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Porting map - Edomata for Rust</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Event-driven automata in Rust: event sourcing and CQRS on PostgreSQL, with the same wire format as the Scala library">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-9c6ed84e.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-8a9e2bd7.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Edomata for Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/beyond-scale-group/edomata" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="porting-map-scala-modules-and-suites--rust"><a class="header" href="#porting-map-scala-modules-and-suites--rust">Porting map: Scala modules and suites → Rust</a></h1>
+<p>This table is the contract of the Rust port (see <code>docs/plans/rust-port.md</code> at the repository root).
+Every Scala module and every Scala test suite is mapped to its Rust
+counterpart. Rows marked <em>planned</em> name the milestone that ports them; the
+port is complete when no row is left <em>planned</em>.</p>
+<h2 id="modules"><a class="header" href="#modules">Modules</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>#</th><th>Scala module</th><th>Rust crate</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td><code>core</code></td><td><code>edomata-core</code></td><td>ported (milestone 1)</td></tr>
+<tr><td>2</td><td><code>backend</code></td><td><code>edomata-backend</code></td><td>ported (milestone 2)</td></tr>
+<tr><td>3</td><td><code>postgres</code></td><td><code>edomata-postgres</code></td><td>ported (milestone 3)</td></tr>
+<tr><td>4</td><td><code>skunk</code></td><td><code>edomata-sqlx</code></td><td>ported (milestone 5)</td></tr>
+<tr><td>5</td><td><code>doobie</code></td><td><code>edomata-sqlx</code></td><td>ported (milestone 5)</td></tr>
+<tr><td>6</td><td><code>skunk-circe</code></td><td><code>edomata-serde</code></td><td>ported (milestone 4)</td></tr>
+<tr><td>7</td><td><code>skunk-jsoniter</code></td><td><code>edomata-serde</code></td><td>ported (milestone 4)</td></tr>
+<tr><td>8</td><td><code>skunk-upickle</code></td><td><code>edomata-serde</code></td><td>ported (milestone 4; <code>msgpack</code> payloads are a documented limitation)</td></tr>
+<tr><td>9</td><td><code>doobie-circe</code></td><td><code>edomata-serde</code></td><td>ported (milestone 4)</td></tr>
+<tr><td>10</td><td><code>doobie-jsoniter</code></td><td><code>edomata-serde</code></td><td>ported (milestone 4)</td></tr>
+<tr><td>11</td><td><code>doobie-upickle</code></td><td><code>edomata-serde</code></td><td>ported (milestone 4; <code>msgpack</code> payloads are a documented limitation)</td></tr>
+<tr><td>12</td><td><code>backend-tests</code></td><td><code>edomata-backend-tests</code></td><td>ported (milestone 2, in-memory; milestone 5, PostgreSQL through <code>edomata-sqlx</code>)</td></tr>
+<tr><td>13</td><td><code>e2e</code></td><td><code>edomata-e2e</code></td><td>ported (milestone 8, test-only)</td></tr>
+<tr><td>14</td><td><code>munit</code></td><td><code>edomata-testkit</code></td><td>ported (milestone 6)</td></tr>
+<tr><td>15</td><td><code>saas</code></td><td><code>edomata-saas</code></td><td>ported (milestone 6)</td></tr>
+<tr><td>16</td><td><code>saas-skunk</code></td><td><code>edomata-saas-sqlx</code></td><td>ported (milestone 6)</td></tr>
+<tr><td>17</td><td><code>java-api</code></td><td><code>edomata-simple</code></td><td>ported (milestone 7)</td></tr>
+<tr><td>—</td><td><code>examples/</code></td><td><code>rust/examples/</code> (<code>edomata-examples</code>, one binary per example)</td><td>ported (milestone 8); Kafka and RabbitMQ examples added (milestone 9)</td></tr>
+<tr><td>—</td><td><em>(new)</em></td><td><code>edomata-broker</code>, <code>edomata-kafka</code>, <code>edomata-rabbitmq</code></td><td>added (milestone 9; no Scala equivalent)</td></tr>
+<tr><td>—</td><td><code>docs/</code>, <code>website/</code></td><td><code>rust/book/</code> (mdBook) with <code>rust/book/samples</code> (<code>edomata-book-samples</code>)</td><td>ported (milestone 10)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="type-mapping-core"><a class="header" href="#type-mapping-core">Type mapping (core)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td><code>NonEmptyChain[T]</code></td><td><code>NonEmpty&lt;T&gt;</code> (<code>nonempty![...]</code>)</td></tr>
+<tr><td><code>ValidatedNec[R, T]</code>, <code>EitherNec[R, T]</code></td><td><code>Result&lt;T, NonEmpty&lt;R&gt;&gt;</code> (<code>ResultNec&lt;T, R&gt;</code>)</td></tr>
+<tr><td><code>Decision[R, E, A]</code></td><td><code>Decision&lt;R, E, A&gt;</code></td></tr>
+<tr><td><code>DecisionT[F, R, E, A]</code></td><td><code>DecisionT&lt;R, E, A&gt;</code> (a <code>Future</code>)</td></tr>
+<tr><td><code>ResponseT[RES, R, N, A]</code></td><td><code>ResponseT&lt;Res, N&gt;</code> with <code>Res: RaiseError</code></td></tr>
+<tr><td><code>ResponseD[R, E, N, A]</code></td><td><code>ResponseD&lt;R, E, N, A&gt;</code></td></tr>
+<tr><td><code>ResponseE[R, N, A]</code></td><td><code>ResponseE&lt;R, N, A&gt;</code></td></tr>
+<tr><td><code>RaiseError[F, R]</code></td><td><code>RaiseError</code> trait (GAT <code>WithOutput&lt;B&gt;</code>)</td></tr>
+<tr><td><code>Action[F, R, E, N, A]</code></td><td><code>Action&lt;R, E, N, A&gt;</code> (a <code>Future</code>)</td></tr>
+<tr><td><code>Edomaton[F, Env, R, E, N, A]</code></td><td><code>Edomaton&lt;Env, R, E, N, A&gt;</code></td></tr>
+<tr><td><code>Stomaton[F, Env, S, R, E, A]</code></td><td><code>Stomaton&lt;Env, S, R, N, A&gt;</code></td></tr>
+<tr><td><code>RequestContext</code>, <code>CommandMessage</code>, <code>MessageMetadata</code></td><td>same names</td></tr>
+<tr><td><code>DomainModel</code> + <code>ModelTC</code></td><td><code>DomainModel</code> trait</td></tr>
+<tr><td><code>CQRSModel</code> + <code>StateModelTC</code></td><td><code>CqrsModel</code> trait</td></tr>
+<tr><td><code>DomainDSL</code>, <code>Domain</code></td><td><code>DomainDsl</code> (<code>App&lt;C, S, E, R, N, T&gt;</code>)</td></tr>
+<tr><td><code>CQRSDomainDSL</code>, <code>CQRSDomain</code></td><td><code>CqrsDomainDsl</code> (<code>CqrsApp&lt;C, S, R, N, T&gt;</code>)</td></tr>
+<tr><td><code>DomainCompiler</code>, <code>EdomatonResult</code></td><td>same names</td></tr>
+<tr><td><code>DomainService[F, C, R]</code></td><td><code>DomainService&lt;'a, C, R&gt;</code></td></tr>
+<tr><td><code>edomata.syntax.all</code></td><td><code>edomata_core::syntax::*</code></td></tr>
+<tr><td><code>Response</code> (deprecated alias)</td><td>not ported (deprecated in Scala)</td></tr>
+</tbody>
+</table>
+</div>
+<p>Method naming: Scala overloads become distinct names (<code>validate</code> /
+<code>validate_one</code>, <code>assert_with</code> / <code>assert_one</code>, <code>acceptWhen</code> → <code>accept_when</code>,
+<code>accept_some</code>, <code>accept_some_or</code>, <code>accept_ok</code>, <code>accept_ok_nec</code>); <code>flatMap</code> is
+<code>and_then</code> (with <code>flat_map</code> as an alias); <code>&gt;&gt;</code> is <code>then</code>; <code>as</code> is <code>replace</code>;
+<code>tailRecM</code> is <code>tail_rec</code> with <code>std::ops::ControlFlow</code>.</p>
+<h2 id="type-mapping-backend"><a class="header" href="#type-mapping-backend">Type mapping (backend)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td><code>SeqNr</code>, <code>EventVersion</code>, <code>StreamId</code></td><td>same names (<code>i64</code>, <code>i64</code>, <code>String</code>)</td></tr>
+<tr><td><code>EventMetadata</code>, <code>EventMessage[T]</code></td><td>same names (<code>uuid::Uuid</code>, <code>chrono::DateTime&lt;Utc&gt;</code>)</td></tr>
+<tr><td><code>BackendError</code> (<code>VersionConflict</code>, <code>MaxRetryExceeded</code>, <code>PersistenceError</code>, <code>UnknownError</code>)</td><td><code>BackendError</code> enum (<code>thiserror</code>)</td></tr>
+<tr><td><code>CommandState.Redundant</code></td><td><code>eventsourcing::CommandState::Redundant</code>, <code>cqrs::CommandState::Redundant</code></td></tr>
+<tr><td><code>AggregateState.Valid</code> / <code>Conflicted</code></td><td><code>eventsourcing::ValidState</code>, <code>eventsourcing::AggregateState</code></td></tr>
+<tr><td><code>cqrs.AggregateState</code></td><td><code>cqrs::AggregateState</code></td></tr>
+<tr><td><code>Cache</code>, <code>LRUCache</code></td><td><code>Cache</code> trait, <code>LruCache</code></td></tr>
+<tr><td><code>CommandStore</code>, <code>CommandStore.inMem</code></td><td><code>CommandStore</code> trait, <code>InMemoryCommandStore</code></td></tr>
+<tr><td><code>Repository</code>, <code>RepositoryReader</code>, <code>CachedRepository</code></td><td>same names in <code>eventsourcing</code> / <code>cqrs</code></td></tr>
+<tr><td><code>JournalReader</code>, <code>OutboxReader</code>, <code>OutboxItem</code></td><td>same names</td></tr>
+<tr><td><code>OutboxConsumer</code></td><td><code>OutboxConsumer</code> (batched, <code>run</code> / <code>consume_once</code>)</td></tr>
+<tr><td><code>SnapshotReader</code>, <code>SnapshotStore</code>, <code>SnapshotPersistence</code>, <code>SnapshotStore.inMem</code> / <code>persisted</code></td><td>same traits, <code>InMemorySnapshotStore</code>, <code>PersistedSnapshotStore</code> (+ <code>PersistedSnapshotConfig</code>)</td></tr>
+<tr><td><code>Notifications</code>, <code>NotificationsConsumer</code>, <code>NotificationsPublisher</code></td><td>same names (built on <code>Signal</code> / <code>tokio::sync::Notify</code>, ADR 0005)</td></tr>
+<tr><td><code>CommandHandler</code>, <code>CommandHandler.withRetry</code></td><td><code>CommandHandler::new</code> / <code>with_retry</code> + <code>RetryConfig</code></td></tr>
+<tr><td><code>retry</code></td><td><code>retry</code>, <code>retry_with</code></td></tr>
+<tr><td><code>Storage</code>, <code>StorageDriver[F, Codec[_]]</code></td><td><code>Storage</code>, <code>StorageDriver</code> with GAT <code>Codec&lt;T&gt;</code> (and <code>Handler&lt;N&gt;</code> for CQRS)</td></tr>
+<tr><td><code>Backend</code>, <code>BackendBuilder</code>, <code>PartialBackendBuilder</code></td><td>same names; <code>Backend::builder(model, dsl).driver(d)...build(...)</code></td></tr>
+<tr><td><code>DomainService[F, C, R]</code></td><td><code>DomainService&lt;C, R&gt;</code> (<code>Arc&lt;dyn Fn(CommandMessage&lt;C&gt;) -&gt; BoxFuture&lt;CommandResult&lt;R&gt;&gt;&gt;</code>)</td></tr>
+<tr><td><code>CommandMessage[?]</code> (payload-erased)</td><td><code>CommandRef&lt;'_&gt;</code></td></tr>
+<tr><td><code>StateModelTC[S]</code></td><td><code>cqrs::StateModel&lt;S&gt;</code></td></tr>
+<tr><td><code>SkunkHandler</code> (CQRS notification hook)</td><td><code>StorageDriver::Handler&lt;N&gt;</code> (<code>InMemoryNotificationHandler&lt;N&gt;</code> in memory)</td></tr>
+<tr><td><em>(none)</em></td><td><code>inmemory::InMemoryDriver</code>, <code>InMemoryEventStore</code>, <code>InMemoryStateStore</code>, <code>InMemorySnapshotPersistence</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="type-mapping-postgres"><a class="header" href="#type-mapping-postgres">Type mapping (postgres)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td><code>PGNamespace</code> (opaque type, inline macro <code>PGNamespace("x")</code>, <code>fromString</code>)</td><td><code>PGNamespace</code> newtype, <code>TryFrom&lt;&amp;str&gt;</code> / <code>FromStr</code> / <code>from_string</code> (runtime validation, same messages), <code>PGNamespaceError</code></td></tr>
+<tr><td><code>PGNaming</code> (<code>Schema</code>, <code>Prefixed</code>, <code>schema</code>, <code>prefixed</code>, <code>table</code>, <code>constraint</code>, <code>index</code>, <code>needsSchemaSetup</code>)</td><td><code>PGNaming</code> enum with the same methods (<code>needs_schema_setup</code>), plus <code>schema_str</code> / <code>prefixed_str</code></td></tr>
+<tr><td><code>PGNamespace.prefixed("x")</code></td><td><code>PGNamespace::prefixed(self)</code> / <code>PGNaming::prefixed_str</code></td></tr>
+<tr><td><code>PGSchema.eventsourcing(naming, eventType, notificationType, snapshotType)</code></td><td><code>PGSchema::eventsourcing(&amp;naming)</code> (all <code>jsonb</code>) / <code>PGSchema::eventsourcing_with(&amp;naming, ...)</code></td></tr>
+<tr><td><code>PGSchema.cqrs(naming, stateType, notificationType)</code></td><td><code>PGSchema::cqrs(&amp;naming)</code> / <code>PGSchema::cqrs_with(&amp;naming, ...)</code></td></tr>
+<tr><td>private DDL helpers</td><td><code>edomata_postgres::ddl::schema_statement</code> and <code>ddl::*_statements</code> (public, reused by drivers)</td></tr>
+<tr><td><code>EventMigration(version, description, run)</code>, <code>EventMigration[A, B](...)</code>, <code>andThen</code></td><td><code>EventMigration::new</code>, <code>EventMigration::typed</code>, <code>and_then</code>, <code>run</code></td></tr>
+<tr><td><code>MigrationResult(applied, skipped)</code></td><td><code>MigrationResult { applied, skipped }</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="type-mapping-codecs"><a class="header" href="#type-mapping-codecs">Type mapping (codecs)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td><code>BackendCodec[T]</code> (<code>Json</code>, <code>JsonB</code>, <code>Binary</code>; skunk and doobie variants)</td><td><code>edomata_backend::Codec&lt;T&gt;</code> + <code>PayloadFormat</code> (<code>Json</code>, <code>Jsonb</code>, <code>Bytea</code>)</td></tr>
+<tr><td><code>CirceCodec.json</code> / <code>.jsonb</code></td><td><code>SerdeCodec::&lt;T&gt;::json()</code> / <code>::jsonb()</code> (default)</td></tr>
+<tr><td><code>JsoniterCodec.json</code> / <code>.jsonb</code> / <code>.msgpack</code></td><td><code>SerdeCodec::&lt;T&gt;::json()</code> / <code>::jsonb()</code> / <code>::bytea()</code> (jsoniter’s <code>msgpack</code> writes JSON bytes)</td></tr>
+<tr><td><code>UpickleCodec.json</code> / <code>.jsonb</code></td><td><code>SerdeCodec::&lt;T&gt;::json()</code> / <code>::jsonb()</code> with <code>#[serde(tag = "$type")]</code> and <code>compat::upickle_option</code></td></tr>
+<tr><td><code>UpickleCodec.msgpack</code></td><td>not portable: real MessagePack, unreadable with <code>serde_json</code> (documented limitation)</td></tr>
+<tr><td>skunk <code>Codec[T]</code> / doobie <code>Meta[T]</code> wire encoding</td><td><code>edomata_serde::pg::{JsonbPayload, JsonPayload, ByteaPayload, PgPayload}</code> (<code>sqlx</code> <code>Encode</code> / <code>Decode</code> / <code>Type</code>)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="type-mapping-postgresql-driver"><a class="header" href="#type-mapping-postgresql-driver">Type mapping (PostgreSQL driver)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala (Skunk / Doobie)</th><th>Rust (<code>edomata-sqlx</code>)</th></tr>
+</thead>
+<tbody>
+<tr><td><code>SkunkDriver</code> / <code>DoobieDriver</code> (<code>apply(ns, pool)</code>, <code>from(namespace, pool)</code>, <code>from(naming, pool, skipSetup)</code>)</td><td><code>SqlxDriver::for_namespace(ns, pool)</code>, <code>SqlxDriver::new(naming, pool)</code>, <code>SqlxDriver::new_with(naming, pool, skip_setup)</code></td></tr>
+<tr><td><code>SkunkCQRSDriver</code> / <code>DoobieCQRSDriver</code></td><td><code>SqlxCqrsDriver</code> (same constructors)</td></tr>
+<tr><td><code>Resource[F, Session[F]]</code> / <code>Transactor[F]</code></td><td><code>sqlx::PgPool</code></td></tr>
+<tr><td><code>BackendCodec[T]</code> (driver codec typeclass)</td><td><code>SqlxCodec&lt;T&gt;</code> (<code>StorageDriver::Codec&lt;T&gt;</code>; <code>Default</code> = <code>SerdeCodec::jsonb()</code>)</td></tr>
+<tr><td><code>SkunkHandler[F][N]</code> / <code>DoobieHandler[N]</code></td><td><code>SqlxHandler&lt;N&gt;</code> (<code>Fn(&amp;NonEmpty&lt;N&gt;, &amp;mut PgConnection) -&gt; BoxFuture&lt;Result&lt;(), BackendError&gt;&gt;</code>)</td></tr>
+<tr><td><code>SkunkRepository</code>, <code>SkunkCQRSRepository</code>, <code>SkunkJournalReader</code>, <code>SkunkOutboxReader</code>, <code>SkunkSnapshotPersistence</code> (and Doobie twins)</td><td>private <code>SqlxRepository</code>, <code>SqlxCqrsRepository</code>, <code>SqlxJournalReader</code>, <code>SqlxOutboxReader</code>, <code>SqlxSnapshotPersistence</code> behind the <code>edomata-backend</code> traits</td></tr>
+<tr><td><code>Queries.scala</code> (both drivers)</td><td><code>queries.rs</code> (same SQL; setup DDL from <code>edomata_postgres::ddl</code>)</td></tr>
+<tr><td><code>SkunkMigrations.run</code> / <code>DoobieMigrations.run(naming, pool, migrations, batchSize)</code></td><td><code>SqlxMigrations::run(&amp;naming, &amp;pool, &amp;migrations)</code> / <code>run_with_batch_size</code></td></tr>
+<tr><td><code>SqlState.UniqueViolation</code> → <code>VersionConflict</code></td><td>SQLSTATE <code>23505</code> → <code>BackendError::VersionConflict</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="type-mapping-test-kit"><a class="header" href="#type-mapping-test-kit">Type mapping (test kit)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala (<code>munit</code> module)</th><th>Rust (<code>edomata-testkit</code>)</th></tr>
+</thead>
+<tbody>
+<tr><td><code>trait DomainSuite(msgId, address)</code> (MUnit base trait with an <code>extension [F[_], C, S, E, R, N]</code> on <code>Edomaton[F, RequestContext[C, S], R, E, N, Unit]</code>)</td><td><code>EdomatonAssertions</code> extension trait on <code>Edomaton&lt;RequestContext&lt;C, S&gt;, R, E, N, T&gt;</code> (works with any test runner)</td></tr>
+<tr><td><code>DomainSuite</code> constructor defaults (<code>msgId = "1"</code>, <code>address = "sut"</code>; commands timestamped <code>Instant.MIN</code>)</td><td><code>TestCommand</code> (same defaults, <code>DateTime::&lt;Utc&gt;::MIN_UTC</code>; <code>TestCommand::new(id, address)</code>, <code>message(payload)</code>)</td></tr>
+<tr><td><code>app.runWith(command, state)</code></td><td><code>app.run_with(&amp;model, command, state)</code>, <code>app.run_with_command(&amp;model, &amp;TestCommand, command, state)</code></td></tr>
+<tr><td><code>expect</code>, <code>expectAll</code>, <code>expectRejection</code>, <code>expectRejectionWith(command, state)(err1, errs*)</code>, <code>expectRejectionWith(command, state)(expectedErrors, expectedNotifications)</code>, <code>expectRejectionNotify</code>, <code>expectThat</code></td><td><code>expect</code>, <code>expect_all</code>, <code>expect_rejection</code>, <code>expect_rejection_with</code>, <code>expect_rejection_and_notify</code>, <code>expect_rejection_notify</code>, <code>expect_that</code></td></tr>
+<tr><td><em>(none)</em></td><td><code>StomatonAssertions</code> (<code>run_with</code>, <code>expect</code>, <code>expect_rejection_with</code>) for CQRS programs</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="type-mapping-saas"><a class="header" href="#type-mapping-saas">Type mapping (SaaS)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala (<code>saas</code>, <code>saas-skunk</code>)</th><th>Rust (<code>edomata-saas</code>, <code>edomata-saas-sqlx</code>)</th></tr>
+</thead>
+<tbody>
+<tr><td><code>TenantId</code>, <code>UserId</code> (opaque strings)</td><td><code>TenantId</code>, <code>UserId</code> newtypes (<code>new</code>, <code>value</code>, <code>into_string</code>, <code>From&lt;&amp;str&gt;</code> / <code>From&lt;String&gt;</code>)</td></tr>
+<tr><td><code>CrudAction</code></td><td><code>CrudAction</code> (+ <code>CrudAction::ALL</code>)</td></tr>
+<tr><td><code>CrudState[+A]</code> (<code>NonExistent</code>, <code>Active</code>, <code>Deleted</code>)</td><td><code>CrudState&lt;A&gt;</code> (same variants; <code>active</code>, <code>deleted</code>, <code>tenant_id</code>, <code>owner_id</code>, <code>data</code>, <code>is_active</code>, <code>map</code>)</td></tr>
+<tr><td><code>SaaSCommand[Auth, +C]</code></td><td><code>SaaSCommand&lt;Auth, C&gt;</code></td></tr>
+<tr><td><code>AuthPolicy[Auth]</code> (typeclass, <code>given</code>)</td><td><code>AuthPolicy&lt;Auth&gt;</code> trait, passed as a value (ADR 0009)</td></tr>
+<tr><td><code>CallerIdentity</code> + its default <code>given AuthPolicy</code></td><td><code>CallerIdentity</code> + <code>PermissivePolicy</code></td></tr>
+<tr><td><code>RoleBasedPolicy(rolesFor)</code></td><td><code>RoleBasedPolicy::new(roles_for)</code>, <code>RoleBasedPolicy::none()</code></td></tr>
+<tr><td><code>SaaSGuard.checkTenant</code>, <code>checkAuthorization</code></td><td><code>SaaSGuard::check_tenant</code>, <code>check_authorization</code>, <code>check</code></td></tr>
+<tr><td><code>SaaSDomainDSL[Auth, C, A, E, R, N](mkRejection)</code> (<code>App[F, T]</code>)</td><td><code>SaaSDomainDsl&lt;Auth, C, A, E, R, N&gt;::new(policy, mk_rejection)</code> (<code>SaaSEsApp&lt;..., T&gt;</code>)</td></tr>
+<tr><td><code>SaaSCQRSDomainDSL[Auth, C, A, R, N](mkRejection)</code></td><td><code>SaaSCqrsDsl&lt;Auth, C, A, R, N&gt;::new(policy, mk_rejection)</code> (<code>SaaSCqrsApp&lt;..., T&gt;</code>)</td></tr>
+<tr><td><code>guardedRouter</code>, <code>unsafeUnguardedRouter</code>, <code>guarded</code>, <code>unsafeUnguarded</code>, <code>auth</code>, <code>command</code>, <code>entityState</code>, <code>set</code>, <code>modifyS</code>, <code>decideS</code>, …</td><td><code>guarded_router</code>, <code>unsafe_unguarded_router</code>, <code>guarded</code>, <code>unsafe_unguarded</code>, <code>auth</code>, <code>command</code>, <code>entity_state</code>, <code>set</code>, <code>modify_s</code>, <code>decide_s</code>, … (+ <code>guard(action)</code> and <code>policy()</code>)</td></tr>
+<tr><td><code>SaaSEventSourcedService</code>, <code>SaaSCQRSService</code> (<code>SaaS</code>, <code>domain</code>)</td><td><code>SaaSEventSourcedService</code>, <code>SaaSCqrsService</code> (<code>saas()</code>, <code>domain()</code>)</td></tr>
+<tr><td><code>TenantAwareReader[F, Auth, A]</code>, <code>TenantScopedQuery[F, Auth, A, Q]</code>, <code>UnsafeCrossTenantQuery[F, A, Q]</code></td><td>same names (<code>async_trait</code>); <code>TenantScopedQuery.apply</code> → <code>ScopedQueryFn::new(policy, run)</code>, <code>UnsafeCrossTenantQuery.apply</code> → <code>CrossTenantQueryFn::new(run)</code></td></tr>
+<tr><td><code>TenantExtractor[S]</code> (typeclass)</td><td><code>TenantExtractor</code> trait implemented by <code>CrudState&lt;A&gt;</code> (<code>tenant_and_owner</code>)</td></tr>
+<tr><td><code>SaaSPGSchema.cqrs(naming, stateType, notificationType, rls)</code>, <code>SaaSPGSchema.RLSConfig</code></td><td><code>SaaSPGSchema::cqrs(&amp;naming)</code> / <code>cqrs_with(&amp;naming, state_type, notification_type, rls)</code>, <code>RlsConfig</code>; statements in <code>edomata_saas::ddl</code></td></tr>
+<tr><td><code>edomata.saas</code> package re-exports (<code>CommandMessage</code>, <code>MessageMetadata</code>, <code>Decision</code>, <code>Backend</code>)</td><td><code>edomata_saas</code> re-exports <code>CommandMessage</code>, <code>MessageMetadata</code>, <code>Decision</code>, <code>NonEmpty</code>, <code>PGNaming</code>, <code>PGNamespace</code> (no <code>Backend</code>: the SaaS crate does not depend on <code>edomata-backend</code>)</td></tr>
+<tr><td><code>SaaSSkunkCQRSDriver</code> (<code>apply</code>, <code>from</code>, <code>from(naming, pool, skipSetup)</code>)</td><td><code>SaaSSqlxCqrsDriver::for_namespace</code>, <code>new</code>, <code>new_with(naming, pool, skip_setup)</code></td></tr>
+<tr><td><code>BackendCodec[S]</code> + <code>TenantExtractor[S]</code> (driver requirements)</td><td><code>SaaSCodec&lt;T&gt;</code> (<code>state</code>, <code>with_extractor</code>, <code>notification</code>, <code>jsonb_state</code>, <code>jsonb_notification</code>)</td></tr>
+<tr><td><code>SaaSQueries</code> (<code>listByTenant</code>, tenant-aware <code>put</code> / outbox insert)</td><td>private <code>SaaSStateQueries</code> / <code>SaaSOutboxQueries</code>; <code>TenantStateLister::list_by_tenant</code></td></tr>
+<tr><td><code>SaaSSkunkCQRSRepository</code>, <code>SaaSSkunkOutboxReader</code></td><td>private <code>SaaSRepository</code>; <code>edomata_sqlx::shared::SqlxOutboxReader</code> reused</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="broker-distribution-new-no-scala-equivalent"><a class="header" href="#broker-distribution-new-no-scala-equivalent">Broker distribution (new, no Scala equivalent)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Concept</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td>broker-neutral message</td><td><code>edomata_broker::BrokerMessage</code> (<code>outbox_id</code> / <code>journal_id</code>, <code>headers()</code>), <code>MessageKind</code>, <code>headers::*</code></td></tr>
+<tr><td>publisher</td><td><code>edomata_broker::Publisher</code> (<code>publish(&amp;NonEmpty&lt;BrokerMessage&gt;)</code>), <code>PublishError</code> (<code>Transient</code> / <code>Permanent</code>), <code>RecordingPublisher</code> for tests</td></tr>
+<tr><td>outbox relay</td><td><code>edomata_broker::OutboxRelay</code> (<code>relay_once</code>, <code>run</code>, <code>run_as_leader</code>, <code>wake_on</code>, <code>metrics</code>)</td></tr>
+<tr><td>journal relay</td><td><code>edomata_broker::JournalRelay</code>, <code>CheckpointStore</code>, <code>InMemoryCheckpointStore</code>, <code>postgres::PgCheckpointStore</code>, <code>PGSchema::relay_checkpoints</code> (opt-in DDL)</td></tr>
+<tr><td>payload encoding</td><td><code>MessageEncoder::serde</code> / <code>from_codec</code></td></tr>
+<tr><td>configuration and counters</td><td><code>RelayConfig</code>, <code>RetryPolicy</code>, <code>RelayMetrics</code> / <code>MetricsSnapshot</code>, <code>RelayError</code>, <code>CancellationToken</code></td></tr>
+<tr><td>leader election, cross-process wake-ups</td><td><code>postgres::LeaderLock</code> / <code>LeaderGuard</code>, <code>postgres::listen</code>; <code>SqlxDriver::with_outbox_notify_channel</code> / <code>with_journal_notify_channel</code>, <code>SqlxCqrsDriver::with_outbox_notify_channel</code></td></tr>
+<tr><td>Kafka</td><td><code>edomata_kafka::KafkaPublisher</code> (<code>builder</code>, <code>with_topic</code>, <code>with_fixed_topic</code>, <code>with_config</code>), <code>default_topic</code></td></tr>
+<tr><td>RabbitMQ</td><td><code>edomata_rabbitmq::RabbitMqPublisher</code> (<code>connect</code>, <code>with_exchange</code>, <code>with_routing_key</code>, <code>with_fixed_exchange</code>, <code>declare_exchange</code>)</td></tr>
+</tbody>
+</table>
+</div>
+<p>Tests: <code>crates/edomata-broker/tests/{outbox_relay,journal_relay,postgres}.rs</code>,
+<code>crates/edomata-kafka/tests/kafka.rs</code> and <code>crates/edomata-rabbitmq/tests/rabbitmq.rs</code>
+(testcontainers; Docker required).</p>
+<h2 id="type-mapping-simple-facade"><a class="header" href="#type-mapping-simple-facade">Type mapping (simple facade)</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala (<code>java-api</code>)</th><th>Rust (<code>edomata-simple</code>)</th></tr>
+</thead>
+<tbody>
+<tr><td><code>JDomainModel</code> (<code>initial</code>, <code>transition</code>, <code>create</code>, <code>toModelTC</code>)</td><td><code>SimpleDomainModel</code> trait (<code>initial</code>, <code>transition</code> → <code>Result&lt;S, Vec&lt;R&gt;&gt;</code>, <code>into_model</code>), <code>ClosureModel::new</code> (<code>create</code>), <code>ModelAdapter</code></td></tr>
+<tr><td><code>JDecision</code> (<code>Accepted</code>, <code>Rejected</code>, <code>Indecisive</code>; <code>accept</code>, <code>acceptReturn</code>, <code>reject</code>, <code>pure</code>, <code>unit</code>, <code>map</code>, <code>flatMap</code>, <code>toEither</code>)</td><td><code>SimpleDecision</code> enum (same variants; <code>accept</code>, <code>accept_return</code>, <code>reject</code>, <code>pure</code>, <code>unit</code>, <code>map</code>, <code>and_then</code> / <code>flat_map</code>, <code>to_result</code>, <code>events</code>, <code>reasons</code>)</td></tr>
+<tr><td><code>Converters.decisionToJava</code> / <code>decisionToScala</code></td><td><code>SimpleDecision::from(Decision)</code> / <code>SimpleDecision::into_decision</code> (<code>EmptyRejection</code> error)</td></tr>
+<tr><td><code>Converters.toJavaList</code> / <code>toChain</code> / <code>toNonEmptyChain</code></td><td><code>NonEmpty::into_vec</code>, <code>Vec</code>, <code>NonEmpty::from_vec</code></td></tr>
+<tr><td><code>JAppResult</code> (<code>decide</code>, <code>decideAndPublish</code>, <code>accept</code>, <code>reject</code>, <code>publish</code>)</td><td><code>AppResult</code> (same constructors + <code>and_publish</code>)</td></tr>
+<tr><td><code>JCommandHandler.create</code>, <code>JRequestContext</code> (<code>command</code>, <code>commandMessage</code>, <code>state</code>, <code>address</code>, <code>messageId</code>)</td><td><code>CommandHandler::new</code> / <code>new_async</code>, <code>Context</code> (<code>command</code>, <code>message</code>, <code>state</code>, <code>address()</code>, <code>message_id()</code>, <code>time()</code>)</td></tr>
+<tr><td><code>JCodec</code> (<code>encode</code>, <code>decode</code>, <code>of</code>, <code>toBackendCodec</code>)</td><td><code>SimpleCodec</code> trait (<code>encode</code>, <code>decode</code> → <code>Result&lt;T, String&gt;</code>, <code>into_codec</code>), <code>ClosureCodec::new</code> (<code>of</code>), <code>CodecAdapter</code>, <code>serde_codec</code> for serde types</td></tr>
+<tr><td><code>JCommandMessage.of(id, time, address, payload)</code></td><td><code>CommandMessage::new(id, time, address, payload)</code> (re-exported)</td></tr>
+<tr><td><code>JEventMessage</code>, <code>JOutboxItem</code></td><td><code>EventMessage</code>, <code>OutboxItem</code> (re-exported)</td></tr>
+<tr><td><code>JEither</code> (<code>left</code>, <code>right</code>, <code>isLeft</code>, <code>isRight</code>, <code>getLeft</code>, <code>getRight</code>, <code>fold</code>, <code>map</code>)</td><td><code>Result&lt;R, L&gt;</code> (<code>Err</code>, <code>Ok</code>, <code>is_err</code>, <code>is_ok</code>, <code>unwrap_err</code>, <code>unwrap</code>, <code>map_or_else</code>, <code>map</code>)</td></tr>
+<tr><td><code>JBackendBuilder.forDoobie(model)</code> (<code>namespace</code>, <code>schemaNamespace</code>, <code>dataSource</code>, <code>eventCodec</code>, <code>notificationCodec</code>, <code>maxRetry</code>, <code>inMemSnapshotSize</code>, <code>skipSetup</code>, <code>build(runtime)</code>)</td><td><code>SimpleBackend::builder(model)</code> (<code>namespace</code>, <code>schema_namespace</code>, <code>naming</code>, <code>pool</code> / <code>database_url</code>, <code>event_codec</code> / <code>simple_event_codec</code>, <code>notification_codec</code> / <code>simple_notification_codec</code>, <code>serde_codecs</code>, <code>max_retry</code>, <code>in_mem_snapshot_size</code>, <code>skip_setup</code>, <code>build().await</code>, <code>build_blocking(runtime)</code>)</td></tr>
+<tr><td><code>JBackend</code> (<code>handle</code>, <code>journal</code>, <code>outbox</code>, <code>close</code>)</td><td><code>SimpleBackend</code> (<code>handle</code>, <code>compile</code>, <code>journal</code>, <code>outbox</code>, <code>close</code>, <code>inner</code>); <code>BlockingBackend</code> for blocking calls</td></tr>
+<tr><td><code>JJournalReader</code> (<code>readStream</code>, <code>readStreamAfter</code>, <code>readAll</code>, <code>readAllAfter</code>)</td><td><code>SimpleJournal</code> (<code>read_stream</code>, <code>read_stream_after</code>, <code>read_all</code>, <code>read_all_after</code>, returning <code>Vec</code>)</td></tr>
+<tr><td><code>JOutboxReader.read</code></td><td><code>SimpleOutbox::read</code> (+ <code>mark_as_sent</code>, <code>mark_all_as_sent</code>); blocking twins on <code>BlockingBackend</code></td></tr>
+<tr><td><code>EdomataRuntime</code> (<code>create</code>, <code>global</code>, <code>fromExisting</code>, <code>close</code>)</td><td><code>SimpleRuntime</code> (<code>create</code> owns a Tokio runtime since there is no global one, <code>from_handle</code>, <code>block_on</code>, <code>close</code>)</td></tr>
+<tr><td><code>JPGSchema</code> (<code>eventsourcing</code>, <code>cqrs</code>, <code>eventsourcingWithSchema</code>, <code>cqrsWithSchema</code>)</td><td><code>SimplePGSchema</code> (<code>eventsourcing</code> / <code>eventsourcing_with</code>, <code>cqrs</code> / <code>cqrs_with</code>, <code>eventsourcing_with_schema</code>, <code>cqrs_with_schema</code>, returning <code>Result&lt;Vec&lt;String&gt;, SimpleError&gt;</code>)</td></tr>
+<tr><td><code>IllegalArgumentException</code> / <code>IllegalStateException</code></td><td><code>SimpleError::InvalidNamespace</code> / <code>MissingConfig</code>; <code>SimpleError::Connection</code>, <code>SimpleError::Backend</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="test-suites"><a class="header" href="#test-suites">Test suites</a></h2>
+<h3 id="modulescoresrctest"><a class="header" href="#modulescoresrctest"><code>modules/core/src/test</code></a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala suite</th><th>Rust test</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>decision/DecisionSuite.scala</code></td><td><code>crates/edomata-core/tests/decision.rs</code></td><td>MonadError, Traverse, Eq laws via <code>proptest</code>; accumulation and validation properties. <code>SerializableTests</code> is JVM-only (no equivalent).</td></tr>
+<tr><td><code>decision/DecisionSyntaxSuite.scala</code></td><td><code>crates/edomata-core/tests/decision_syntax.rs</code></td><td></td></tr>
+<tr><td><code>decision/Generators.scala</code>, <code>Helpers.scala</code> (at <code>modules/core/src/test/scala/</code>)</td><td><code>crates/edomata-core/tests/common/mod.rs</code></td><td>proptest strategies</td></tr>
+<tr><td><code>decisiont/DecisionTSuite.scala</code></td><td><code>crates/edomata-core/tests/decision_t.rs</code></td><td></td></tr>
+<tr><td><code>responset/ResponseTLaws.scala</code></td><td><code>crates/edomata-core/tests/response.rs</code> (<code>check_laws</code>)</td><td>generic over <code>Res: RaiseError</code>; the Cats <code>Traverse</code> law set is not ported (no <code>Traverse</code> in Rust, see ADR 0004)</td></tr>
+<tr><td><code>responset/ResponseDecisionSuite.scala</code> (<code>ResponseDecisionSuite</code>, <code>ResponseEitherNecSuite</code>)</td><td><code>crates/edomata-core/tests/response.rs</code></td><td><code>response_decision_laws</code>, <code>response_result_nec_laws</code></td></tr>
+<tr><td><code>action/ActionSuite.scala</code></td><td><code>crates/edomata-core/tests/action.rs</code></td><td></td></tr>
+<tr><td><code>edomaton/EdomatonSuite.scala</code></td><td><code>crates/edomata-core/tests/edomaton.rs</code></td><td>laws checked on inputs <code>1, 2, 3</code> like <code>ExhaustiveCheck</code></td></tr>
+<tr><td><code>stomaton/StomatonSuite.scala</code></td><td><code>crates/edomata-core/tests/stomaton.rs</code></td><td></td></tr>
+<tr><td><code>stomaton/StomatonConstructorSuite.scala</code></td><td><code>crates/edomata-core/tests/stomaton.rs</code></td><td></td></tr>
+<tr><td><code>ModelSyntaxSuite.scala</code></td><td><code>crates/edomata-core/tests/model_syntax.rs</code></td><td></td></tr>
+<tr><td><em>(none in Scala)</em></td><td><code>crates/edomata-core/tests/compiler.rs</code></td><td>pins <code>DomainCompiler</code> / DSL behaviour</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="modulesbackendsrctest"><a class="header" href="#modulesbackendsrctest"><code>modules/backend/src/test</code></a></h3>
+<p>All under <code>crates/edomata-backend/tests/</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala suite</th><th>Rust test</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>LRUCacheSuite.scala</code></td><td><code>lru_cache.rs</code></td><td></td></tr>
+<tr><td><code>InMemoryCommandStoreSuite.scala</code></td><td><code>command_store.rs</code></td><td></td></tr>
+<tr><td><code>OutboxConsumerSuite.scala</code></td><td><code>outbox_consumer.rs</code></td><td>“mark each chunk” uses the consumer’s batch size instead of fs2 chunk boundaries</td></tr>
+<tr><td><code>FakeOutboxReader.scala</code>, <code>Doubles.scala</code></td><td><code>common/mod.rs</code></td><td>test doubles</td></tr>
+<tr><td><code>eventsourcing/CachedRepositorySuite.scala</code></td><td><code>es_cached_repository.rs</code></td><td></td></tr>
+<tr><td><code>eventsourcing/CommandHandlerSuite.scala</code></td><td><code>es_command_handler.rs</code></td><td>“raised errors” / “retry” use failing repositories (programs have no error channel, ADR 0005)</td></tr>
+<tr><td><code>eventsourcing/NotificationsSuite.scala</code></td><td><code>notifications.rs</code></td><td>Tokio paused clock replaces <code>TestControl</code></td></tr>
+<tr><td><code>eventsourcing/RepositoryReaderSuite.scala</code></td><td><code>es_repository_reader.rs</code></td><td></td></tr>
+<tr><td><code>eventsourcing/PersistedSnapshotStoreSuite.scala</code></td><td><code>es_snapshot_stores.rs</code></td><td>Tokio paused clock replaces <code>TestControl</code></td></tr>
+<tr><td><code>eventsourcing/InMemorySnapshotSuite.scala</code></td><td><code>es_snapshot_stores.rs</code></td><td></td></tr>
+<tr><td><code>eventsourcing/FakeRepository.scala</code>, <code>eventsourcing/Doubles.scala</code></td><td><code>common/mod.rs</code></td><td>test doubles</td></tr>
+<tr><td><code>cqrs/CachedRepositorySuite.scala</code></td><td><code>cqrs_cached_repository.rs</code></td><td></td></tr>
+<tr><td><code>cqrs/CommandHandlerSuite.scala</code></td><td><code>cqrs_command_handler.rs</code></td><td>same adaptation as the event-sourcing handler suite</td></tr>
+<tr><td><code>cqrs/NotificationsSuite.scala</code></td><td><code>notifications.rs</code></td><td></td></tr>
+<tr><td><code>cqrs/FakeRepository.scala</code></td><td><code>common/mod.rs</code></td><td>test double</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="modulesbackend-tests"><a class="header" href="#modulesbackend-tests"><code>modules/backend-tests</code></a></h3>
+<p>The suites are a library crate, <code>crates/edomata-backend-tests</code>, so that the
+same checks run against every storage. <code>tests/inmemory.rs</code> runs them
+against the in-memory driver and <code>crates/edomata-sqlx/tests/shared_suites.rs</code> runs them against PostgreSQL.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala suite</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td><code>shared/BackendCompatibilitySuite.scala</code></td><td><code>src/eventsourcing.rs</code> (<code>prepared_data</code> module)</td></tr>
+<tr><td><code>shared/CqrsSuite.scala</code></td><td><code>src/cqrs.rs</code></td></tr>
+<tr><td><code>shared/PersistenceSuite.scala</code></td><td><code>src/eventsourcing.rs</code></td></tr>
+<tr><td><code>shared/SnapshotPersistenceSuite.scala</code></td><td><code>src/eventsourcing.rs</code> (<code>snapshot_*</code> checks)</td></tr>
+<tr><td><code>shared/TestDomain.scala</code>, <code>shared/Utils.scala</code></td><td><code>src/lib.rs</code> (<code>TestDomain</code>, <code>TestCqrsModel</code>, <code>random_string</code>)</td></tr>
+<tr><td><code>{jvm,js,native}/StorageSuite.scala</code></td><td><code>tests/inmemory.rs</code> (one <code>#[tokio::test]</code> per check; a single Rust variant replaces the three platform variants)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="modulespostgressrctest"><a class="header" href="#modulespostgressrctest"><code>modules/postgres/src/test</code></a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala suite</th><th>Rust test</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>PGNamespaceSuite.scala</code> (<code>PGNamespaceSuite</code>)</td><td><code>crates/edomata-postgres/tests/naming.rs</code></td><td>the compile-time macro check becomes a runtime <code>TryFrom</code> check with the same message</td></tr>
+<tr><td><code>PGNamespaceSuite.scala</code> (<code>PGSchemaSuite</code>)</td><td><code>crates/edomata-postgres/tests/naming.rs</code></td><td></td></tr>
+<tr><td><code>GoldenDDL.scala</code> (new generator, test scope)</td><td><code>crates/edomata-postgres/tests/golden.rs</code> + <code>rust/tests/golden/*.sql</code></td><td>byte-for-byte DDL comparison for <code>Schema</code>/<code>Prefixed</code> × <code>jsonb</code>/<code>json</code>/<code>bytea</code>/mixed (32 files)</td></tr>
+<tr><td><em>(none in Scala)</em></td><td><code>crates/edomata-postgres/tests/migration.rs</code></td><td>pins <code>EventMigration</code> semantics</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="codec-modules-skunk-circe-skunk-jsoniter-skunk-upickle-doobie-circe-doobie-jsoniter-doobie-upickle"><a class="header" href="#codec-modules-skunk-circe-skunk-jsoniter-skunk-upickle-doobie-circe-doobie-jsoniter-doobie-upickle">Codec modules (<code>skunk-circe</code>, <code>skunk-jsoniter</code>, <code>skunk-upickle</code>, <code>doobie-circe</code>, <code>doobie-jsoniter</code>, <code>doobie-upickle</code>)</a></h3>
+<p>These modules have no Scala test suites. The Rust crate adds:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Rust test</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>crates/edomata-serde/tests/round_trip.rs</code></td><td>round trips for every format, wire-format bytes of the sqlx wrappers</td></tr>
+<tr><td><code>crates/edomata-serde/tests/golden_payloads.rs</code> + <code>rust/tests/golden/payloads/</code></td><td>payloads written by Circe, jsoniter (JSON and <code>msgpack</code>) and uPickle (JSON) are readable and re-encoded byte-for-byte; uPickle <code>msgpack</code> is asserted unreadable</td></tr>
+<tr><td><code>crates/edomata-serde/tests/sql.rs</code></td><td>stored <code>jsonb</code> / <code>json</code> / <code>bytea</code> payloads queried with <code>-&gt;&gt;</code> and <code>@&gt;</code> on the docker-compose PostgreSQL</td></tr>
+<tr><td><code>examples/src/test/scala/GoldenPayloads.scala</code> (new generator, test scope)</td><td>produces the golden payload files</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="modulesskunk-and-modulesdoobie-tests"><a class="header" href="#modulesskunk-and-modulesdoobie-tests"><code>modules/skunk</code> and <code>modules/doobie</code> tests</a></h3>
+<p>Both Scala suites wire the shared <code>backend-tests</code> suites to their driver; the
+single <code>edomata-sqlx</code> driver runs them once, under
+<code>crates/edomata-sqlx/tests/</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala suite (classes)</th><th>Rust test</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>SkunkCompatibilitySuite</code> / <code>DoobieCompatibilitySuite</code> (<code>SkunkCompatibilitySuite</code> and <code>DoobieJsonCompatibilitySuite</code> for json, <code>*JsonbCompatibilitySuite</code>, <code>*BinaryCompatibilitySuite</code>)</td><td><code>shared_suites.rs</code> (<code>compatibility_json</code>, <code>compatibility_jsonb</code>, <code>compatibility_binary</code>)</td><td>same <code>compatibility_*</code> schemas from <code>testdata.sql</code>; <code>IntCodec</code> in <code>common/mod.rs</code> reproduces the Scala test codecs (hex bytes for <code>bytea</code>)</td></tr>
+<tr><td><code>*PersistenceSuite</code>, <code>*PersistenceKeywordNamespaceSuite</code>, <code>*PrefixedPersistenceSuite</code></td><td><code>shared_suites.rs</code> (<code>persistence</code>, <code>persistence_keyword_namespace</code>, <code>persistence_prefixed</code>)</td><td>checks of one namespace are serialised with a lock (MUnit runs a suite sequentially)</td></tr>
+<tr><td><code>*SnapshotPersistenceSuite</code></td><td><code>shared_suites.rs</code> (<code>snapshot_*</code>)</td><td></td></tr>
+<tr><td><code>*CQRSSuite</code>, <code>*PrefixedCQRSSuite</code></td><td><code>shared_suites.rs</code> (<code>cqrs_schema</code>, <code>cqrs_prefixed</code>)</td><td></td></tr>
+<tr><td><em>(none in Scala)</em></td><td><code>migrations.rs</code></td><td>pins <code>SkunkMigrations</code> / <code>DoobieMigrations</code> behaviour (apply, skip, rewrite, truncate snapshots, atomic failure)</td></tr>
+<tr><td><em>(none in Scala)</em></td><td><code>driver.rs</code></td><td><code>skip_setup</code>, Flyway workflow with <code>PGSchema</code>, prefixed catalog names, namespace validation, transactional CQRS handler, duplicate-command race</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="modulessaassrctest"><a class="header" href="#modulessaassrctest"><code>modules/saas/src/test</code></a></h3>
+<p>All under <code>crates/edomata-saas/tests/</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala suite</th><th>Rust test</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>SaaSGuardSuite.scala</code></td><td><code>guard.rs</code></td><td>includes the custom <code>AuthPolicy</code> (API key) checks</td></tr>
+<tr><td><code>SaaSDomainDSLSuite.scala</code></td><td><code>domain_dsl.rs</code></td><td></td></tr>
+<tr><td><code>SaaSCQRSDSLSuite.scala</code></td><td><code>cqrs_dsl.rs</code></td><td></td></tr>
+<tr><td><code>SaaSServiceSuite.scala</code></td><td><code>service.rs</code></td><td>services, <code>CrudState</code>, <code>types.rs</code>, re-exports; the covariance test has no Rust equivalent (invariant generics), the <code>serde</code> shape is pinned instead</td></tr>
+<tr><td><code>SaaSPGSchemaSuite.scala</code> (<code>TenantExtractorSuite</code>, <code>SaaSPGSchemaSuite</code>)</td><td><code>schema.rs</code></td><td></td></tr>
+<tr><td><code>GoldenSaaSDDL.scala</code> (new generator, test scope)</td><td><code>schema.rs</code> (<code>saas_ddl_matches_scala_golden_files</code>) + <code>rust/tests/golden/saas_cqrs_*.sql</code></td><td>24 files: schema/prefixed/quoted namespace × <code>jsonb</code>/<code>json</code>/<code>bytea</code>/mixed × with/without RLS</td></tr>
+<tr><td><code>TenantAwareReaderSuite.scala</code></td><td><code>reader.rs</code></td><td></td></tr>
+<tr><td><code>ProductCatalogSuite.scala</code></td><td><code>product_catalog.rs</code></td><td></td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="modulessaas-skunk"><a class="header" href="#modulessaas-skunk"><code>modules/saas-skunk</code></a></h3>
+<p>The Scala module has no test suite. <code>crates/edomata-saas-sqlx/tests/postgres.rs</code>
+adds PostgreSQL tests for: <code>tenant_id</code> / <code>owner_id</code> population on save,
+empty tenant on <code>notify</code>, catalog objects created by setup, <code>skip_setup</code> with
+RLS DDL from <code>SaaSPGSchema</code> enforced as a non-superuser role, the
+transactional handler, namespace validation, <code>TenantStateLister</code> and
+<code>SaaSCodec</code>.</p>
+<h3 id="modulesjava-apisrctest"><a class="header" href="#modulesjava-apisrctest"><code>modules/java-api/src/test</code></a></h3>
+<p>All under <code>crates/edomata-simple/tests/</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala suite</th><th>Rust test</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ConvertersSuite.scala</code></td><td><code>converters.rs</code></td><td>list conversions become <code>NonEmpty::from_vec</code> / <code>into_vec</code></td></tr>
+<tr><td><code>JAppResultSuite.scala</code></td><td><code>app_result.rs</code></td><td></td></tr>
+<tr><td><code>JCodecSuite.scala</code></td><td><code>codec.rs</code></td><td></td></tr>
+<tr><td><code>JCommandMessageSuite.scala</code></td><td><code>command_message.rs</code></td><td>on the re-exported <code>CommandMessage</code></td></tr>
+<tr><td><code>JDecisionSuite.scala</code></td><td><code>decision.rs</code></td><td></td></tr>
+<tr><td><code>JDomainModelSuite.scala</code></td><td><code>domain_model.rs</code></td><td></td></tr>
+<tr><td><code>JEitherSuite.scala</code></td><td><code>either.rs</code></td><td>pins the <code>JEither</code> → <code>Result</code> mapping</td></tr>
+<tr><td><code>JPGSchemaSuite.scala</code></td><td><code>pg_schema.rs</code></td><td></td></tr>
+<tr><td><code>JavaApiIntegrationSuite.scala</code> (runs <code>src/test/java/.../JavaApiTest.java</code>)</td><td><code>integration.rs</code></td><td>the 17 Java checks</td></tr>
+<tr><td><em>(none in Scala)</em></td><td><code>backend.rs</code></td><td><code>SimpleBackend</code> on PostgreSQL: builder validation, commands, journal, outbox, <code>skip_setup</code>, blocking backend</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="modulese2e"><a class="header" href="#modulese2e"><code>modules/e2e</code></a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala</th><th>Rust</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>main/accounts/Domain.scala</code>, <code>main/accounts/Service.scala</code></td><td><code>crates/edomata-e2e/src/lib.rs</code></td><td><code>BigDecimal</code> → <code>rust_decimal::Decimal</code>; JSON shapes match Circe (ADR 0011)</td></tr>
+<tr><td><code>main/e2e.scala</code> + <code>SkunkE2ETestSuites.scala</code> + <code>DoobieE2ETestSuites.scala</code></td><td><code>crates/edomata-e2e/tests/e2e.rs</code></td><td>one sqlx variant replaces the Skunk and Doobie variants</td></tr>
+<tr><td><code>CrossLanguage.scala</code> (new, test scope: the Scala side of the cross-language test)</td><td><code>crates/edomata-e2e/tests/cross_language.rs</code></td><td>Scala writes, Rust reads and appends, Scala verifies; needs <code>sbt</code> (see <code>rust/README.md</code>)</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="modulesmunit"><a class="header" href="#modulesmunit"><code>modules/munit</code></a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td><code>DomainSuite.scala</code> (no test suite of its own)</td><td><code>edomata-testkit</code>; <code>crates/edomata-testkit/tests/assertions.rs</code> pins every helper</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="examples"><a class="header" href="#examples"><code>examples/</code></a></h3>
+<p>All under <code>rust/examples/src/bin/</code>; run with <code>cargo run -p edomata-examples --bin &lt;name&gt;</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala example</th><th>Rust example</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Example1.scala</code></td><td><code>counter.rs</code></td><td>the counter’s transition really counts (ADR 0011)</td></tr>
+<tr><td><code>StomatonExample.scala</code></td><td><code>stomaton.rs</code></td><td>runnable (the Scala one has <code>???</code> placeholders)</td></tr>
+<tr><td><code>MigrationExample.scala</code></td><td><code>migration.rs</code></td><td>also seeds a V1 journal and reads it back as V3</td></tr>
+<tr><td><code>SaaSExample.scala</code></td><td><code>saas_todo.rs</code></td><td>tenant-scoped read queries run real SQL</td></tr>
+<tr><td><code>ProductCatalogExample.scala</code></td><td><code>product_catalog.rs</code></td><td>the unimplemented <code>ProductQueries</code> read queries are replaced by <code>TenantStateLister::list_by_tenant</code></td></tr>
+<tr><td><em>(new)</em></td><td><code>kafka_relay.rs</code>, <code>rabbitmq_relay.rs</code> (features <code>kafka</code> / <code>rabbitmq</code>)</td><td>outbox relays to Kafka and RabbitMQ (milestone 9)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="documentation"><a class="header" href="#documentation">Documentation</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Scala page (<code>docs/</code>)</th><th>Book chapter (<code>rust/book/src/</code>)</th><th>Compiled samples</th></tr>
+</thead>
+<tbody>
+<tr><td><code>introduction.md</code></td><td><code>introduction.md</code></td><td></td></tr>
+<tr><td><code>about/design-goals.md</code>, <code>about/features.md</code></td><td><code>about/design-goals.md</code>, <code>about/features.md</code></td><td></td></tr>
+<tr><td><code>tutorials/getting-started.md</code></td><td><code>tutorials/getting-started.md</code></td><td></td></tr>
+<tr><td><code>tutorials/eventsourcing.md</code></td><td><code>tutorials/eventsourcing.md</code></td><td><code>book/samples/src/eventsourcing.rs</code>, <code>book/samples/src/testing.rs</code></td></tr>
+<tr><td><code>tutorials/cqrs.md</code></td><td><code>tutorials/cqrs.md</code></td><td><code>book/samples/src/cqrs.rs</code></td></tr>
+<tr><td><code>tutorials/backends.md</code></td><td><code>tutorials/backends.md</code></td><td><code>book/samples/src/running.rs</code></td></tr>
+<tr><td><code>tutorials/processes.md</code></td><td><code>tutorials/processes.md</code></td><td><code>book/samples/src/processes.rs</code></td></tr>
+<tr><td><code>tutorials/saas.md</code></td><td><code>tutorials/saas.md</code></td><td><code>book/samples/src/saas.rs</code></td></tr>
+<tr><td><code>tutorials/migrations.md</code></td><td><code>tutorials/migrations.md</code></td><td><code>book/samples/src/migrations.rs</code></td></tr>
+<tr><td><code>principles/index.md</code>, <code>principles/definitions.md</code></td><td><code>principles/index.md</code>, <code>principles/definitions.md</code></td><td></td></tr>
+<tr><td><code>backends/skunk.md</code>, <code>backends/doobie.md</code></td><td><code>backends/postgres.md</code> (one sqlx page)</td><td><code>book/samples/src/running.rs</code></td></tr>
+<tr><td><code>backends/java-api.md</code></td><td><code>backends/simple-api.md</code></td><td><code>book/samples/src/simple.rs</code></td></tr>
+<tr><td><em>(none)</em></td><td><code>backends/brokers.md</code></td><td><code>book/samples/src/processes.rs</code>, <code>book/samples/src/brokers.rs</code></td></tr>
+<tr><td><em>(none)</em></td><td><code>guides/cookbook.md</code>, <code>guides/testing.md</code></td><td><code>book/samples/src/cookbook.rs</code>, <code>book/samples/src/testing.rs</code>, <code>book/samples/src/eventsourcing.rs</code></td></tr>
+<tr><td><em>(none)</em></td><td><code>operations/schema.md</code>, <code>operations/relays.md</code>, <code>operations/saas.md</code></td><td><code>book/samples/src/operations.rs</code></td></tr>
+<tr><td><em>(none)</em></td><td><code>operations/migrations.md</code></td><td></td></tr>
+<tr><td><em>(none)</em></td><td><code>operations/troubleshooting.md</code></td><td><code>book/samples/src/troubleshooting.rs</code></td></tr>
+<tr><td><em>(none)</em></td><td><code>reference/api.md</code> (links to the rustdoc deployed with the website)</td><td></td></tr>
+<tr><td><code>other/modules.md</code>, <code>other/faq.md</code></td><td><code>other/modules.md</code>, <code>other/faq.md</code></td><td></td></tr>
+<tr><td><em>(none)</em></td><td><code>other/migration-guide.md</code>, <code>other/porting.md</code> (this file), <code>design/*</code> (the ADRs)</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../other/migration-guide.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../other/faq.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../other/migration-guide.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../other/faq.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

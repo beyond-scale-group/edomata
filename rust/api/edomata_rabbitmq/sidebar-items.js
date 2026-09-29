@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["default_exchange","default_routing_key"],"struct":["RabbitMqPublisher"]};

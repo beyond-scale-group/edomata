@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["READ_MODEL_DDL"],"enum":["ProductCommand","ProductNotification","ProductRejection","ProductStatus"],"fn":["api_key","main","mk_rejection","on_active","price_check","product_admin_service","product_service","projection","set_active"],"struct":["ApiKeyContext","Product","ProductModel","ScopePolicy"],"type":["Dsl","ProductApp","Service"]};

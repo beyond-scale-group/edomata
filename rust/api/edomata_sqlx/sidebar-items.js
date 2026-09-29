@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["DEFAULT_MIGRATION_BATCH_SIZE"],"enum":["PGNaming"],"mod":["queries","shared"],"struct":["EventMigration","MigrationResult","PGNamespace","PGSchema","SqlxCodec","SqlxCqrsDriver","SqlxDriver","SqlxHandler","SqlxMigrations"],"type":["PgPool"]};

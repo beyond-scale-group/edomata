@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["READ_MODEL_DDL"],"enum":["TodoCommand","TodoNotification"],"fn":["admin_list_all","list_by_tenant","main","policy","projection","roles","todo_admin_service","todo_service"],"struct":["Todo","TodoModel","TodoReadModel"],"type":["Service","TodoApp"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["random_string","test_cqrs_dsl","test_domain_dsl"],"mod":["cqrs","eventsourcing"],"struct":["TestCqrsModel","TestDomain"]};

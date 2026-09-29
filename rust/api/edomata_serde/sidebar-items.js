@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CodecError","PayloadFormat"],"mod":["compat","pg"],"struct":["SerdeCodec"],"trait":["Codec"]};

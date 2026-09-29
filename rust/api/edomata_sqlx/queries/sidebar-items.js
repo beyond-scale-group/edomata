@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["setup_schema"],"struct":["CommandQueries","JournalQueries","MigrationQueries","OutboxQueries","SnapshotQueries","StateQueries"]};

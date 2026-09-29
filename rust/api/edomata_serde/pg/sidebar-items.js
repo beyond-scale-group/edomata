@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["JSONB_VERSION"],"enum":["PgPayload"],"struct":["ByteaPayload","JsonPayload","JsonbPayload"]};

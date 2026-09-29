@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["kafka_relay","rabbitmq_relay"]};
