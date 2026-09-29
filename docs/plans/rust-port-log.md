@@ -116,6 +116,12 @@ Maven Central publish workflow. The 10 squash merges created the tags `v0.12.25`
 The port adds Rust code, documentation and Scala test tooling only. The Scala library
 artifacts in `0.12.24` and `0.12.25` are therefore functionally the same as `0.12.23`.
 
+To stop this from happening again, PR #58 changed `Auto Tag on Merge` so that it tags a release
+only when a published artifact changes: a `v0.12.N` tag for a published Scala module, and a
+`rust-v0.1.N` tag for a published Rust crate. Documentation, tests, examples, the book, the
+website and CI-only changes create no tag (see the "Releases" section of `CLAUDE.md`). The
+merges after it, including this log, therefore created no Scala release.
+
 ## Left to the maintainers
 
 - **`ANTHROPIC_API_KEY`**: it is exported in the terminal session (Ghostty, then herdr, then
