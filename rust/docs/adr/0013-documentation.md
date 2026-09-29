@@ -59,12 +59,14 @@ guide for Scala and Java users, and CI.
    links to the book and the migration guide.
 
 6. **CI builds the book.** A `book` job installs `mdbook` and runs
-   `mdbook build book` (from `rust/`); the samples are already covered by the lint
-   and test jobs since they are workspace members.
+   `mdbook build book` (from `rust/`), then `book/check_links.py`, which checks
+   every include, anchor and relative link of the rendered book (a small script,
+   since `mdbook-linkcheck` does not support mdBook 0.5); the samples are already
+   covered by the lint and test jobs since they are workspace members.
 
 ## Consequences
 
 Documentation drift is caught by the compiler (samples), by `mdbook build`
-(broken includes) and by the pre-PR documentation audit (prose
+and `check_links.py` (broken includes, anchors and links) and by the pre-PR documentation audit (prose
 against code). The price is that prose and samples live in two files per
 chapter, which the anchors keep close.
