@@ -13,7 +13,7 @@ keywords.workspace = true
 
 [features]
 default = ["serde"]
-# `Serialize` / `Deserialize` for `TenantId`, `UserId`, `CrudState` and `SaaSCommand`.
+# `Serialize` / `Deserialize` for `TenantId`, `UserId`, `CallerIdentity`, `CrudAction`, `CrudState` and `SaaSCommand`.
 serde = ["dep:serde", "edomata-core/serde"]
 
 [dependencies]

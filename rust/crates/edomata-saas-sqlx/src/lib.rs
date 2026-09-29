@@ -1,8 +1,9 @@
 //! # Edomata SaaS sqlx driver
 //!
 //! A tenant-aware PostgreSQL CQRS driver, the port of `saas-skunk`. It is a
-//! drop-in replacement for `edomata_sqlx::SqlxCqrsDriver` whose `states` and
-//! `outbox` tables carry `tenant_id` / `owner_id` columns (the DDL of
+//! drop-in replacement for `edomata_sqlx::SqlxCqrsDriver` whose `states`
+//! table carries `tenant_id` / `owner_id` columns and whose `outbox` table
+//! carries `tenant_id` (the DDL of
 //! `edomata_saas::SaaSPGSchema`), populated from the state through
 //! [`edomata_saas::TenantExtractor`], so that PostgreSQL Row-Level Security
 //! and tenant-scoped indexes can be used.
@@ -51,8 +52,8 @@
 //! and the tenant-aware DDL), `edomata-backend` (the
 //! [`cqrs::StorageDriver`](edomata_backend::cqrs::StorageDriver) trait it
 //! implements), `edomata-sqlx` (shared query helpers, the outbox reader and
-//! [`SqlxHandler`]), `edomata-postgres` and `edomata-serde`. Nothing in the
-//! workspace builds on it; applications use it in place of `edomata-sqlx`'s
+//! [`SqlxHandler`]), `edomata-postgres` and `edomata-serde`. No library crate
+//! builds on it (the examples and the book samples use it); applications use it in place of `edomata-sqlx`'s
 //! CQRS driver.
 //!
 //! ## Feature flags

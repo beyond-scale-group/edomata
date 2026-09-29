@@ -70,9 +70,9 @@
 //! [`StorageDriver`](edomata_backend::eventsourcing::StorageDriver) traits
 //! it implements and the command handling built on them), `edomata-postgres`
 //! (naming and DDL) and `edomata-serde` (payload wire formats). It is used
-//! by `edomata-saas-sqlx` (through [`shared`]), `edomata-simple`,
-//! `edomata-broker` and the Kafka / RabbitMQ publishers, and is the storage
-//! of `edomata-e2e`.
+//! by `edomata-saas-sqlx` (through [`shared`]) and `edomata-simple`, is
+//! the storage of `edomata-e2e`, and backs the tests and examples of
+//! `edomata-broker` and the Kafka / RabbitMQ publishers.
 //!
 //! ## Feature flags
 //!

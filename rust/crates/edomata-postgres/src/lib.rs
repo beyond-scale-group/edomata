@@ -23,8 +23,8 @@
 //! `edomata-postgres` has no Edomata dependency and does no I/O. It is the
 //! shared SQL vocabulary of the PostgreSQL crates: `edomata-sqlx` (the
 //! storage drivers and `SqlxMigrations`), `edomata-saas` (`SaaSPGSchema`),
-//! `edomata-saas-sqlx`, `edomata-broker` (relay checkpoints and leader
-//! locks) and `edomata-simple` (`SimplePGSchema`). It is the port of the
+//! `edomata-saas-sqlx`, `edomata-broker` (the relay checkpoints table) and
+//! `edomata-simple` (`SimplePGSchema`). It is the port of the
 //! Scala `postgres` module.
 //!
 //! ## Feature flags

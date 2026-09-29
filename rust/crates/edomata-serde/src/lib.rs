@@ -50,7 +50,7 @@
 //! it implements (and re-exports, with [`CodecError`] and
 //! [`PayloadFormat`]). It is the default codec of the PostgreSQL crates
 //! built on it: `edomata-sqlx` (whose drivers bind payloads through
-//! [`pg`]), `edomata-saas-sqlx`, `edomata-simple` and `edomata-broker`.
+//! [`pg`]), `edomata-saas-sqlx`, `edomata-simple` and `edomata-e2e`.
 //!
 //! ## Feature flags
 //!

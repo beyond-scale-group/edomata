@@ -55,8 +55,10 @@
 //!
 //! ## Where it fits
 //!
-//! `edomata-core` is the pure base of the workspace: every other crate
-//! depends on it, and it depends on no other Edomata crate.
+//! `edomata-core` is the pure base of the workspace: it depends on no other
+//! Edomata crate, and every other crate builds on it, directly or (for
+//! `edomata-serde`, through `edomata-backend`) indirectly, except
+//! `edomata-postgres`, which is independent of it.
 //!
 //! - `edomata-backend` runs [`Edomaton`] and [`Stomaton`] programs against a
 //!   storage (journal, snapshots, outbox, optimistic concurrency, retries)

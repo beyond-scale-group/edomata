@@ -83,8 +83,8 @@
 //! A facade over `edomata-core` (programs), `edomata-backend` (command
 //! handling), `edomata-sqlx` (the PostgreSQL driver), `edomata-postgres`
 //! (DDL) and `edomata-serde` (codecs); it re-exports what an application
-//! needs, so no other Edomata crate is required. Nothing in the workspace
-//! builds on it. Move to the generic crates when you need CQRS, SaaS,
+//! needs, so no other Edomata crate is required. No library crate
+//! builds on it (the book samples use it). Move to the generic crates when you need CQRS, SaaS,
 //! custom storages or composable programs.
 //!
 //! ## Feature flags
