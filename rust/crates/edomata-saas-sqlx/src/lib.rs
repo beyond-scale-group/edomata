@@ -24,8 +24,47 @@
 //!     .await?;
 //! # let _ = backend; Ok(()) }
 //! ```
+//!
+//! ## Tables created by hand
+//!
+//! With `skip_setup` ([`SaaSSqlxCqrsDriver::new_with`]), generate the tables
+//! (and, optionally, the RLS policies) with
+//! [`SaaSPGSchema`](edomata_saas::SaaSPGSchema) and run them from a
+//! migration tool:
+//!
+//! ```no_run
+//! # use edomata_saas::{PGNaming, RlsConfig, SaaSPGSchema};
+//! # use edomata_saas_sqlx::SaaSSqlxCqrsDriver;
+//! # async fn example(pool: sqlx::PgPool) -> Result<(), Box<dyn std::error::Error>> {
+//! let naming = PGNaming::prefixed_str("todos")?;
+//! let rls = RlsConfig::new("app_user", "app.tenant_id");
+//! for statement in SaaSPGSchema::cqrs_with(&naming, "jsonb", "jsonb", Some(&rls)) {
+//!     println!("{statement}"); // into V1__todos.sql
+//! }
+//! let driver = SaaSSqlxCqrsDriver::new_with(naming, pool, true).await?;
+//! # let _ = driver; Ok(()) }
+//! ```
+//!
+//! ## Where it fits
+//!
+//! It depends on `edomata-saas` (tenancy types, [`TenantExtractor`](edomata_saas::TenantExtractor)
+//! and the tenant-aware DDL), `edomata-backend` (the
+//! [`cqrs::StorageDriver`](edomata_backend::cqrs::StorageDriver) trait it
+//! implements), `edomata-sqlx` (shared query helpers, the outbox reader and
+//! [`SqlxHandler`]), `edomata-postgres` and `edomata-serde`. Nothing in the
+//! workspace builds on it; applications use it in place of `edomata-sqlx`'s
+//! CQRS driver.
+//!
+//! ## Feature flags
+//!
+//! This crate has no Cargo feature flags.
 
 #![forbid(unsafe_code)]
+#![warn(missing_docs)]
+#![warn(rustdoc::broken_intra_doc_links, rustdoc::private_intra_doc_links)]
+// `doc_auto_cfg` was merged into `doc_cfg` (Rust 1.92), which now shows
+// feature-gated items on docs.rs automatically.
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 mod codec;
 mod driver;
