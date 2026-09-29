@@ -36,4 +36,4 @@ you can create your own models and use them with or without other data models pr
 
 ## Rust port
 
-The same data models are available in Rust, in the `edomata-core` crate: `Decision`, `DecisionT`, `ResponseT` (with the `ResponseD` alias), `Action`, `Edomaton` and `Stomaton`, together with DSLs derived from a `DomainModel`. The Rust backends store data in the same PostgreSQL tables and payload formats as the Scala backends, and add an outbox relay to Kafka and RabbitMQ. See [Edomata for Rust](../rust/index.md).
+The same data models are available in Rust, in the `edomata-core` crate: `Decision`, `DecisionT`, `ResponseT` (with the `ResponseD` alias), `Action`, `Edomaton` and `Stomaton`, together with DSLs derived from a `DomainModel`. The Rust backends store data in the same PostgreSQL tables and payload formats as the Scala backends (except uPickle MessagePack payloads, which Rust cannot read), and add an outbox relay to Kafka and RabbitMQ. See [Edomata for Rust](../rust/index.md).

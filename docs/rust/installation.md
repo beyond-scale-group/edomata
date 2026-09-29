@@ -69,8 +69,8 @@ edomata-saas = { git = "https://github.com/beyond-scale-group/edomata", tag = "v
 edomata-saas-sqlx = { git = "https://github.com/beyond-scale-group/edomata", tag = "v0.12.34" }
 ```
 
-`edomata-saas` has a `serde` feature, on by default, for `TenantId`, `UserId`, `CrudState` and
-`SaaSCommand`.
+`edomata-saas` has a `serde` feature, on by default, for `TenantId`, `UserId`, `CrudAction`,
+`CrudState`, `SaaSCommand` and `CallerIdentity`.
 
 ## Simple API
 

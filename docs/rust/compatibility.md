@@ -43,7 +43,7 @@ provided the Rust types serialize to the same JSON shape. Golden payload tests c
 | Scala codec | serde representation |
 |-------------|----------------------|
 | Circe generic derivation | externally tagged (serde's default); use struct variants everywhere, including parameterless cases (`Opened {}` is written `{"Opened": {}}`) |
-| jsoniter-scala `JsonCodecMaker.make` | `#[serde(tag = "type")]`; `None` fields omitted with `skip_serializing_if` |
+| jsoniter-scala `JsonCodecMaker.make` | `#[serde(tag = "type")]`; `Option` fields with `#[serde(default, skip_serializing_if = "Option::is_none")]` |
 | uPickle `ReadWriter.derived` | `#[serde(tag = "$type")]` in an untagged wrapper, since parameterless cases are bare strings; `Option` fields with `edomata_serde::compat::upickle_option` |
 
 Use `#[serde(rename_all_fields = "camelCase")]` (or per-field `rename`) for camelCase field

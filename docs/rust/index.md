@@ -17,7 +17,7 @@ its idiomatic Rust equivalent.
 | Scala | Rust |
 |-------|------|
 | effects in `F[_]` (Cats Effect) | `async` functions and `Future`s, run on Tokio by the backends |
-| `Decision`, `Response`, `Edomaton`, `Stomaton` | the same types in `edomata-core`, with `and_then` / `map` instead of `flatMap` / `map` |
+| `Decision`, `ResponseD`, `Edomaton`, `Stomaton` | the same types in `edomata-core` (`ResponseD` is an alias of `ResponseT`), with `and_then` / `map` instead of `flatMap` / `map` |
 | `DomainModel` and its DSL | the `DomainModel` trait and `model.dsl::<Command, Notification>()` |
 | Skunk and Doobie drivers | one sqlx driver, `edomata-sqlx` |
 | Circe, jsoniter-scala and uPickle codecs | `serde` through `edomata-serde` |
@@ -28,7 +28,8 @@ Kafka or RabbitMQ (`edomata-broker`, `edomata-kafka`, `edomata-rabbitmq`).
 
 ## Status and requirements
 
-- 14 library crates, all ported from the Scala modules they map to (see [Crates](crates.md)).
+- 12 library crates and 2 test-only crates. 11 of them port a Scala module, and 3 (the broker
+  crates) are new (see [Crates](crates.md)).
 - Minimum supported Rust version: **1.88** (edition 2024). Every crate is `#![forbid(unsafe_code)]`.
 - The backends run on Tokio and PostgreSQL through sqlx. `edomata-core` has no runtime
   dependency and also builds for `wasm32-unknown-unknown`.

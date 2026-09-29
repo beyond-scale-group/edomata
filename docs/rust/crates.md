@@ -11,7 +11,7 @@ Circe, jsoniter-scala and uPickle.
 
 | Scala module(s) | Rust crate | Purpose |
 |-----------------|------------|---------|
-| `core` | `edomata-core` | `Decision`, `Response`, `Action`, `Edomaton`, `Stomaton`, the DSLs, `DomainModel`, `CqrsModel` |
+| `core` | `edomata-core` | `Decision`, `ResponseT` / `ResponseD`, `Action`, `Edomaton`, `Stomaton`, the DSLs, `DomainModel`, `CqrsModel` |
 | `backend` | `edomata-backend` | backend abstractions, in-memory driver, command handling, caches, snapshots, outbox |
 | `postgres` | `edomata-postgres` | `PGNaming`, `PGNamespace`, `PGSchema` (DDL identical to Scala's), `EventMigration` |
 | `skunk`, `doobie` | `edomata-sqlx` | PostgreSQL event-sourcing and CQRS drivers, journal and outbox readers, snapshots, migrations, `skip_setup` |
@@ -33,7 +33,8 @@ RabbitMQ relays) and `edomata-book-samples` (the compiled code samples of the Ru
 
 The Scala modules cross-build for the JVM, Scala.js and Scala Native. The Rust crates build for
 native targets; `edomata-core` also builds for `wasm32-unknown-unknown`, which CI checks. The
-backends need Tokio and a PostgreSQL server.
+backends need Tokio, and the PostgreSQL backends need a PostgreSQL server; `edomata-backend` also
+has an in-memory driver for tests and prototypes.
 
 ## Dependencies between crates
 
@@ -50,6 +51,8 @@ backends need Tokio and a PostgreSQL server.
 | `edomata-simple` | `edomata-sqlx` and its dependencies |
 | `edomata-broker` | `edomata-core`, `edomata-backend`, `edomata-postgres` |
 | `edomata-kafka`, `edomata-rabbitmq` | `edomata-core`, `edomata-broker` |
+| `edomata-backend-tests` (test-only) | `edomata-core`, `edomata-backend` |
+| `edomata-e2e` (test-only) | `edomata-core`, `edomata-backend`, `edomata-serde`, `edomata-sqlx` |
 
 Applications that do not depend on `edomata-kafka` or `edomata-rabbitmq` pull no broker client.
 
