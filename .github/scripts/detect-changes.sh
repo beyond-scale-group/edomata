@@ -17,27 +17,27 @@ before=${1:-}
 after=${2:?usage: detect-changes.sh <before-sha> <after-sha>}
 
 # A new branch or an unknown "before" (all zeros, force push): compare with the
-# parent commit instead.
+# parent commit instead, or with the empty tree for a root commit.
 if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ] ||
   ! git cat-file -e "${before}^{commit}" 2>/dev/null; then
-  before="${after}^"
+  before=$(git rev-parse --verify --quiet "${after}^" || git hash-object -t tree /dev/null)
 fi
 
 files=$(git diff --name-only "$before" "$after")
 
+# Count the matching files instead of using "grep -q": with pipefail, grep -q
+# stops at its first match, the upstream grep can then die of SIGPIPE on a huge
+# diff, and the check would wrongly report false (a missed release).
+# "|| true" keeps a count of zero from failing the pipeline.
+count() { printf '%s\n' "$files" | grep -E "$1" | grep -Ev "$2" | grep -c . || true; }
+
 scala=false
-if printf '%s\n' "$files" |
-  grep -E '^(build\.sbt$|project/|modules/.+/src/main/)' |
-  grep -Ev '^modules/(backend-tests|e2e)/' |
-  grep -q .; then
+if [ "$(count '^(build\.sbt$|project/|modules/.+/src/main/)' '^modules/(backend-tests|e2e)/')" -gt 0 ]; then
   scala=true
 fi
 
 rust=false
-if printf '%s\n' "$files" |
-  grep -E '^rust/(Cargo\.toml$|crates/[^/]+/(src/|Cargo\.toml$|README\.md$))' |
-  grep -Ev '^rust/crates/(edomata-backend-tests|edomata-e2e)/' |
-  grep -q .; then
+if [ "$(count '^rust/(Cargo\.toml$|crates/[^/]+/(src/|Cargo\.toml$|README\.md$))' '^rust/crates/(edomata-backend-tests|edomata-e2e)/')" -gt 0 ]; then
   rust=true
 fi
 
