@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-plans/rust-docs" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.9.2">
+<title data-rh="true">Goal: document the Edomata Rust library | Edomata</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://beyond-scale-group.github.io/edomata/img/icon.png"><meta data-rh="true" name="twitter:image" content="https://beyond-scale-group.github.io/edomata/img/icon.png"><meta data-rh="true" property="og:url" content="https://beyond-scale-group.github.io/edomata/docs/plans/rust-docs"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Goal: document the Edomata Rust library | Edomata"><meta data-rh="true" name="description" content="Status (2026-09-27): started, then paused to save usage. None of PRs A–D is open yet."><meta data-rh="true" property="og:description" content="Status (2026-09-27): started, then paused to save usage. None of PRs A–D is open yet."><link data-rh="true" rel="icon" href="/edomata/img/icon.png"><link data-rh="true" rel="canonical" href="https://beyond-scale-group.github.io/edomata/docs/plans/rust-docs"><link data-rh="true" rel="alternate" href="https://beyond-scale-group.github.io/edomata/docs/plans/rust-docs" hreflang="en"><link data-rh="true" rel="alternate" href="https://beyond-scale-group.github.io/edomata/docs/plans/rust-docs" hreflang="x-default"><link rel="stylesheet" href="/edomata/assets/css/styles.8e5b82b2.css">
+<script src="/edomata/assets/js/runtime~main.0fc6fa8a.js" defer="defer"></script>
+<script src="/edomata/assets/js/main.78ca8552.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/edomata/"><div class="navbar__logo"><img src="/edomata/img/icon.png" alt="Edomata Logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="/edomata/img/icon.png" alt="Edomata Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">Edomata</b></a><a class="navbar__item navbar__link" href="/edomata/docs/introduction">Documentation</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a href="https://github.com/beyond-scale-group/edomata" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><main class="docMainContainer_TBSr docMainContainerEnhanced_lQrH"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Goal: document the Edomata Rust library</h1></header>
+<blockquote>
+<p><strong>Status (2026-09-27):</strong> started, then paused to save usage. None of PRs A–D is open yet.
+Uncommitted work in progress exists only in local worktrees, on the branches
+<code>docs/rust-api-docs</code> (A), <code>docs/rust-book</code> (B), <code>docs/website-rust-section</code> (C) and
+<code>ci/publish-rust-docs</code> (D). To resume, run one agent per PR with the condition in
+<a href="/edomata/assets/files/rust-docs.goal-6fabd95a2f5fad0ff0dd7abef67b9731.txt" target="_blank" class=""><code>rust-docs.goal.txt</code></a>, preferably one at a time.</p>
+</blockquote>
+<p>Source of truth for the documentation session. The Rust port of Edomata is complete and merged
+on <code>main</code> of <code>beyond-scale-group/edomata</code>. It lives in <code>rust/</code>: a Cargo workspace with 14 crates
+under <code>rust/crates/</code>, examples in <code>rust/examples/</code>, and an mdBook in <code>rust/book/</code> with its samples
+crate in <code>rust/book/samples/</code>. Read <code>CLAUDE.md</code> (the &quot;Rust Port&quot; section), <code>rust/README.md</code>,
+<code>rust/PORTING.md</code>, <code>rust/book/src/SUMMARY.md</code> and <code>docs/plans/rust-port.md</code> first.</p>
+<p>The work is complete, accurate and published documentation, in four independent PRs.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hard-rules">Hard rules<a href="#hard-rules" class="hash-link" aria-label="Direct link to Hard rules" title="Direct link to Hard rules" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Never merge a PR, and never push to <code>main</code>.</strong> <code>Auto Tag on Merge</code> tags every merge to <code>main</code>,
+and each tag publishes a release to Maven Central, which can&#x27;t be undone. Open PRs only. The
+maintainer merges them.</li>
+<li class="">Each PR branches from <code>main</code> in its own worktree (use the native <code>EnterWorktree</code> tool). The four
+PRs must not depend on each other. Where one links to another (for example, the website
+linking to the published book), use the final public URLs below.</li>
+<li class="">Run the mandatory pre-PR documentation audit from <code>CLAUDE.md</code> before opening each PR. Fix its
+findings in a dedicated <code>docs:</code> commit.</li>
+<li class="">Don&#x27;t change the behaviour of Rust code, and don&#x27;t touch the Scala modules. Documentation
+comments, lint attributes, doc tests, book samples, CI and website files are in scope.</li>
+<li class="">Never delete, weaken or <code>#[ignore]</code> a test or a doc test to get green. Report failures
+truthfully.</li>
+<li class="">Everything is in English.</li>
+</ul>
+<p>Public URLs, which the website must keep serving at its current root:</p>
+<ul>
+<li class="">Website: <code>https://beyond-scale-group.github.io/edomata/</code></li>
+<li class="">Book: <code>https://beyond-scale-group.github.io/edomata/rust/book/</code></li>
+<li class="">API docs: <code>https://beyond-scale-group.github.io/edomata/rust/api/</code>, with crate pages such as
+<code>.../rust/api/edomata_core/</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="pr-a-complete-api-documentation-rustdoc">PR A: complete API documentation (rustdoc)<a href="#pr-a-complete-api-documentation-rustdoc" class="hash-link" aria-label="Direct link to PR A: complete API documentation (rustdoc)" title="Direct link to PR A: complete API documentation (rustdoc)" translate="no">​</a></h2>
+<ul>
+<li class="">
+<p>Document <strong>every public item</strong> in all 14 library crates: modules, types, traits, functions,
+methods, fields, enum variants, associated types, constants and macros. Say what each item
+does, its semantics and invariants, its errors and panics (there should be none in library
+code), and link related items.</p>
+</li>
+<li class="">
+<p><strong>Crate-level docs</strong> (<code>//!</code> in each <code>lib.rs</code>): the crate&#x27;s purpose, where it sits among the
+other crates, a runnable example, and its Cargo feature flags. Show feature-gated items on
+docs.rs with <code>#![cfg_attr(docsrs, feature(doc_auto_cfg))]</code> and a
+<code>[package.metadata.docs.rs]</code> section.</p>
+</li>
+<li class="">
+<p><strong>Examples:</strong> add runnable doc examples to the core types at least: <code>Decision</code>, <code>ResponseT</code> /
+<code>ResponseD</code>, <code>Action</code>, <code>Edomaton</code>, <code>Stomaton</code>, <code>DomainModel</code>, the DSLs, <code>PGNaming</code> /
+<code>PGSchema</code>, the codecs, the sqlx drivers&#x27; <code>from(..., skip_setup)</code>, <code>OutboxRelay</code>, and the
+simple API. Use <code>no_run</code> for examples that need PostgreSQL or a broker, but they must still
+compile.</p>
+</li>
+<li class="">
+<p><strong>Lock it in:</strong></p>
+<ul>
+<li class="">add <code>#![warn(missing_docs)]</code> to every library crate;</li>
+<li class="">add <code>#![warn(rustdoc::broken_intra_doc_links, rustdoc::private_intra_doc_links)]</code>;</li>
+<li class="">make CI fail on any rustdoc warning. <code>rust.yml</code> already runs <code>cargo doc</code> with
+<code>-D warnings</code>; make sure <code>missing_docs</code> is covered there and by clippy&#x27;s <code>-D warnings</code>.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Checks:</strong></p>
+<ul>
+<li class=""><code>RUSTDOCFLAGS=&quot;-D warnings&quot; cargo doc --workspace --all-features --no-deps</code></li>
+<li class=""><code>cargo test --workspace --all-features --doc</code></li>
+<li class=""><code>cargo clippy --workspace --all-targets --all-features -- -D warnings</code></li>
+<li class=""><code>cargo test --workspace --all-features</code></li>
+</ul>
+<p>All must pass. Docker, the docker-compose PostgreSQL, a JDK and sbt are available. If a
+Homebrew PostgreSQL also listens on <code>localhost:5432</code>, set <code>DATABASE_URL</code> to the container.</p>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="pr-b-review-and-deepen-the-book-rustbook">PR B: review and deepen the book (<code>rust/book/</code>)<a href="#pr-b-review-and-deepen-the-book-rustbook" class="hash-link" aria-label="Direct link to pr-b-review-and-deepen-the-book-rustbook" title="Direct link to pr-b-review-and-deepen-the-book-rustbook" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Audit every chapter</strong> in <code>SUMMARY.md</code> against the code:<!-- -->
+<ul>
+<li class="">every type, function, feature flag, command and path it names must exist and behave as
+described;</li>
+<li class="">fix every inaccuracy;</li>
+<li class="">remove wording carried over from the Scala docs that doesn&#x27;t apply to Rust.</li>
+</ul>
+</li>
+<li class=""><strong>Add chapters.</strong> All code must come from <code>rust/book/samples</code> by anchor, so it is compiled and
+tested with the workspace. Add:<!-- -->
+<ul>
+<li class=""><strong>Cookbook:</strong> short recipes for common tasks. Define a domain, validate and reject, publish
+notifications, read state, compose programs, handle optimistic concurrency conflicts and
+retries, keep commands idempotent, use snapshots and caching.</li>
+<li class=""><strong>Testing:</strong> unit-testing domains with <code>edomata-testkit</code>, and integration tests against
+PostgreSQL.</li>
+<li class=""><strong>Operations:</strong>
+<ul>
+<li class="">schema management with <code>PGSchema</code>, <code>skip_setup</code> and a Flyway workflow;</li>
+<li class="">event migrations;</li>
+<li class="">running the outbox and broker relays in production (leader election with advisory
+locks, at-least-once delivery, deduplication by message ID, metrics and <code>tracing</code>);</li>
+<li class="">multi-tenant SaaS deployment with RLS.</li>
+</ul>
+</li>
+<li class=""><strong>Troubleshooting:</strong> common errors (<code>VersionConflict</code>, <code>MaxRetryExceeded</code>, codec errors,
+connection and setup problems) and what to do about them.</li>
+<li class=""><strong>API reference:</strong> a chapter that links to the published rustdoc for every crate.</li>
+</ul>
+</li>
+<li class=""><strong>Checks:</strong> <code>mdbook build rust/book</code> and the full <code>cargo test</code> pass. Every relative link and
+anchor resolves. Add <code>mdbook-linkcheck</code>, or an equivalent check in CI, if it&#x27;s cheap.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="pr-c-website-integration-docusaurus-docs--website">PR C: website integration (Docusaurus, <code>docs/</code> + <code>website/</code>)<a href="#pr-c-website-integration-docusaurus-docs--website" class="hash-link" aria-label="Direct link to pr-c-website-integration-docusaurus-docs--website" title="Direct link to pr-c-website-integration-docusaurus-docs--website" translate="no">​</a></h2>
+<ul>
+<li class="">Add a <strong>Rust</strong> section to the website:<!-- -->
+<ul>
+<li class="">what the port is;</li>
+<li class="">how the crates map to the Scala modules;</li>
+<li class="">installation (<code>Cargo.toml</code> snippets for the main crates and features);</li>
+<li class="">a minimal quickstart;</li>
+<li class="">the wire-compatibility guarantees (a shared PostgreSQL between Scala and Rust services,
+<code>jsonb</code> payloads, and the uPickle MessagePack limitation);</li>
+<li class="">links to the book, the API docs and the migration guide at the public URLs above.</li>
+</ul>
+</li>
+<li class="">Give it a sidebar entry. Mention the Rust port in <code>docs/introduction.md</code> and
+<code>docs/about/features.md</code> without changing their claims about the Scala library.</li>
+<li class=""><code>docs/</code> is processed by mdoc and rendered as MDX. Don&#x27;t use a bare <code>&lt;</code>, <code>{</code>, <code>}</code> or <code>@</code>
+outside code spans or code blocks. Rust code blocks are plain fenced <code>rust</code> blocks, not
+<code>scala mdoc</code>.</li>
+<li class=""><strong>Checks:</strong> <code>sbt docs/mdoc</code> has no new warnings, and <code>cd website &amp;&amp; npm ci &amp;&amp; npm run build</code>
+succeeds.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="pr-d-publish-the-book-and-api-docs-online">PR D: publish the book and API docs online<a href="#pr-d-publish-the-book-and-api-docs-online" class="hash-link" aria-label="Direct link to PR D: publish the book and API docs online" title="Direct link to PR D: publish the book and API docs online" translate="no">​</a></h2>
+<ul>
+<li class="">
+<p>The website is deployed by the <code>Publish site</code> step of the <code>Generate Site</code> job in
+<code>.github/workflows/ci.yml</code>. It uses <code>peaceiris/actions-gh-pages</code> with
+<code>publish_dir: website/build</code> and <strong><code>keep_files: false</code></strong>, so each deploy replaces the whole
+<code>gh-pages</code> branch. A separate deploy of the Rust docs would be wiped by the next site deploy.</p>
+</li>
+<li class="">
+<p>So build the Rust docs <strong>into the same deploy</strong>. In that job, before <code>Publish site</code>:</p>
+<ol>
+<li class="">install Rust and mdbook;</li>
+<li class="">run <code>mdbook build rust/book</code> and copy the output to <code>website/build/rust/book/</code>;</li>
+<li class="">run <code>cargo doc --workspace --all-features --no-deps</code>, copy <code>rust/target/doc</code> to
+<code>website/build/rust/api/</code>, and add an <code>index.html</code> that redirects to <code>edomata_core/</code>.</li>
+</ol>
+<p>Keep the existing condition that deploys only on pushes to <code>main</code>. <code>ci.yml</code> is maintained by
+hand (&quot;Forked from the upstream sbt-github-actions generated workflow&quot;). Check <code>ci.sbt</code> and
+keep the two consistent if it generates part of this job.</p>
+</li>
+<li class="">
+<p>Link the book and the API docs from <code>rust/README.md</code> and the root <code>README.md</code>.</p>
+</li>
+<li class="">
+<p><strong>Checks:</strong></p>
+<ul>
+<li class="">reproduce the combined build locally (website build, then the Rust docs copied in);</li>
+<li class="">check that <code>website/build/index.html</code>, <code>website/build/rust/book/index.html</code> and
+<code>website/build/rust/api/edomata_core/index.html</code> all exist, and that relative links work
+when served under <code>/edomata/</code>;</li>
+<li class="">the PR&#x27;s CI must be green.</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="definition-of-done">Definition of done<a href="#definition-of-done" class="hash-link" aria-label="Direct link to Definition of done" title="Direct link to Definition of done" translate="no">​</a></h2>
+<ul>
+<li class="">PRs A, B, C and D are open against <code>main</code>. None of them is merged.</li>
+<li class="">Each PR&#x27;s CI is green, apart from two failures that already happen on <code>main</code>:
+<code>Validate Steward Config</code> and <code>claude-review</code>.</li>
+<li class="">All the checks listed for each PR pass locally on its branch.</li>
+<li class="">Each PR description lists what it adds, the checks that were run with their results, and
+anything left undone.</li>
+</ul></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/beyond-scale-group/edomata/tree/main/docs/docs/plans/rust-docs.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#hard-rules" class="table-of-contents__link toc-highlight">Hard rules</a></li><li><a href="#pr-a-complete-api-documentation-rustdoc" class="table-of-contents__link toc-highlight">PR A: complete API documentation (rustdoc)</a></li><li><a href="#pr-b-review-and-deepen-the-book-rustbook" class="table-of-contents__link toc-highlight">PR B: review and deepen the book (<code>rust/book/</code>)</a></li><li><a href="#pr-c-website-integration-docusaurus-docs--website" class="table-of-contents__link toc-highlight">PR C: website integration (Docusaurus, <code>docs/</code> + <code>website/</code>)</a></li><li><a href="#pr-d-publish-the-book-and-api-docs-online" class="table-of-contents__link toc-highlight">PR D: publish the book and API docs online</a></li><li><a href="#definition-of-done" class="table-of-contents__link toc-highlight">Definition of done</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Documentation</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/edomata/docs/introduction">Introduction</a></li><li class="footer__item"><a class="footer__link-item" href="/edomata/docs/tutorials/getting-started">Getting Started</a></li><li class="footer__item"><a class="footer__link-item" href="/edomata/docs/principles/">Principles</a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Backends</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/edomata/docs/backends/skunk">Skunk</a></li><li class="footer__item"><a class="footer__link-item" href="/edomata/docs/backends/doobie">Doobie</a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Rust</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/edomata/docs/rust/">Rust port</a></li><li class="footer__item"><a href="https://beyond-scale-group.github.io/edomata/rust/book/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Rust book<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://beyond-scale-group.github.io/edomata/rust/api/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Rust API docs<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Ecosystem</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://typelevel.org/cats/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Cats<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://typelevel.org/cats-effect/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Cats Effect<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://fs2.io/" target="_blank" rel="noopener noreferrer" class="footer__link-item">FS2<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/beyond-scale-group/edomata" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright 2026 Beyond Scale Group. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>
