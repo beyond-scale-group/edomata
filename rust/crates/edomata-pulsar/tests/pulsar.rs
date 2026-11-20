@@ -41,6 +41,34 @@ struct Broker {
 
 static BROKER: tokio::sync::OnceCell<Broker> = tokio::sync::OnceCell::const_new();
 
+/// The image reports "messaging service is ready" before the standalone
+/// broker created the `public/default` namespace: a producer on it fails
+/// with "Namespace not found" until then. Waits until one can be created.
+async fn wait_for_default_namespace(service_url: &str) {
+    let deadline = Instant::now() + Duration::from_secs(90);
+    loop {
+        let attempt = async {
+            let client = Pulsar::builder(service_url, TokioExecutor).build().await?;
+            client
+                .producer()
+                .with_topic("persistent://public/default/edomata-readiness-probe")
+                .build()
+                .await
+                .map(|_| ())
+        };
+        match tokio::time::timeout(Duration::from_secs(10), attempt).await {
+            Ok(Ok(())) => return,
+            outcome => {
+                assert!(
+                    Instant::now() < deadline,
+                    "public/default never became usable: {outcome:?}"
+                );
+                tokio::time::sleep(Duration::from_secs(1)).await;
+            }
+        }
+    }
+}
+
 async fn service_url() -> String {
     BROKER
         .get_or_init(|| async {
@@ -49,9 +77,11 @@ async fn service_url() -> String {
                 .await
                 .expect("Docker must be available to start the Pulsar container");
             let port = container.get_host_port_ipv4(6650).await.unwrap();
+            let service_url = format!("pulsar://127.0.0.1:{port}");
+            wait_for_default_namespace(&service_url).await;
             Broker {
                 _container: container,
-                service_url: format!("pulsar://127.0.0.1:{port}"),
+                service_url,
             }
         })
         .await
