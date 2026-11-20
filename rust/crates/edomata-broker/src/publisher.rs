@@ -211,6 +211,9 @@ impl Publisher for RecordingPublisher {
     }
 }
 
+// `AtomicUsize::fetch_update` is deprecated in favour of `try_update`, which
+// is newer than the MSRV (1.88): keep the old name until the MSRV moves.
+#[allow(deprecated)]
 fn take_one(counter: &AtomicUsize) -> bool {
     counter
         .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |n| n.checked_sub(1))
