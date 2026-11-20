@@ -35,10 +35,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-9c6ed84e.js";
+            window.path_to_searchindex_js = "../searchindex-475fb46f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-8a9e2bd7.js"></script>
+        <script src="../toc-c1ecc6a1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -206,7 +206,7 @@
 <li><code>edomata-sqlx</code>: event-sourcing and CQRS drivers on PostgreSQL (journal, outbox, commands, snapshots, states, migrations), schema or prefixed naming, DDL extraction for Flyway, <code>skip_setup</code>.</li>
 <li><code>edomata-serde</code>: <code>jsonb</code> (default), <code>json</code> and <code>bytea</code> payloads through serde. It reads and writes the JSON of the Scala Circe, jsoniter and uPickle codecs when your types use the matching serde representation; uPickle’s <code>msgpack</code> payloads (MessagePack in <code>bytea</code>) are not readable.</li>
 <li><code>edomata-saas</code> / <code>edomata-saas-sqlx</code>: multi-tenant CRUD with automatic tenant isolation and authorisation, tenant-aware tables and optional Row-Level Security.</li>
-<li><code>edomata-broker</code> with <code>edomata-kafka</code> and <code>edomata-rabbitmq</code>: opt-in, at-least-once distribution of outbox notifications and journal events with leader election and <code>LISTEN/NOTIFY</code> wake-ups (a Rust addition without Scala equivalent).</li>
+<li><code>edomata-broker</code> with <code>edomata-kafka</code>, <code>edomata-rabbitmq</code> and <code>edomata-pulsar</code>: opt-in, at-least-once distribution of outbox notifications and journal events with leader election and <code>LISTEN/NOTIFY</code> wake-ups (a Rust addition without Scala equivalent).</li>
 </ul>
 
                     </main>

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["kafka_relay","rabbitmq_relay"]};
+window.SIDEBAR_ITEMS = {"fn":["kafka_relay","pulsar_relay","rabbitmq_relay"]};

@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Edomata Pulsar"><title>edomata_pulsar - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-203241e4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="edomata_pulsar" data-themes="" data-resource-suffix="" data-rustdoc-version="1.100.0 (0ef1bc386 2026-11-09)" data-channel="1.100.0" data-search-js="search-b167f383.js" data-stringdex-js="stringdex-b5109af9.js" data-settings-js="settings-170eb4bf.js" ><script src="../static.files/storage-41dd4d93.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-1814ead3.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-9f56287d.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate edomata_pulsar</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../edomata_pulsar/index.html">edomata_<wbr>pulsar</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#edomata-pulsar" title="Edomata Pulsar">Edomata Pulsar</a><ul><li><a href="#where-it-fits" title="Where it fits">Where it fits</a></li><li><a href="#limits-of-a-shared-namespace" title="Limits of a shared namespace">Limits of a shared namespace</a></li><li><a href="#example" title="Example">Example</a></li><li><a href="#clever-cloud" title="Clever Cloud">Clever Cloud</a></li><li><a href="#feature-flags" title="Feature flags">Feature flags</a></li></ul></li></ul><h3><a href="#reexports">Crate Items</a></h3><ul class="block"><li><a href="#reexports" title="Re-exports">Re-exports</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#enums" title="Enums">Enums</a></li><li><a href="#constants" title="Constants">Constants</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1>Crate <span>edomata_<wbr>pulsar</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/edomata_pulsar/lib.rs.html#1-1246">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="edomata-pulsar"><a class="doc-anchor" href="#edomata-pulsar">§</a>Edomata Pulsar</h2>
+<p>A <a href="../edomata_broker/publisher/trait.Publisher.html" title="trait edomata_broker::publisher::Publisher"><code>Publisher</code></a> for <code>edomata-broker</code> relays backed by the
+[<code>pulsar</code>] client (Apache Pulsar, including the managed add-on of Clever
+Cloud):</p>
+<ul>
+<li>one Pulsar producer per topic, created lazily and cached; a producer
+(or the whole connection) that fails is dropped so that the next
+<code>publish</code> recreates it;</li>
+<li>the stream id is the message key, which keeps per-stream ordering (also
+on partitioned topics: the producer routes by key);</li>
+<li>the topic is chosen by a function of the message (default: one topic
+per relay source, i.e. per aggregate namespace); short names are placed
+in the configured tenant and namespace, full
+<code>persistent://&lt;tenant&gt;/&lt;namespace&gt;/&lt;topic&gt;</code> URLs are used as they are;</li>
+<li>the message id and metadata travel as message properties (see
+<code>edomata_broker::headers</code>).</li>
+</ul>
+<p><code>publish</code> returns only after the broker acknowledged every message of the
+batch (a send receipt each); the relay marks outbox items as sent after
+that, so delivery is at-least-once and consumers deduplicate on the
+<code>edomata-id</code> property.</p>
+<p>Errors are classified for the relay: invalid topics, authentication and
+authorization failures, rejected topics and messages larger than the
+configured maximum are <a href="../edomata_broker/publisher/enum.PublishError.html#variant.Permanent" title="variant edomata_broker::publisher::PublishError::Permanent"><code>PublishError::Permanent</code></a>; everything else
+(connection lost, timeouts, broker not ready…) is
+<a href="../edomata_broker/publisher/enum.PublishError.html#variant.Transient" title="variant edomata_broker::publisher::PublishError::Transient"><code>PublishError::Transient</code></a> and retried. When unsure the error is
+transient.</p>
+<h3 id="where-it-fits"><a class="doc-anchor" href="#where-it-fits">§</a>Where it fits</h3>
+<p><code>edomata-pulsar</code> depends only on <code>edomata-core</code> and <code>edomata-broker</code>: it
+is one <a href="../edomata_broker/publisher/trait.Publisher.html" title="trait edomata_broker::publisher::Publisher"><code>Publisher</code></a> implementation for the broker-agnostic
+<a href="../edomata_broker/outbox_relay/struct.OutboxRelay.html" title="struct edomata_broker::outbox_relay::OutboxRelay"><code>OutboxRelay</code></a> and
+<a href="../edomata_broker/journal_relay/struct.JournalRelay.html" title="struct edomata_broker::journal_relay::JournalRelay"><code>JournalRelay</code></a>. Applications that do not
+use Pulsar don’t depend on it. It has no Scala counterpart. The
+[<code>pulsar</code>] crate is re-exported for its configuration and error types.</p>
+<h3 id="limits-of-a-shared-namespace"><a class="doc-anchor" href="#limits-of-a-shared-namespace">§</a>Limits of a shared namespace</h3>
+<p>A Pulsar producer belongs to one topic, so the number of distinct topics
+your topic function produces is the number of producers this publisher
+keeps. Managed offerings cap them: Clever Cloud documents at most 100
+topics per namespace and 100 producers per topic. Prefer
+<a href="struct.PulsarPublisherBuilder.html#method.with_fixed_topic" title="method edomata_pulsar::PulsarPublisherBuilder::with_fixed_topic"><code>with_fixed_topic</code></a> or a
+function with a bounded range; never derive the topic from a stream id.</p>
+<h3 id="example"><a class="doc-anchor" href="#example">§</a>Example</h3>
+<p>An outbox relay publishing to one Pulsar topic with token authentication
+over TLS (the connection is made at the first publish, not at build time):</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::sync::Arc;
+
+<span class="kw">use </span>edomata_backend::eventsourcing::Backend;
+<span class="kw">use </span>edomata_broker::postgres::LeaderLock;
+<span class="kw">use </span>edomata_broker::{CancellationToken, MessageEncoder, OutboxRelay, RelayConfig};
+<span class="kw">use </span>edomata_core::<span class="kw-2">*</span>;
+<span class="kw">use </span>edomata_pulsar::PulsarPublisher;
+<span class="kw">use </span>edomata_sqlx::SqlxDriver;
+
+<span class="kw">struct </span>Counter;
+<span class="kw">impl </span>DomainModel <span class="kw">for </span>Counter {
+    <span class="kw">type </span>State = i32; <span class="kw">type </span>Event = i32; <span class="kw">type </span>Rejection = String;
+    <span class="kw">fn </span>initial(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 { <span class="number">0 </span>}
+    <span class="kw">fn </span>transition(<span class="kw-2">&amp;</span><span class="self">self</span>, e: <span class="kw-2">&amp;</span>i32, s: i32) -&gt; <span class="prelude-ty">Result</span>&lt;i32, NonEmpty&lt;String&gt;&gt; { <span class="prelude-val">Ok</span>(s + e) }
+}
+
+<span class="kw">let </span>backend = Backend::builder(Counter, Counter.dsl::&lt;i32, String&gt;())
+    .driver(SqlxDriver::for_namespace(<span class="string">"counters"</span>, pool.clone()).<span class="kw">await</span><span class="question-mark">?</span>)
+    .build_default()
+    .<span class="kw">await</span><span class="question-mark">?</span>;
+
+<span class="kw">let </span>publisher = PulsarPublisher::builder(<span class="string">"pulsar+ssl://broker.example.com:6651"</span>)
+    .with_token(<span class="string">"eyJ..."</span>)
+    .with_namespace(<span class="string">"my-tenant"</span>, <span class="string">"my-namespace"</span>)
+    .with_fixed_topic(<span class="string">"counters-notifications"</span>)
+    .build()<span class="question-mark">?</span>;
+
+<span class="kw">let </span>relay = OutboxRelay::new(
+    Arc::clone(backend.outbox()),
+    Arc::new(publisher),
+    MessageEncoder::&lt;String&gt;::serde(),
+    RelayConfig::new(<span class="string">"counters"</span>),
+)
+.wake_on(backend.updates().outbox());
+
+relay
+    .run_as_leader(LeaderLock::new(pool, <span class="string">"counters"</span>), CancellationToken::new())
+    .<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div><h3 id="clever-cloud"><a class="doc-anchor" href="#clever-cloud">§</a>Clever Cloud</h3>
+<p>The Pulsar add-on injects <code>ADDON_PULSAR_BINARY_URL</code>, <code>ADDON_PULSAR_TOKEN</code>,
+<code>ADDON_PULSAR_TENANT</code> and <code>ADDON_PULSAR_NAMESPACE</code>;
+<a href="struct.PulsarPublisherBuilder.html#method.from_clever_env" title="associated function edomata_pulsar::PulsarPublisherBuilder::from_clever_env"><code>PulsarPublisherBuilder::from_clever_env</code></a> reads them.</p>
+<h3 id="feature-flags"><a class="doc-anchor" href="#feature-flags">§</a>Feature flags</h3>
+<p>This crate has no Cargo feature flags of its own. The <code>pulsar</code> client is
+built with TLS through <code>rustls</code> (no system OpenSSL), without OAuth2
+authentication and without message compression; building it needs the
+<code>protoc</code> protobuf compiler.</p>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><dl class="item-table reexports"><dt id="reexport.pulsar"><code>pub use pulsar;</code></dt></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.InvalidTopic.html" title="struct edomata_pulsar::InvalidTopic">Invalid<wbr>Topic</a></dt><dd>A topic that cannot be resolved to a Pulsar topic name, see
+<a href="fn.resolve_topic.html" title="fn edomata_pulsar::resolve_topic"><code>resolve_topic</code></a>.</dd><dt><a class="struct" href="struct.PulsarPublisher.html" title="struct edomata_pulsar::PulsarPublisher">Pulsar<wbr>Publisher</a></dt><dd>Publishes broker messages to Apache Pulsar.</dd><dt><a class="struct" href="struct.PulsarPublisherBuilder.html" title="struct edomata_pulsar::PulsarPublisherBuilder">Pulsar<wbr>Publisher<wbr>Builder</a></dt><dd>Builds a <a href="struct.PulsarPublisher.html" title="struct edomata_pulsar::PulsarPublisher"><code>PulsarPublisher</code></a>.</dd></dl><h2 id="enums" class="section-header">Enums<a href="#enums" class="anchor">§</a></h2><dl class="item-table"><dt><a class="enum" href="enum.BuildError.html" title="enum edomata_pulsar::BuildError">Build<wbr>Error</a></dt><dd>Why a <a href="struct.PulsarPublisher.html" title="struct edomata_pulsar::PulsarPublisher"><code>PulsarPublisher</code></a> could not be built.</dd></dl><h2 id="constants" class="section-header">Constants<a href="#constants" class="anchor">§</a></h2><dl class="item-table"><dt><a class="constant" href="constant.DEFAULT_MAX_MESSAGE_SIZE.html" title="constant edomata_pulsar::DEFAULT_MAX_MESSAGE_SIZE">DEFAULT_<wbr>MAX_<wbr>MESSAGE_<wbr>SIZE</a></dt><dd>The default maximum payload size: 5 MiB less the 10 KiB Pulsar reserves
+for the frame and the metadata, i.e. Pulsar’s documented default
+<code>maxMessageSize</code> (5 MiB). See
+<a href="struct.PulsarPublisherBuilder.html#method.with_max_message_size" title="method edomata_pulsar::PulsarPublisherBuilder::with_max_message_size"><code>with_max_message_size</code></a>.</dd><dt><a class="constant" href="constant.DEFAULT_NAMESPACE.html" title="constant edomata_pulsar::DEFAULT_NAMESPACE">DEFAULT_<wbr>NAMESPACE</a></dt><dd>The namespace of short topic names unless
+<a href="struct.PulsarPublisherBuilder.html#method.with_namespace" title="method edomata_pulsar::PulsarPublisherBuilder::with_namespace"><code>with_namespace</code></a> is called.</dd><dt><a class="constant" href="constant.DEFAULT_TENANT.html" title="constant edomata_pulsar::DEFAULT_TENANT">DEFAULT_<wbr>TENANT</a></dt><dd>The tenant of short topic names unless
+<a href="struct.PulsarPublisherBuilder.html#method.with_namespace" title="method edomata_pulsar::PulsarPublisherBuilder::with_namespace"><code>with_namespace</code></a> is called.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.default_topic.html" title="fn edomata_pulsar::default_topic">default_<wbr>topic</a></dt><dd>The default topic: the relay source with every character outside
+<code>[A-Za-z0-9._-]</code> replaced by <code>-</code> (a safe subset of Pulsar’s topic name
+alphabet), that is one topic per relay source, see <a href="fn.sanitize_topic.html" title="fn edomata_pulsar::sanitize_topic"><code>sanitize_topic</code></a>.</dd><dt><a class="fn" href="fn.resolve_topic.html" title="fn edomata_pulsar::resolve_topic">resolve_<wbr>topic</a></dt><dd>Resolves a topic to a full Pulsar topic name.</dd><dt><a class="fn" href="fn.sanitize_topic.html" title="fn edomata_pulsar::sanitize_topic">sanitize_<wbr>topic</a></dt><dd>Makes a string a valid Pulsar topic name (the part after the namespace):
+every character outside <code>[A-Za-z0-9._-]</code> becomes <code>-</code> (a safe subset of
+the alphabet Pulsar accepts), and an empty name becomes <code>"edomata"</code>.</dd></dl></section></div></main></body></html>

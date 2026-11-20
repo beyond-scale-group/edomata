@@ -35,10 +35,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-9c6ed84e.js";
+            window.path_to_searchindex_js = "../searchindex-475fb46f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-8a9e2bd7.js"></script>
+        <script src="../toc-c1ecc6a1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -193,8 +193,8 @@
 <p>Yes. The tables and DDL are byte-for-byte identical, and serde reads and writes the JSON of each Scala codec (Circe, jsoniter, uPickle) once your types use the matching serde representation; only uPickle’s <code>msgpack</code> payloads (MessagePack in <code>bytea</code>) cannot be read. A cross-language test exercises exactly this. See the <a href="migration-guide.html#matching-the-json-shape">migration guide</a>.</p>
 <h2 id="what-is-the-point-of-this-library-i-can-create-my-own-data-structures"><a class="header" href="#what-is-the-point-of-this-library-i-can-create-my-own-data-structures">What is the point of this library? I can create my own data structures.</a></h2>
 <p>Exactly, that’s how simple it is. While it is not rocket science to write a monadic data type, it is not what you want to focus on when writing business logic; and building an effect stack out of readers, writers and error channels won’t be appealing either. Too much flexibility is cognitive load better spent on real business problems. Edomata is a few opinionated, tailored data types for creating programs, plus production-ready interpreters for them.</p>
-<h2 id="where-are-the-kafka--rabbitmq-features"><a class="header" href="#where-are-the-kafka--rabbitmq-features">Where are the Kafka / RabbitMQ features?</a></h2>
-<p>In <code>edomata-broker</code>, <code>edomata-kafka</code> and <code>edomata-rabbitmq</code>, see <a href="../backends/brokers.html">Distributing events</a>. They are opt-in: nothing in the core or the PostgreSQL backend depends on a broker client.</p>
+<h2 id="where-are-the-kafka--rabbitmq--pulsar-features"><a class="header" href="#where-are-the-kafka--rabbitmq--pulsar-features">Where are the Kafka / RabbitMQ / Pulsar features?</a></h2>
+<p>In <code>edomata-broker</code>, <code>edomata-kafka</code>, <code>edomata-rabbitmq</code> and <code>edomata-pulsar</code>, see <a href="../backends/brokers.html">Distributing events</a>. They are opt-in: nothing in the core or the PostgreSQL backend depends on a broker client.</p>
 
                     </main>
 

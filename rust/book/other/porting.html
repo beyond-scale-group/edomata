@@ -35,10 +35,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-9c6ed84e.js";
+            window.path_to_searchindex_js = "../searchindex-475fb46f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-8a9e2bd7.js"></script>
+        <script src="../toc-c1ecc6a1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -208,6 +208,7 @@ port is complete when no row is left <em>planned</em>.</p>
 <tr><td>17</td><td><code>java-api</code></td><td><code>edomata-simple</code></td><td>ported (milestone 7)</td></tr>
 <tr><td>—</td><td><code>examples/</code></td><td><code>rust/examples/</code> (<code>edomata-examples</code>, one binary per example)</td><td>ported (milestone 8); Kafka and RabbitMQ examples added (milestone 9)</td></tr>
 <tr><td>—</td><td><em>(new)</em></td><td><code>edomata-broker</code>, <code>edomata-kafka</code>, <code>edomata-rabbitmq</code></td><td>added (milestone 9; no Scala equivalent)</td></tr>
+<tr><td>—</td><td><em>(new)</em></td><td><code>edomata-pulsar</code></td><td>added after milestone 9 (no Scala counterpart)</td></tr>
 <tr><td>—</td><td><code>docs/</code>, <code>website/</code></td><td><code>rust/book/</code> (mdBook) with <code>rust/book/samples</code> (<code>edomata-book-samples</code>)</td><td>ported (milestone 10)</td></tr>
 </tbody>
 </table>
@@ -393,12 +394,13 @@ port is complete when no row is left <em>planned</em>.</p>
 <tr><td>leader election, cross-process wake-ups</td><td><code>postgres::LeaderLock</code> / <code>LeaderGuard</code>, <code>postgres::listen</code>; <code>SqlxDriver::with_outbox_notify_channel</code> / <code>with_journal_notify_channel</code>, <code>SqlxCqrsDriver::with_outbox_notify_channel</code></td></tr>
 <tr><td>Kafka</td><td><code>edomata_kafka::KafkaPublisher</code> (<code>builder</code>, <code>with_topic</code>, <code>with_fixed_topic</code>, <code>with_config</code>), <code>default_topic</code></td></tr>
 <tr><td>RabbitMQ</td><td><code>edomata_rabbitmq::RabbitMqPublisher</code> (<code>connect</code>, <code>with_exchange</code>, <code>with_routing_key</code>, <code>with_fixed_exchange</code>, <code>declare_exchange</code>)</td></tr>
+<tr><td>Pulsar</td><td><code>edomata_pulsar::PulsarPublisher</code> (<code>builder</code>, <code>with_token</code>, <code>with_namespace</code>, <code>with_topic</code>, <code>with_fixed_topic</code>, <code>from_clever_env</code>), <code>resolve_topic</code>, <code>default_topic</code> (no Scala counterpart)</td></tr>
 </tbody>
 </table>
 </div>
 <p>Tests: <code>crates/edomata-broker/tests/{outbox_relay,journal_relay,postgres}.rs</code>,
-<code>crates/edomata-kafka/tests/kafka.rs</code> and <code>crates/edomata-rabbitmq/tests/rabbitmq.rs</code>
-(testcontainers; Docker required).</p>
+<code>crates/edomata-kafka/tests/kafka.rs</code>, <code>crates/edomata-rabbitmq/tests/rabbitmq.rs</code> and
+<code>crates/edomata-pulsar/tests/pulsar.rs</code> (testcontainers; Docker required).</p>
 <h2 id="type-mapping-simple-facade"><a class="header" href="#type-mapping-simple-facade">Type mapping (simple facade)</a></h2>
 <div class="table-wrapper">
 <table>

@@ -35,10 +35,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-9c6ed84e.js";
+            window.path_to_searchindex_js = "../searchindex-475fb46f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-8a9e2bd7.js"></script>
+        <script src="../toc-c1ecc6a1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -275,8 +275,8 @@ pub async fn run_journal_relay(
 <h2 id="delivery-guarantees"><a class="header" href="#delivery-guarantees">Delivery guarantees</a></h2>
 <ul>
 <li><strong>At-least-once.</strong> Items are marked as sent (or the checkpoint advanced) only after the publisher returned, which it does once the broker acknowledged the whole batch. A crash in between publishes the batch again after the restart or the failover.</li>
-<li><strong>Stable message ids.</strong> Every message has a deterministic id, <code>"{source}:outbox:{seq_nr}"</code> or <code>"{source}:journal:{seq_nr}"</code>, in the <code>edomata-id</code> header (Kafka) or the <code>message_id</code> property (RabbitMQ). A redelivery has the same id.</li>
-<li><strong>Ordering.</strong> A relay publishes in sequence-number order, one batch at a time; Kafka partitions by stream id and RabbitMQ routes by stream id and awaits each confirm, so the messages of one aggregate stay in order.</li>
+<li><strong>Stable message ids.</strong> Every message has a deterministic id, <code>"{source}:outbox:{seq_nr}"</code> or <code>"{source}:journal:{seq_nr}"</code>, in the <code>edomata-id</code> header (Kafka), the <code>message_id</code> property (RabbitMQ) or the <code>edomata-id</code> message property (Pulsar). A redelivery has the same id.</li>
+<li><strong>Ordering.</strong> A relay publishes in sequence-number order, one batch at a time; Kafka partitions by stream id and RabbitMQ routes by stream id and awaits each confirm, Pulsar keys by stream id and awaits every send receipt, so the messages of one aggregate stay in order.</li>
 <li><strong>Duplicates on the producer side too.</strong> Rejected or indecisive commands that are sent again write their notifications again (only accepted commands are recorded as handled), and those are new outbox rows with new ids.</li>
 </ul>
 <p>So consumers must be idempotent. Record each message id in the same transaction as the effect, and skip the ids already recorded:</p>

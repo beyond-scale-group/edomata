@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["DEFAULT_MAX_MESSAGE_SIZE","DEFAULT_NAMESPACE","DEFAULT_TENANT"],"enum":["BuildError"],"fn":["default_topic","resolve_topic","sanitize_topic"],"struct":["InvalidTopic","PulsarPublisher","PulsarPublisherBuilder"]};

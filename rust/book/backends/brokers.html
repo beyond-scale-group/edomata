@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Distributing events with Kafka / RabbitMQ - Edomata for Rust</title>
+        <title>Distributing events with Kafka / RabbitMQ / Pulsar - Edomata for Rust</title>
 
 
         <!-- Custom HTML head -->
@@ -35,10 +35,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-9c6ed84e.js";
+            window.path_to_searchindex_js = "../searchindex-475fb46f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-8a9e2bd7.js"></script>
+        <script src="../toc-c1ecc6a1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -177,8 +177,8 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="distributing-events-with-kafka--rabbitmq"><a class="header" href="#distributing-events-with-kafka--rabbitmq">Distributing events with Kafka / RabbitMQ</a></h1>
-<p>Broker distribution is a Rust addition without Scala equivalent, and it is <strong>opt-in</strong>: <code>edomata-broker</code> is broker-agnostic and pulls no broker client; <code>edomata-kafka</code> (rdkafka) and <code>edomata-rabbitmq</code> (lapin) are separate crates you depend on only when you need them.</p>
+                        <h1 id="distributing-events-with-kafka--rabbitmq--pulsar"><a class="header" href="#distributing-events-with-kafka--rabbitmq--pulsar">Distributing events with Kafka / RabbitMQ / Pulsar</a></h1>
+<p>Broker distribution is a Rust addition without Scala equivalent, and it is <strong>opt-in</strong>: <code>edomata-broker</code> is broker-agnostic and pulls no broker client; <code>edomata-kafka</code> (rdkafka), <code>edomata-rabbitmq</code> (lapin) and <code>edomata-pulsar</code> (pulsar) are separate crates you depend on only when you need them.</p>
 <h2 id="the-transactional-outbox-is-the-only-source"><a class="header" href="#the-transactional-outbox-is-the-only-source">The transactional outbox is the only source</a></h2>
 <p>Commands never publish to a broker. They write events and outbox rows to PostgreSQL in one transaction, as always; a <strong>relay</strong> then reads what was committed, publishes it, and <strong>only after the broker acknowledged</strong> marks the items as sent. Nothing is lost, nothing is published unless it was committed.</p>
 <pre><code class="language-text">command ──▶ aggregate ──▶ PostgreSQL: journal + outbox (one transaction)
@@ -186,12 +186,12 @@
                         OutboxRelay ◀───┘ (in-process signal, LISTEN/NOTIFY or polling)
                              │ publish batch, in sequence order
                              ▼
-                      Publisher (Kafka / RabbitMQ) ──ack──▶ mark as sent
+                      Publisher (Kafka / RabbitMQ / Pulsar) ──ack──▶ mark as sent
 </code></pre>
 <h3 id="delivery-semantics"><a class="header" href="#delivery-semantics">Delivery semantics</a></h3>
 <ul>
 <li><strong>At-least-once</strong>: a crash between publishing and marking redelivers the batch. Every message has a stable, deterministic id, <code>"{source}:outbox:{seq_nr}"</code> (or <code>"{source}:journal:{seq_nr}"</code>), so consumers deduplicate on it (the <code>edomata-id</code> header / <code>message_id</code> property).</li>
-<li><strong>Per-stream ordering</strong>: relays publish in sequence order, one batch at a time; Kafka uses the stream id as partition key, RabbitMQ as routing key and awaits each confirm.</li>
+<li><strong>Per-stream ordering</strong>: relays publish in sequence order, one batch at a time; Kafka uses the stream id as partition key, RabbitMQ as routing key and awaits each confirm, Pulsar uses it as message key and awaits every send receipt.</li>
 <li><strong>Resilience</strong>: transient failures are retried with exponential backoff (<code>RetryPolicy</code>); permanent failures, and transient ones once the policy’s <code>max_retries</code> budget is exhausted, stop the relay with an error (counted as <code>failed</code>). <code>RelayMetrics</code> exposes published / retried / failed / lag counters, and the relay emits <code>tracing</code> events.</li>
 <li><strong>Multiple replicas</strong>: <code>run_as_leader</code> with a <code>LeaderLock</code> (a PostgreSQL advisory lock) ensures only one relay per source publishes at a time, with automatic failover.</li>
 </ul>
@@ -218,7 +218,7 @@ pub async fn relay_outbox(backend: &amp;AccountBackend) -&gt; Result&lt;(), edom
     let cancel = CancellationToken::new();
     relay.run(cancel).await
 }</code></pre>
-<p>With a real broker, the publisher is a <code>KafkaPublisher</code> or a <code>RabbitMqPublisher</code>. The samples below are compiled with the <code>kafka</code> / <code>rabbitmq</code> features of the samples crate (<code>rust/book/samples/src/brokers.rs</code>); the full examples (<code>rust/examples/src/bin/kafka_relay.rs</code>, <code>rabbitmq_relay.rs</code>) also wire a writer:</p>
+<p>With a real broker, the publisher is a <code>KafkaPublisher</code>, a <code>RabbitMqPublisher</code> or a <code>PulsarPublisher</code>. The samples below are compiled with the <code>kafka</code> / <code>rabbitmq</code> / <code>pulsar</code> features of the samples crate (<code>rust/book/samples/src/brokers.rs</code>); the full examples (<code>rust/examples/src/bin/kafka_relay.rs</code>, <code>rabbitmq_relay.rs</code>) also wire a writer:</p>
 <h3 id="kafka"><a class="header" href="#kafka">Kafka</a></h3>
 <pre><code class="language-rust ignore">    // Idempotent producer (`enable.idempotence=true`, `acks=all`), a fixed
     // topic (the default is one topic per source), the stream id as the
@@ -261,12 +261,37 @@ pub async fn relay_outbox(backend: &amp;AccountBackend) -&gt; Result&lt;(), edom
 <p><code>RabbitMqPublisher::connect(uri)</code> enables publisher confirms; <code>with_exchange</code> / <code>with_routing_key</code> choose the route per message (defaults: the source and the stream id); messages are persistent (<code>delivery_mode = 2</code>) with <code>message_id</code> set, and the publisher reconnects after a connection failure.</p>
 <pre><code class="language-sh">AMQP_URL=amqp://guest:guest@localhost:5672/%2f cargo run -p edomata-examples --features rabbitmq --bin rabbitmq_relay
 </code></pre>
+<h3 id="pulsar"><a class="header" href="#pulsar">Pulsar</a></h3>
+<pre><code class="language-rust ignore">    // Service URL, token, tenant and namespace from the add-on's environment
+    // (`ADDON_PULSAR_*`); one topic for every message, the stream id as the
+    // message key, the ids and metadata as message properties. Nothing
+    // connects before the first publish.
+    let publisher = PulsarPublisherBuilder::from_clever_env()?
+        .with_fixed_topic("accounts-notifications")
+        .build()?;
+    let relay = OutboxRelay::new(
+        Arc::clone(backend.outbox()),
+        Arc::new(publisher),
+        MessageEncoder::&lt;Notification&gt;::serde(),
+        RelayConfig::new("pulsar_accounts").with_poll_interval(Duration::from_secs(10)),
+    )
+    .wake_on(backend.updates().outbox());
+    relay.run(cancel).await?;</code></pre>
+<p><code>PulsarPublisher::builder(service_url)</code> (<code>pulsar://</code> or <code>pulsar+ssl://</code>) takes <code>with_token</code>, <code>with_namespace(tenant, namespace)</code>, <code>with_topic</code> / <code>with_fixed_topic</code> and the TLS settings of the <code>pulsar</code> client; <code>PulsarPublisherBuilder::from_clever_env()</code> reads the variables of Clever Cloud’s Pulsar add-on (<code>ADDON_PULSAR_BINARY_URL</code>, <code>ADDON_PULSAR_TOKEN</code>, <code>ADDON_PULSAR_TENANT</code>, <code>ADDON_PULSAR_NAMESPACE</code>).</p>
+<ul>
+<li><strong>Topics</strong>: a short name (the default is the sanitized relay source) goes to <code>persistent://&lt;tenant&gt;/&lt;namespace&gt;/&lt;name&gt;</code>; a full <code>persistent://...</code> or <code>non-persistent://...</code> URL is used as it is. A topic URL that is malformed is a permanent failure.</li>
+<li><strong>Producers</strong>: Pulsar producers are per topic. They are created lazily, cached, and dropped when they fail (the whole connection too when the failure is a connection one), so the next publish recreates them. The first publish connects: a wrong address is a transient failure, not a build error. Keep the number of topics small: Clever Cloud documents 100 topics per namespace and 100 producers per topic.</li>
+<li><strong>Keys and ordering</strong>: the stream id is the message key and producers do not batch, so a stream stays ordered within a topic (on a partitioned topic the key picks the partition).</li>
+<li><strong>Errors</strong>: invalid topic, authentication or authorization refused, a payload above <code>with_max_message_size</code> (default 5 MiB less 10 KiB, checked before sending) are permanent; connection loss, timeouts and everything unrecognised are transient.</li>
+<li><strong>Build requirement</strong>: the <code>pulsar</code> client’s protocol definitions are compiled at build time, so building <code>edomata-pulsar</code> needs the <code>protoc</code> protobuf compiler (<code>apt install protobuf-compiler</code>); TLS uses rustls, no system OpenSSL.</li>
+</ul>
+<p>The integration tests (<code>crates/edomata-pulsar/tests/pulsar.rs</code>) start a standalone Pulsar with testcontainers. Token authentication, TLS and the Clever Cloud add-on are not covered by them.</p>
 <h2 id="wake-ups-across-processes"><a class="header" href="#wake-ups-across-processes">Wake-ups across processes</a></h2>
 <p>A relay passes over the outbox when started, whenever a wake-up stream yields, and at least every <code>poll_interval</code>. In the writing process, <code>backend.updates().outbox()</code> is the in-process signal. In another process, use PostgreSQL <code>LISTEN/NOTIFY</code>: configure the driver with <code>with_outbox_notify_channel("channel")</code> (it raises <code>NOTIFY</code> inside the writing transaction) and wake the relay with <code>edomata_broker::postgres::listen(pool, "channel")</code>.</p>
 <h2 id="streaming-the-journal"><a class="header" href="#streaming-the-journal">Streaming the journal</a></h2>
 <p><code>JournalRelay</code> tails the journal (raw events, not just notifications) from a checkpoint stored by a <code>CheckpointStore</code> (<code>PgCheckpointStore</code> in the <code>relay_checkpoints</code> table, created by <code>PgCheckpointStore::setup</code> or the opt-in <code>PGSchema::relay_checkpoints</code> DDL; <code>InMemoryCheckpointStore</code> for tests). The checkpoint advances only after the broker acknowledged a batch; journal messages carry the event id and version as extra headers.</p>
 <h2 id="testing"><a class="header" href="#testing">Testing</a></h2>
-<p><code>RecordingPublisher</code> records every message it receives and can fail before or after publishing on demand, which is how the crash-between-publish-and-mark scenario is tested without a broker. The <code>edomata-kafka</code> and <code>edomata-rabbitmq</code> crates run their integration tests against real brokers started with testcontainers (Docker required): no message marked before acknowledgment, redelivery and deduplication, per-stream ordering, leader election with two relays.</p>
+<p><code>RecordingPublisher</code> records every message it receives and can fail before or after publishing on demand, which is how the crash-between-publish-and-mark scenario is tested without a broker. The <code>edomata-kafka</code>, <code>edomata-rabbitmq</code> and <code>edomata-pulsar</code> crates run their integration tests against real brokers started with testcontainers (Docker required): no message marked before acknowledgment, redelivery and deduplication, per-stream ordering, leader election with two relays.</p>
 <p>Running relays with several replicas, deduplicating on the consumer side and monitoring are covered in <a href="../operations/relays.html">Running relays in production</a>. See <a href="../design/adr-0012.html">ADR 0012</a> for the design decisions.</p>
 
                     </main>
