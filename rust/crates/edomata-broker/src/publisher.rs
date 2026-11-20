@@ -68,7 +68,8 @@ impl PublishError {
 /// republishes the whole batch, so consumers see duplicates, never gaps.
 /// Classify failures with [`PublishError`]. Implementations exist for
 /// Kafka (`edomata_kafka::KafkaPublisher`), RabbitMQ
-/// (`edomata_rabbitmq::RabbitMqPublisher`), and tests
+/// (`edomata_rabbitmq::RabbitMqPublisher`), Apache Pulsar
+/// (`edomata_pulsar::PulsarPublisher`), and tests
 /// ([`RecordingPublisher`]); `Arc<P>` is a publisher when `P` is.
 ///
 /// ```
