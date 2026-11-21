@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["SaaSCodec","SaaSSqlxCqrsDriver","SqlxHandler","TenantStateLister"]};
+window.SIDEBAR_ITEMS = {"struct":["RlsGateway","SaaSCodec","SaaSSqlxCqrsDriver","SqlxHandler","TenantStateLister"]};

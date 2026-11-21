@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["outbox_statements","rls_statements","states_statements"]};
+window.SIDEBAR_ITEMS = {"fn":["es_commands_statements","es_journal_statements","es_outbox_statements","es_rls_statements","es_snapshots_statements","outbox_statements","rls_statements","states_statements"]};

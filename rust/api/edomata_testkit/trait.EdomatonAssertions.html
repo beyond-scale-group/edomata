@@ -5,16 +5,16 @@
         model: <a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;M</a>,
         command: C,
         state: S,
-    ) -&gt; EdomatonResult&lt;S, E, R, N&gt;
-       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a></span>;
+    ) -&gt; <a class="enum" href="../edomata_core/compiler/enum.EdomatonResult.html" title="enum edomata_core::compiler::EdomatonResult">EdomatonResult</a>&lt;S, E, R, N&gt;
+       <span class="where">where M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a></span>;
 <span class="item-spacer"></span>    async fn <a href="#tymethod.run_with_command" class="fn">run_with_command</a>&lt;M&gt;(
         &amp;self,
         model: <a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;M</a>,
         test: &amp;<a class="struct" href="struct.TestCommand.html" title="struct edomata_testkit::TestCommand">TestCommand</a>,
         command: C,
         state: S,
-    ) -&gt; EdomatonResult&lt;S, E, R, N&gt;
-       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a></span>;
+    ) -&gt; <a class="enum" href="../edomata_core/compiler/enum.EdomatonResult.html" title="enum edomata_core::compiler::EdomatonResult">EdomatonResult</a>&lt;S, E, R, N&gt;
+       <span class="where">where M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a></span>;
 <span class="item-spacer"></span>    async fn <a href="#tymethod.expect" class="fn">expect</a>&lt;M&gt;(
         &amp;self,
         model: <a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;M</a>,
@@ -23,7 +23,7 @@
         expected_state: S,
         expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
     )
-       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+       <span class="where">where M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
              S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -36,7 +36,7 @@
         expected_state: S,
         expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
     )
-       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+       <span class="where">where M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
              S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -46,8 +46,8 @@
         model: <a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;M</a>,
         command: C,
         state: S,
-    ) -&gt; (<a class="struct" href="https://doc.rust-lang.org/1.100.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;N&gt;, NonEmpty&lt;R&gt;)
-       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    ) -&gt; (<a class="struct" href="https://doc.rust-lang.org/1.100.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;N&gt;, <a class="struct" href="../edomata_core/nonempty/struct.NonEmpty.html" title="struct edomata_core::nonempty::NonEmpty">NonEmpty</a>&lt;R&gt;)
+       <span class="where">where M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
              S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -59,7 +59,7 @@
         state: S,
         expected_errors: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = R&gt;,
     )
-       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+       <span class="where">where M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
              S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -72,7 +72,7 @@
         expected_errors: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = R&gt;,
         expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
     )
-       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+       <span class="where">where M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
              S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -84,7 +84,7 @@
         state: S,
         notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
     )
-       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+       <span class="where">where M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
              S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -97,19 +97,19 @@
         expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
         that: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>(<a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;S</a>),
     )
-       <span class="where">where M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+       <span class="where">where M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
              S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
              N: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a></span>;
 }</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Assertion helpers for event-sourced programs, implemented for every
-[<code>Edomaton</code>] over a [<code>RequestContext</code>] (the programs built with
-<a href="edomata_core::DomainDsl"><code>DomainDsl</code></a>).</p>
+<a href="../edomata_core/edomaton/struct.Edomaton.html" title="struct edomata_core::edomaton::Edomaton"><code>Edomaton</code></a> over a <a href="../edomata_core/request_context/struct.RequestContext.html" title="struct edomata_core::request_context::RequestContext"><code>RequestContext</code></a> (the programs built with
+<a href="../edomata_core/dsl/struct.DomainDsl.html" title="struct edomata_core::dsl::DomainDsl"><code>DomainDsl</code></a>).</p>
 <p>Each assertion runs the program once with the given command and state,
 folds its events into the model with
-[<code>Edomaton::execute</code>], and panics if the [<code>EdomatonResult</code>] differs from
-the expectation. [<code>EdomatonResult::Indecisive</code>] (no event accepted) and
-[<code>EdomatonResult::Conflicted</code>] (events the model refuses) fail every
+<a href="../edomata_core/edomaton/struct.Edomaton.html#method.execute" title="method edomata_core::edomaton::Edomaton::execute"><code>Edomaton::execute</code></a>, and panics if the <a href="../edomata_core/compiler/enum.EdomatonResult.html" title="enum edomata_core::compiler::EdomatonResult"><code>EdomatonResult</code></a> differs from
+the expectation. <a href="../edomata_core/compiler/enum.EdomatonResult.html#variant.Indecisive" title="variant edomata_core::compiler::EdomatonResult::Indecisive"><code>EdomatonResult::Indecisive</code></a> (no event accepted) and
+<a href="../edomata_core/compiler/enum.EdomatonResult.html#variant.Conflicted" title="variant edomata_core::compiler::EdomatonResult::Conflicted"><code>EdomatonResult::Conflicted</code></a> (events the model refuses) fail every
 <code>expect*</code> assertion; use <a href="trait.EdomatonAssertions.html#tymethod.run_with" title="method edomata_testkit::EdomatonAssertions::run_with"><code>run_with</code></a> to assert on them.</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>edomata_core::<span class="kw-2">*</span>;
@@ -147,8 +147,8 @@ futures::executor::block_on(<span class="kw">async </span>{
     model: <a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;M</a>,
     command: C,
     state: S,
-) -&gt; EdomatonResult&lt;S, E, R, N&gt;<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h4></section></summary><div class="docblock"><p>Runs the program against <code>state</code> with <code>command</code> (default
+) -&gt; <a class="enum" href="../edomata_core/compiler/enum.EdomatonResult.html" title="enum edomata_core::compiler::EdomatonResult">EdomatonResult</a>&lt;S, E, R, N&gt;<div class="where">where
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h4></section></summary><div class="docblock"><p>Runs the program against <code>state</code> with <code>command</code> (default
 <a href="struct.TestCommand.html" title="struct edomata_testkit::TestCommand"><code>TestCommand</code></a>) and folds the decision into <code>model</code>.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="tymethod.run_with_command" class="method"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#171-179">Source</a><h4 class="code-header">async fn <a href="#tymethod.run_with_command" class="fn">run_with_command</a>&lt;M&gt;(
     &amp;self,
@@ -156,8 +156,8 @@ futures::executor::block_on(<span class="kw">async </span>{
     test: &amp;<a class="struct" href="struct.TestCommand.html" title="struct edomata_testkit::TestCommand">TestCommand</a>,
     command: C,
     state: S,
-) -&gt; EdomatonResult&lt;S, E, R, N&gt;<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h4></section></summary><div class="docblock"><p>Like <a href="trait.EdomatonAssertions.html#tymethod.run_with" title="method edomata_testkit::EdomatonAssertions::run_with"><code>run_with</code></a> with a custom <a href="struct.TestCommand.html" title="struct edomata_testkit::TestCommand"><code>TestCommand</code></a>.</p>
+) -&gt; <a class="enum" href="../edomata_core/compiler/enum.EdomatonResult.html" title="enum edomata_core::compiler::EdomatonResult">EdomatonResult</a>&lt;S, E, R, N&gt;<div class="where">where
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h4></section></summary><div class="docblock"><p>Like <a href="trait.EdomatonAssertions.html#tymethod.run_with" title="method edomata_testkit::EdomatonAssertions::run_with"><code>run_with</code></a> with a custom <a href="struct.TestCommand.html" title="struct edomata_testkit::TestCommand"><code>TestCommand</code></a>.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="tymethod.expect" class="method"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#183-195">Source</a><h4 class="code-header">async fn <a href="#tymethod.expect" class="fn">expect</a>&lt;M&gt;(
     &amp;self,
     model: <a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;M</a>,
@@ -166,7 +166,7 @@ futures::executor::block_on(<span class="kw">async </span>{
     expected_state: S,
     expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
 )<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -180,7 +180,7 @@ and <code>expected_notifications</code>, in order.</p>
     expected_state: S,
     expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
 )<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -191,8 +191,8 @@ order.</p>
     model: <a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;M</a>,
     command: C,
     state: S,
-) -&gt; (<a class="struct" href="https://doc.rust-lang.org/1.100.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;N&gt;, NonEmpty&lt;R&gt;)<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+) -&gt; (<a class="struct" href="https://doc.rust-lang.org/1.100.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;N&gt;, <a class="struct" href="../edomata_core/nonempty/struct.NonEmpty.html" title="struct edomata_core::nonempty::NonEmpty">NonEmpty</a>&lt;R&gt;)<div class="where">where
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -205,7 +205,7 @@ reasons.</p>
     state: S,
     expected_errors: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = R&gt;,
 )<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -219,7 +219,7 @@ no notifications.</p>
     expected_errors: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = R&gt;,
     expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
 )<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -232,7 +232,7 @@ no notifications.</p>
     state: S,
     notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
 )<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -245,13 +245,13 @@ no notifications.</p>
     expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
     that: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>(<a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;S</a>),
 )<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     N: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,</div></h4></section></summary><div class="docblock"><p>Asserts that the program accepts with exactly <code>expected_notifications</code>
 and that <code>that</code> holds for the new state.</p>
-</div></details></div><h2 id="dyn-compatibility" class="section-header">Dyn Compatibility<a href="#dyn-compatibility" class="anchor">§</a></h2><div class="dyn-compatibility-info"><p>This trait is <b>not</b> <a href="https://doc.rust-lang.org/1.100.0/reference/items/traits.html#dyn-compatibility">dyn compatible</a>.</p><p><i>In older versions of Rust, dyn compatibility was called "object safety".</i></p></div><h2 id="foreign-impls" class="section-header">Implementations on Foreign Types<a href="#foreign-impls" class="anchor">§</a></h2><details class="toggle implementors-toggle"><summary><section id="impl-EdomatonAssertions%3CC,+S,+E,+R,+N%3E-for-Edomaton%3CRequestContext%3CC,+S%3E,+R,+E,+N,+T%3E" class="impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#289-490">Source</a><a href="#impl-EdomatonAssertions%3CC,+S,+E,+R,+N%3E-for-Edomaton%3CRequestContext%3CC,+S%3E,+R,+E,+N,+T%3E" class="anchor">§</a><h3 class="code-header">impl&lt;C, S, E, R, N, T&gt; <a class="trait" href="trait.EdomatonAssertions.html" title="trait edomata_testkit::EdomatonAssertions">EdomatonAssertions</a>&lt;C, S, E, R, N&gt; for Edomaton&lt;RequestContext&lt;C, S&gt;, R, E, N, T&gt;<div class="where">where
+</div></details></div><h2 id="dyn-compatibility" class="section-header">Dyn Compatibility<a href="#dyn-compatibility" class="anchor">§</a></h2><div class="dyn-compatibility-info"><p>This trait is <b>not</b> <a href="https://doc.rust-lang.org/1.100.0/reference/items/traits.html#dyn-compatibility">dyn compatible</a>.</p><p><i>In older versions of Rust, dyn compatibility was called "object safety".</i></p></div><h2 id="foreign-impls" class="section-header">Implementations on Foreign Types<a href="#foreign-impls" class="anchor">§</a></h2><details class="toggle implementors-toggle"><summary><section id="impl-EdomatonAssertions%3CC,+S,+E,+R,+N%3E-for-Edomaton%3CRequestContext%3CC,+S%3E,+R,+E,+N,+T%3E" class="impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#289-490">Source</a><a href="#impl-EdomatonAssertions%3CC,+S,+E,+R,+N%3E-for-Edomaton%3CRequestContext%3CC,+S%3E,+R,+E,+N,+T%3E" class="anchor">§</a><h3 class="code-header">impl&lt;C, S, E, R, N, T&gt; <a class="trait" href="trait.EdomatonAssertions.html" title="trait edomata_testkit::EdomatonAssertions">EdomatonAssertions</a>&lt;C, S, E, R, N&gt; for <a class="struct" href="../edomata_core/edomaton/struct.Edomaton.html" title="struct edomata_core::edomaton::Edomaton">Edomaton</a>&lt;<a class="struct" href="../edomata_core/request_context/struct.RequestContext.html" title="struct edomata_core::request_context::RequestContext">RequestContext</a>&lt;C, S&gt;, R, E, N, T&gt;<div class="where">where
     C: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,
@@ -262,15 +262,15 @@ and that <code>that</code> holds for the new state.</p>
     model: <a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;M</a>,
     command: C,
     state: S,
-) -&gt; EdomatonResult&lt;S, E, R, N&gt;<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h4></section><section id="method.run_with_command" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#307-319">Source</a><a href="#method.run_with_command" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.run_with_command" class="fn">run_with_command</a>&lt;M&gt;(
+) -&gt; <a class="enum" href="../edomata_core/compiler/enum.EdomatonResult.html" title="enum edomata_core::compiler::EdomatonResult">EdomatonResult</a>&lt;S, E, R, N&gt;<div class="where">where
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h4></section><section id="method.run_with_command" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#307-319">Source</a><a href="#method.run_with_command" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.run_with_command" class="fn">run_with_command</a>&lt;M&gt;(
     &amp;self,
     model: <a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;M</a>,
     test: &amp;<a class="struct" href="struct.TestCommand.html" title="struct edomata_testkit::TestCommand">TestCommand</a>,
     command: C,
     state: S,
-) -&gt; EdomatonResult&lt;S, E, R, N&gt;<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h4></section><section id="method.expect" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#321-350">Source</a><a href="#method.expect" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.expect" class="fn">expect</a>&lt;M&gt;(
+) -&gt; <a class="enum" href="../edomata_core/compiler/enum.EdomatonResult.html" title="enum edomata_core::compiler::EdomatonResult">EdomatonResult</a>&lt;S, E, R, N&gt;<div class="where">where
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h4></section><section id="method.expect" class="method trait-impl"><a class="src rightside" href="../src/edomata_testkit/lib.rs.html#321-350">Source</a><a href="#method.expect" class="anchor">§</a><h4 class="code-header">async fn <a href="#tymethod.expect" class="fn">expect</a>&lt;M&gt;(
     &amp;self,
     model: <a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;M</a>,
     command: C,
@@ -278,7 +278,7 @@ and that <code>that</code> holds for the new state.</p>
     expected_state: S,
     expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
 )<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -290,7 +290,7 @@ and that <code>that</code> holds for the new state.</p>
     expected_state: S,
     expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
 )<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -299,8 +299,8 @@ and that <code>that</code> holds for the new state.</p>
     model: <a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;M</a>,
     command: C,
     state: S,
-) -&gt; (<a class="struct" href="https://doc.rust-lang.org/1.100.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;N&gt;, NonEmpty&lt;R&gt;)<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+) -&gt; (<a class="struct" href="https://doc.rust-lang.org/1.100.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;N&gt;, <a class="struct" href="../edomata_core/nonempty/struct.NonEmpty.html" title="struct edomata_core::nonempty::NonEmpty">NonEmpty</a>&lt;R&gt;)<div class="where">where
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -311,7 +311,7 @@ and that <code>that</code> holds for the new state.</p>
     state: S,
     expected_errors: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = R&gt;,
 )<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -323,7 +323,7 @@ and that <code>that</code> holds for the new state.</p>
     expected_errors: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = R&gt;,
     expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
 )<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -334,7 +334,7 @@ and that <code>that</code> holds for the new state.</p>
     state: S,
     notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
 )<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
@@ -346,7 +346,7 @@ and that <code>that</code> holds for the new state.</p>
     expected_notifications: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = N&gt;,
     that: impl <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>(<a class="primitive" href="https://doc.rust-lang.org/1.100.0/std/primitive.reference.html">&amp;S</a>),
 )<div class="where">where
-    M: DomainModel&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
+    M: <a class="trait" href="../edomata_core/model/trait.DomainModel.html" title="trait edomata_core::model::DomainModel">DomainModel</a>&lt;State = S, Event = E, Rejection = R&gt; + <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,
     S: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     E: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,
     R: <a class="trait" href="https://doc.rust-lang.org/1.100.0/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>,

@@ -30,9 +30,9 @@ publish failures are retried with exponential backoff
 <code>tracing</code> events.</p>
 <h3 id="where-it-fits"><a class="doc-anchor" href="#where-it-fits">§</a>Where it fits</h3>
 <p><code>edomata-broker</code> sits on top of the storage layer: it reads the
-<a href="edomata_backend::OutboxReader"><code>OutboxReader</code></a> and
-<a href="edomata_backend::eventsourcing::JournalReader"><code>JournalReader</code></a> of an
-<code>edomata-backend</code> <a href="edomata_backend::eventsourcing::Backend"><code>Backend</code></a>
+<a href="../edomata_backend/outbox/trait.OutboxReader.html" title="trait edomata_backend::outbox::OutboxReader"><code>OutboxReader</code></a> and
+<a href="../edomata_backend/eventsourcing/journal/trait.JournalReader.html" title="trait edomata_backend::eventsourcing::journal::JournalReader"><code>JournalReader</code></a> of an
+<code>edomata-backend</code> <a href="../edomata_backend/eventsourcing/backend/struct.Backend.html" title="struct edomata_backend::eventsourcing::backend::Backend"><code>Backend</code></a>
 (in-memory, or PostgreSQL through <code>edomata-sqlx</code>), and its <a href="postgres/index.html" title="mod edomata_broker::postgres"><code>postgres</code></a>
 module uses the <code>edomata-postgres</code> naming for the checkpoint table. It
 has no Scala counterpart. <code>edomata-kafka</code>, <code>edomata-rabbitmq</code> and
